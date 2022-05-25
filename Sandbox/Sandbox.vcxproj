@@ -30,26 +30,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -137,15 +137,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glad\include;D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glfw;D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;D:\Meus Documentos\My Stuff\Programming\C++ and C\2021\Sandbox\Sandbox\Vendor\libs;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\My Documents\GitHub\Sandbox\Sandbox\Vendor\libs;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;D:\Meus Documentos\My Stuff\Programming\C++ and C\2021\Sandbox\Sandbox\vendor\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="inputevents.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
     <ClCompile Include="window.cpp" />
@@ -178,6 +178,7 @@
   <ItemGroup>
     <ClInclude Include="core.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="inputevents.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

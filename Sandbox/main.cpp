@@ -1,6 +1,7 @@
 #include "core.h"
 #include "input.h"
 #include "window.h" 
+#include "inputevents.h"
 
 const int windowWidth = 1920;
 const int windowHeight = 1080;
@@ -49,14 +50,10 @@ int main(void)
     {
         glClearColor(186.0f / 255.0f, 87.0f / 255.0f, 111.0f / 255.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        if (Input::isKeyDown(GLFW_KEY_0))
-        {
-            printf("a");
-        }
-
         glfwSwapBuffers(window->nativeWindow);
         glfwPollEvents();
+
+        InputEvents::setFullscreen();
     }
 
     glfwTerminate();

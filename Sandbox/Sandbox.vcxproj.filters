@@ -13,6 +13,9 @@
     <ClCompile Include="vendor\includes\glad\src\glad.c">
       <Filter>GLAD</Filter>
     </ClCompile>
+    <ClCompile Include="inputevents.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.h">
@@ -22,6 +25,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="window.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="inputevents.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

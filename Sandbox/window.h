@@ -7,6 +7,7 @@ struct Window
 	GLFWwindow* nativeWindow;
 	int windowWidth;
 	int windowHeight;
+	static bool fullscreenMode;
 
 	void installMainCallbacks();
 

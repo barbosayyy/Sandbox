@@ -5,7 +5,7 @@
 //libraries
 
 //glfw and glad
-#include <glad/glad.h>
+#include <glad\glad.h>
 #include <glfw3.h>
 
 //opengl math libraries
