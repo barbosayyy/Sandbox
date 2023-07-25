@@ -1,11 +1,10 @@
 #include "window.h"
-#include "input.h"
 
 void Window::installMainCallbacks()
 {
 	if (nativeWindow != nullptr)
 	{
-		glfwSetKeyCallback(nativeWindow, Input::keycallback);
+		//glfwSetKeyCallback(nativeWindow, Input::keycallback);
 	}
 }
 
@@ -30,7 +29,6 @@ Window* Window::createWindow(int width, int height, const char* title, bool full
 	
 	if (resolution->nativeWindow == nullptr)
 	{
-		printf("Failed to create glfw window");
 		glfwTerminate();
 		return nullptr;
 	}

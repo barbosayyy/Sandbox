@@ -1,6 +1,9 @@
 #pragma once
 
-#include "core.h"
+#include <glfw3.h>
+
+#define WINDOW_WIDTH	800
+#define WINDOW_HEIGHT	600
 
 struct Window
 {
