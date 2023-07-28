@@ -1,66 +1,86 @@
-#include "window.h"
-
-#include <glad/glad.h>
-#include <glfw3.h>
-
-#include <GL/glew.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
 #include <iostream>
 
-const int windowWidth = 1920;
-const int windowHeight = 1080;
+#include <glfw3.h>
+#include <GL/glew.h>
+
+#define WINDOW_WIDTH	800
+#define WINDOW_HEIGHT	600
 const char* windowTitle = "Sandbox";
 
-int exitWithError(const char* msg)
+const char* vertexShaderSource = R"(
+    #version 300 core
+    layout(location = 0) in vec3 aPosition
+
+    void main()
+    {
+        aPosition = vec4(aPosition, 1.0)
+    }
+)";
+
+const char* fragmentShaderSource = R"(
+    #version 300 core    
+    out vec4 fragColor;
+
+    void main()
+    {
+        fragColor = vec4(1.0, 0.5, 0.2, 1.0)
+    }
+)";
+
+unsigned int compileShaders(GLenum shaderType, const char* shaderSource)
 {
-    printf(msg);
-    glfwTerminate();
-    return -1;
+	auto shader = glCreateShader(shaderType);
+
+	glShaderSource(shader, 1, &shaderSource, NULL);
+	glCompileShader(shader);
+
+	int successful;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &successful);
+	if (successful == false)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(shader, 512, NULL, infoLog);
+		std::cerr << "Shader compilation error:\n" << infoLog << std::endl;
+		glDeleteShader(shader);
+		return 0;
+	}
 }
 
 int main(void)
 {
-    glfwInit();
+	if (!glfwInit())
+	{
+		return -1;
+	}
 
-    if (!glfwInit())
-    {
-        return exitWithError("Failed to initialize glfw");
-    }
+	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, windowTitle, NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
 
-    Window* window = Window::createWindow(windowWidth, windowHeight, windowTitle);
+	glfwMakeContextCurrent(window);
 
-    if (window == nullptr)
-    {
-        return exitWithError("Failed to create glfw window");
-    }
+	if (glewInit() != GLEW_OK)
+	{
+		return -1;
+	}
 
-    window->installMainCallbacks();
+	while (!glfwWindowShouldClose(window))
+	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        return exitWithError("Failed to initialize glad");
-    }   
-    
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        printf("Failed to initialize glad.\n");
-        return -1;
-    }
+		
 
-    glViewport(0, 0, windowWidth, windowHeight);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 
-    while (!glfwWindowShouldClose(window->nativeWindow))
-    {
-        glClearColor(186.0f / 255.0f, 87.0f / 255.0f, 111.0f / 255.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window->nativeWindow);
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
-    return 0;
+	glfwTerminate();
+	return 0;
 }
