@@ -137,14 +137,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glad\include;D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glfw;D:\My Documents\GitHub\Sandbox\Sandbox\vendor\includes\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Programming\Repos\Sandbox\Sandbox\Vendor\glew-2.1.0\include;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glad\include;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glfw;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\My Documents\GitHub\Sandbox\Sandbox\Vendor\libs;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;D:\Meus Documentos\My Stuff\Programming\C++ and C\2021\Sandbox\Sandbox\vendor\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Programming\Repos\Sandbox\Sandbox\Vendor\glew-2.1.0\lib\Release\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;D:\Programming\Repos\Sandbox\Sandbox\Vendor\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,12 +169,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="bo_utils.cpp" />
+    <ClCompile Include="shaders.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
-    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="window.h" />
+    <ClInclude Include="bo_utils.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="shaders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

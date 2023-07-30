@@ -4,17 +4,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="window.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\includes\glad\src\glad.c">
       <Filter>GLAD</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="window.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
+    <ClCompile Include="bo_utils.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="shaders.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -26,5 +27,16 @@
     <Filter Include="GLAD">
       <UniqueIdentifier>{75e2ac32-db58-43f8-a90c-16d70bfddc83}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bo_utils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="shaders.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

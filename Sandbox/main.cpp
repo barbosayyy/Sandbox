@@ -4,8 +4,13 @@
 #include <vector>
 #include <iostream>
 
-#include <glfw3.h>
 #include <GL/glew.h>
+#include <glfw3.h>
+
+#include <windows.h>
+#include "bo_utils.h"
+#include "shaders.h"
+#include "input.h"
 
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	600
@@ -31,25 +36,6 @@ const char* fragmentShaderSource = R"(
     }
 )";
 
-unsigned int compileShaders(GLenum shaderType, const char* shaderSource)
-{
-	auto shader = glCreateShader(shaderType);
-
-	glShaderSource(shader, 1, &shaderSource, NULL);
-	glCompileShader(shader);
-
-	int successful;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &successful);
-	if (successful == false)
-	{
-		char infoLog[512];
-		glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		std::cerr << "Shader compilation error:\n" << infoLog << std::endl;
-		glDeleteShader(shader);
-		return 0;
-	}
-}
-
 int main(void)
 {
 	if (!glfwInit())
@@ -71,14 +57,17 @@ int main(void)
 		return -1;
 	}
 
+	//Bind buffer objects here
+
 	while (!glfwWindowShouldClose(window))
 	{
+		Input::processInput(window);
+
+		glClearColor(0.15f, 0.18f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		
-
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+		glfwSwapBuffers(window);
 	}
 
 	glfwTerminate();
