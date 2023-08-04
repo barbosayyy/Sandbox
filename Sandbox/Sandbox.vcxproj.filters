@@ -7,13 +7,16 @@
     <ClCompile Include="vendor\includes\glad\src\glad.c">
       <Filter>GLAD</Filter>
     </ClCompile>
-    <ClCompile Include="bo_utils.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="shaders.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,13 +32,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bo_utils.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="shaders.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_buffer.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,4 +3,18 @@
 #include <iostream>
 #include <GL/glew.h>
 
-unsigned int compileShaders(GLenum shaderType, const char* shaderSource);
+class ShaderProgram {
+public:
+	ShaderProgram();
+	~ShaderProgram();
+
+	unsigned int sProgram;
+
+	void attachShader(unsigned int sProgram, unsigned int shader);
+
+	unsigned int loadProgram(unsigned int sProgram);
+};
+
+unsigned int compileShader(GLenum shaderType, const char* shaderSource);
+
+void deleteShader(unsigned int shader);

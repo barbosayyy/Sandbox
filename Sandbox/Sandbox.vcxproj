@@ -171,12 +171,14 @@
   <ItemGroup>
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="bo_utils.cpp" />
+    <ClCompile Include="primitives.cpp" />
     <ClCompile Include="shaders.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
+    <ClCompile Include="vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bo_utils.h" />
+    <ClInclude Include="vertex_buffer.h" />
+    <ClInclude Include="primitives.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="shaders.h" />
   </ItemGroup>
