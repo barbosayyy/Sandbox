@@ -137,14 +137,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Programming\Repos\Sandbox\Sandbox\Vendor\glew-2.1.0\include;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glad\include;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glfw;D:\Programming\Repos\Sandbox\Sandbox\Vendor\includes\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Sandbox\vendor\includes\glew;$(SolutionDir)\Sandbox\vendor\includes\glfw;$(SolutionDir)\Sandbox\vendor\includes\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Programming\Repos\Sandbox\Sandbox\Vendor\glew-2.1.0\lib\Release\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;D:\Programming\Repos\Sandbox\Sandbox\Vendor\libs</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;$(SolutionDir)\Sandbox\vendor\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,18 +169,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="input.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="primitives.cpp" />
-    <ClCompile Include="shaders.cpp" />
+    <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\primitives.cpp" />
+    <ClCompile Include="src\shaders.cpp" />
+    <ClCompile Include="src\vertex_buffer.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
-    <ClCompile Include="vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vertex_buffer.h" />
-    <ClInclude Include="primitives.h" />
-    <ClInclude Include="input.h" />
-    <ClInclude Include="shaders.h" />
+    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\primitives.h" />
+    <ClInclude Include="src\shaders.h" />
+    <ClInclude Include="src\vertex_buffer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vendor\dlls\glew32.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

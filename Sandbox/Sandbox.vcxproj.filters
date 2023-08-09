@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\includes\glad\src\glad.c">
       <Filter>GLAD</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
+    <ClCompile Include="src\input.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="shaders.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="primitives.cpp">
+    <ClCompile Include="src\primitives.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="vertex_buffer.cpp">
+    <ClCompile Include="src\shaders.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vertex_buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,19 +30,27 @@
     <Filter Include="GLAD">
       <UniqueIdentifier>{75e2ac32-db58-43f8-a90c-16d70bfddc83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DLLs">
+      <UniqueIdentifier>{27272866-6212-435f-93ae-7088b8aad847}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="input.h">
+    <ClInclude Include="src\input.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="shaders.h">
+    <ClInclude Include="src\primitives.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="primitives.h">
+    <ClInclude Include="src\shaders.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="vertex_buffer.h">
+    <ClInclude Include="src\vertex_buffer.h">
       <Filter>Headers</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vendor\dlls\glew32.dll">
+      <Filter>DLLs</Filter>
+    </None>
   </ItemGroup>
 </Project>
