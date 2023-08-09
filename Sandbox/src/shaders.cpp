@@ -26,8 +26,6 @@ unsigned int ShaderProgram::loadProgram(unsigned int sProgram)
 		glGetProgramInfoLog(sProgram, 512, NULL, infoLog);
 	}
 
-	glUseProgram(sProgram);
-
 	return sProgram;
 }
 

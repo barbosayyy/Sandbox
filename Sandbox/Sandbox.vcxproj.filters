@@ -19,6 +19,9 @@
     <ClCompile Include="src\vertex_buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\index_buffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -47,10 +50,13 @@
     <ClInclude Include="src\vertex_buffer.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="src\index_buffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vendor\dlls\glew32.dll">
+    <CopyFileToFolders Include="vendor\dlls\glew32.dll">
       <Filter>DLLs</Filter>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

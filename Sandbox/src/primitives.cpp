@@ -1,25 +1,39 @@
+#include <iostream>
 #include "primitives.h"
-#include "vertex_buffer.h"
 
-Triangle::Triangle() {
-	Triangle::create();
+Square::Square(float x, float width) {
+
+    this->x = x;
+    //this->y = y;
+    this->width = width;
+    //this->height = height;
+
+	Square::create();
 }
 
-Triangle::~Triangle() {
+Square::~Square() {
 
 }
 
-void Triangle::create() {
+void Square::create() {
     float vertices[] = {
-         -0.5f,  -0.5f, 0.0f,  // top right
-         0.0f, 0.5f, 0.0f,  // bottom right
-        0.5f, -0.5f, 0.0f,  // bottom left
+        x,  0.5f, 0.0f,  // top right
+        x, -0.5f, 0.0f,  // bottom right
+        x - width, -0.5f, 0.0f,  // bottom left
+        x - width,  0.5f, 0.0f   // top left 
     };
-    unsigned int vertexCount{ 3 };
+    unsigned int indices[]{
+        0, 1, 3,
+        1, 2, 3
+    };
+    unsigned int vertexCount{ 4 };
+    unsigned int indicesCount{ 6 };
 
     vb = new VertexBuffer(vertices, vertexCount);
+    eb = new IndexBuffer(indices, indicesCount);
 }
 
-void Triangle::draw() {
-    vb->draw();
+void Square::draw() {
+    vb->bind();
+    eb->draw();
 }

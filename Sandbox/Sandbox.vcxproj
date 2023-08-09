@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\primitives.cpp" />
@@ -177,13 +178,17 @@
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\index_buffer.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\primitives.h" />
     <ClInclude Include="src\shaders.h" />
     <ClInclude Include="src\vertex_buffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="vendor\dlls\glew32.dll" />
+    <CopyFileToFolders Include="vendor\dlls\glew32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

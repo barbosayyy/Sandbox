@@ -7,6 +7,3 @@ namespace Input {
 
 	int pressedKey(GLFWwindow* window, int key);
 }
-
-
-
