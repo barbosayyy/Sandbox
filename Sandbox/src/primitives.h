@@ -2,6 +2,8 @@
 
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+#include "shaders.h"
+#include "texture.h"
 
 class Square {
 public:
@@ -14,6 +16,7 @@ public:
     float y;
     float width;
     float height;
+    unsigned int texture;
 private:
     VertexBuffer* vb;
     IndexBuffer* eb;

@@ -137,8 +137,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Sandbox\vendor\includes\glew;$(SolutionDir)\Sandbox\vendor\includes\glfw;$(SolutionDir)\Sandbox\vendor\includes\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Sandbox\Sandbox\vendor\includes\stb_image;$(SolutionDir)\Sandbox\vendor\includes\glew;$(SolutionDir)\Sandbox\vendor\includes\glfw;$(SolutionDir)\Sandbox\vendor\includes\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,6 +170,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -178,6 +181,8 @@
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\index_buffer.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\primitives.h" />

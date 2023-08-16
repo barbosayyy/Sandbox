@@ -2,19 +2,28 @@
 
 #include <iostream>
 #include <GL/glew.h>
+#include "utils.h"
 
-class ShaderProgram {
+class Shader {
 public:
-	ShaderProgram();
-	~ShaderProgram();
+	GLuint shader;
 
-	unsigned int sProgram;
+	Shader(const char* vertexPath, const char* fragmentPath);
 
-	void attachShader(unsigned int sProgram, unsigned int shader);
-
-	unsigned int loadProgram(unsigned int sProgram);
+	void use();
+private:
+	GLuint compileShader(GLenum shaderType, const char* shaderSource);
+	GLuint load(const char* vertexPath, const char* fragmentPath);
 };
 
-unsigned int compileShader(GLenum shaderType, const char* shaderSource);
-
-void deleteShader(unsigned int shader);
+//class ShaderProgram {
+//public:
+//	ShaderProgram();
+//	~ShaderProgram();
+//
+//	unsigned int sProgram;
+//
+//	void attachShader(unsigned int sProgram, unsigned int shader);
+//
+//	unsigned int loadProgram(unsigned int sProgram);
+//};

@@ -11,10 +11,10 @@ public:
 
 	void bind();
 private:
-	GLuint vbo;
-	GLuint vao;
+	GLuint vbo = 0;
+	GLuint vao = 0;
 	float* vertices;
-	GLsizei vertexCount;
+	GLsizei vertexCount = 0;
 
 	void createBuffer(float* vertices, GLsizei vertexCount);
 };

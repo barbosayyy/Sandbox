@@ -1,35 +1,41 @@
 #include "shaders.h"
 
-ShaderProgram::ShaderProgram()
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
-	ShaderProgram::sProgram = glCreateProgram();
+	this->shader = load(File::read(vertexPath).c_str(), File::read(fragmentPath).c_str());
 }
 
-ShaderProgram::~ShaderProgram()
+GLuint Shader::load(const char* vertexPath, const char* fragmentPath)
 {
-	
-}
+	this->shader = glCreateProgram();
+	GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexPath);
+	GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentPath);
 
-void ShaderProgram::attachShader(unsigned int sProgram, unsigned int shader)
-{
-	glAttachShader(sProgram, shader);
-}
+	glAttachShader(this->shader, vShader);
+	glAttachShader(this->shader, fShader);
 
-unsigned int ShaderProgram::loadProgram(unsigned int sProgram)
-{
 	int successful;
-	glLinkProgram(sProgram);
-	glGetProgramiv(sProgram, GL_LINK_STATUS, &successful);
+	glLinkProgram(this->shader);
+	glGetProgramiv(this->shader, GL_LINK_STATUS, &successful);
 	if (successful == false)
 	{
 		char infoLog[512];
-		glGetProgramInfoLog(sProgram, 512, NULL, infoLog);
+		glGetProgramInfoLog(this->shader, 512, NULL, infoLog);
 	}
 
-	return sProgram;
+	glDeleteShader(vShader);
+	glDeleteShader(fShader);
+
+	return shader;
 }
 
-unsigned int compileShader(GLenum shaderType, const char* shaderSource)
+void Shader::use()
+{
+	glUseProgram(this->shader);
+}
+
+GLuint Shader::compileShader(GLenum shaderType, const char* shaderSource)
 {
 	unsigned int shader = glCreateShader(shaderType);
 
@@ -50,9 +56,4 @@ unsigned int compileShader(GLenum shaderType, const char* shaderSource)
 	{
 		return shader;
 	}
-}
-
-void deleteShader(unsigned int shader)
-{
-	glDeleteShader(shader);
 }

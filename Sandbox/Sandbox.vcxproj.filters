@@ -22,6 +22,12 @@
     <ClCompile Include="src\index_buffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -51,6 +57,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="src\index_buffer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

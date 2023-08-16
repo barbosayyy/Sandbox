@@ -7,6 +7,7 @@ class IndexBuffer
 public:
 	IndexBuffer();
 	IndexBuffer(unsigned int* indices, unsigned int indicesCount);
+	IndexBuffer(unsigned int* indices);
 	~IndexBuffer();
 
 	void draw();
@@ -18,5 +19,6 @@ private:
 	void bind(bool bind);
 
 	void createBuffer(unsigned int* indices, unsigned int indicesCount);
+	void createBuffer(unsigned int* indices);
 };
 

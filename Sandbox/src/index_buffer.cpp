@@ -13,9 +13,14 @@ IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int indicesCount)
 	IndexBuffer::createBuffer(this->indices, this->count);
 }
 
+IndexBuffer::IndexBuffer(unsigned int* indices)
+{
+	IndexBuffer::createBuffer(indices);
+}
+
 IndexBuffer::~IndexBuffer()
 {
-
+	glDeleteBuffers(1, &ebo);
 }
 
 void IndexBuffer::createBuffer(unsigned int* indices, unsigned int indicesCount)
@@ -23,6 +28,13 @@ void IndexBuffer::createBuffer(unsigned int* indices, unsigned int indicesCount)
 	glGenBuffers(1, &this->ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+}
+
+void IndexBuffer::createBuffer(unsigned int* indices)
+{
+	glGenBuffers(1, &this->ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 void IndexBuffer::bind(bool bind)
