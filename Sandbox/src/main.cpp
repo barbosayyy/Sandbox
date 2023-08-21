@@ -8,6 +8,7 @@
 
 #include <GL/glew.h>
 #include <glfw3.h>
+#include <glm.hpp>
 
 #include "shaders.h"
 #include "input.h"
@@ -50,13 +51,21 @@ int main(void)
 
 	Square* square = new Square(0.0, 1.0);
 
-	Texture* texture = new Texture();
+	Texture *texture1 = new Texture("assets/container.jpg", JPG, GL_REPEAT);
+	Texture *texture2 = new Texture("assets/test.png", PNG, GL_REPEAT);
 
-	square->texture = texture->texture;
+	square->texture.push_back(texture1->texture);
+	square->texture.push_back(texture2->texture);
 
-	Shader* yellow = new Shader("src/shaders/vertex.vert", "src/shaders/yellow.frag");
-	Shader* texShader = new Shader("src/shaders/tex.vert", "src/shaders/tex.frag");
+	Shader yellow("src/shaders/vertex.vert", "src/shaders/yellow.frag");
+	Shader texShader("src/shaders/tex.vert", "src/shaders/tex.frag");
+	
+	texShader.use();
+	texShader.setInt("texture1", 0);
+	texShader.setInt("texture2", 1);
+	texShader.setFloat("mixValue", 0.0);
 
+	std::cout << a.x << a.y << a.z << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
 		Input::processInput(window);
@@ -64,15 +73,7 @@ int main(void)
 		glClearColor(0.15f, 0.18f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		texShader->use();
 		square->draw();
-
-		/*float timeValue = glfwGetTime();
-		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		int vertexColorLocation = glGetUniformLocation(shader2->shader, "otherColor");
-		shader2->use();
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-		square2->draw();*/
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

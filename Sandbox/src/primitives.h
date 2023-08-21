@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 #include "shaders.h"
@@ -16,7 +17,7 @@ public:
     float y;
     float width;
     float height;
-    unsigned int texture;
+    std::vector<unsigned int> texture;
 private:
     VertexBuffer* vb;
     IndexBuffer* eb;

@@ -57,3 +57,23 @@ GLuint Shader::compileShader(GLenum shaderType, const char* shaderSource)
 		return shader;
 	}
 }
+
+void Shader::setInt(const char* uniformName, GLint value) const
+{
+	glUniform1i(glGetUniformLocation(this->shader, uniformName), value);
+}
+
+void Shader::setFloat(const char* uniformName, GLfloat value) const
+{
+	glUniform1f(glGetUniformLocation(this->shader, uniformName), value);
+}
+
+void Shader::setVec3(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3) const
+{
+	glUniform3f(glGetUniformLocation(this->shader, uniformName), v1, v2, v3);
+}
+
+void Shader::setVec4(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) const
+{
+	glUniform4f(glGetUniformLocation(this->shader, uniformName), v1, v2, v3, v4);
+}
