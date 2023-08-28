@@ -5,22 +5,49 @@
 #include "index_buffer.h"
 #include "shaders.h"
 #include "texture.h"
+#include "glm.hpp"
 
-class Square {
+class Primitive {
 public:
-    Square(float x, float width);
-    ~Square();
+    Primitive();
+    ~Primitive();
 
-    void draw();
+    void setPosition(float x, float y);
+    void setRotation(float degrees, glm::vec3 axis, GLboolean set_by_degrees);
+    glm::mat4 getPosition();
+    std::vector<unsigned int> texture;
 
+    virtual void draw();
+protected:
+    glm::mat4 ml_matrix;
     float x;
     float y;
     float width;
     float height;
-    std::vector<unsigned int> texture;
-private:
-    VertexBuffer* vb;
-    IndexBuffer* eb;
 
-    void create();
+    VertexBuffer* vb = nullptr;
+    IndexBuffer* eb = nullptr;
+
+    virtual void create();
+};
+
+class Square : public Primitive{
+public:
+    Square(float x, float y);
+    ~Square();
+
+    void draw() override;
+protected:
+    void create() override;
+};
+
+
+class Cube : public Primitive {
+public:
+    Cube(float x, float y);
+    ~Cube();
+
+    void draw() override;
+private:
+    void create() override;
 };

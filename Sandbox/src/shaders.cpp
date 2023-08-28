@@ -77,3 +77,8 @@ void Shader::setVec4(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3
 {
 	glUniform4f(glGetUniformLocation(this->shader, uniformName), v1, v2, v3, v4);
 }
+
+void Shader::setMat4(const char* uniformName, glm::mat4 value) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(this->shader, uniformName), 1, GL_FALSE, glm::value_ptr(value));
+}

@@ -10,6 +10,7 @@ public:
 	~VertexBuffer();
 
 	void bind();
+	void draw();
 private:
 	GLuint vbo = 0;
 	GLuint vao = 0;

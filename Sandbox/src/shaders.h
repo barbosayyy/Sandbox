@@ -3,6 +3,8 @@
 #include <iostream>
 #include <GL/glew.h>
 #include "utils.h"
+#include <glm.hpp>
+#include <gtc/type_ptr.hpp>
 
 class Shader {
 public:
@@ -16,6 +18,8 @@ public:
 	void setFloat(const char* uniformName, GLfloat value) const;
 	void setVec3(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3) const;
 	void setVec4(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) const;
+	void setMat4(const char* uniformName, glm::mat4 value) const;
+
 private:
 	GLuint compileShader(GLenum shaderType, const char* shaderSource);
 	GLuint load(const char* vertexPath, const char* fragmentPath);

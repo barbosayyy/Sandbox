@@ -170,6 +170,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\index_buffer.cpp" />
@@ -178,9 +179,11 @@
     <ClCompile Include="src\primitives.cpp" />
     <ClCompile Include="src\shaders.cpp" />
     <ClCompile Include="src\vertex_buffer.cpp" />
+    <ClCompile Include="src\window.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\index_buffer.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="src\primitives.h" />
     <ClInclude Include="src\shaders.h" />
     <ClInclude Include="src\vertex_buffer.h" />
+    <ClInclude Include="src\window.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="vendor\dlls\glew32.dll">
