@@ -13,6 +13,14 @@
 #include "primitives.h"
 #include "camera.h"
 
+void shutdown()
+{
+	if (Input::InputListener::getInstance()->pressedKey(GLFW_KEY_ESCAPE))
+	{
+		glfwTerminate();
+	}
+}
+
 int main(void)
 {
 	// GLFW initialization
@@ -38,7 +46,13 @@ int main(void)
 		return -1;
 	}
 
+	Input::InputListener inputListener(window.window);
+	Input::InputListener::getInstance()->addInputFunction(shutdown);
+
 	//
+
+	Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
+	
 
 	Texture* texture1 = new Texture("assets/container.jpg", JPG, GL_REPEAT);
 	Texture* texture2 = new Texture("assets/confusion.png", PNG, GL_REPEAT);
@@ -50,7 +64,6 @@ int main(void)
 	texShader.setInt("texture2", 1);
 	texShader.setFloat("mixValue", 0.5);
 
-	Camera* camera = new Camera(0.0f, 0.0f, 3.0f);
 
 	Square* square = new Square(0.0f, 0.0f);
 	Cube* cube = new Cube(0.0f, 0.0f);
@@ -58,39 +71,20 @@ int main(void)
 
 	square->texture.push_back(texture1->texture);
 	square->texture.push_back(texture2->texture);
-	
-	float x {0}, z{-3.0};
 
 	while (!glfwWindowShouldClose(window.window))
 	{
-		Input::processInput(window.window);
+		inputListener.processInput(window.window);
 
 		glClearColor(0.15f, 0.18f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glEnable(GL_DEPTH_TEST);
 
-		if (Input::pressedKey(window.window, GLFW_KEY_W))
-		{
-			z += 0.1;
-		}
-		else if (Input::pressedKey(window.window, GLFW_KEY_A))
-		{
-			x += 0.1;
-		}
-		else if (Input::pressedKey(window.window, GLFW_KEY_S))
-		{
-			z -= 0.1;
-		}
-		else if (Input::pressedKey(window.window, GLFW_KEY_D))
-		{
-			x -= 0.1;
-		}
-
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 		proj = glm::perspective(glm::radians(60.0f), (float)window.getWidth() / (float)window.getHeight(), 0.1f, 100.0f);
-		view = glm::translate(view, glm::vec3(x, 0.0f, z));
+		view = camera->lookAt;
 		texShader.setMat4("projection", proj);
 		texShader.setMat4("view", view);
 
@@ -99,12 +93,12 @@ int main(void)
 
 		square->draw();
 
-		cube->setPosition(2.0f, 0.0f);
+		//cube->setPosition(2.0f, 0.0f);
 		cube->setRotation(45.0f, glm::vec3(1.0, 0.0, 0.0), GL_TRUE);
 		texShader.setMat4("model", cube->getPosition());
 		cube->draw();
 
-		cube2->setRotation((float)glfwGetTime(), glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
+		cube2->setRotation((float)glfwGetTime()*0.7, glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
 		texShader.setMat4("model", cube2->getPosition());
 		cube2->draw();
 

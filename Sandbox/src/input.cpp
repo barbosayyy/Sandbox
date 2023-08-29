@@ -1,17 +1,51 @@
 #include "input.h"
 
 namespace Input {
-	void processInput(GLFWwindow* window)
+	InputListener* InputListener::instance = NULL;
+
+	InputListener* InputListener::getInstance()
 	{
-		// Close window
-		if (pressedKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		if (instance == NULL)
 		{
-			glfwSetWindowShouldClose(window, true);
+			std::cout << "Instance not created" << std::endl;
+		}
+		return instance;
+	}
+
+	InputListener::InputListener()
+	{
+
+	}
+
+	InputListener::InputListener(GLFWwindow* window) : window(window)
+	{
+		if (!instance)
+		{
+			instance = this;
 		}
 	}
 
-	int pressedKey(GLFWwindow* window, int key)
+	InputListener::~InputListener()
 	{
-		return glfwGetKey(window, key);
 	}
+
+	void InputListener::addInputFunction(std::function<void()> inputFunction)
+	{
+		inputFunctions.push_back(inputFunction);
+	}
+
+	void InputListener::processInput(GLFWwindow* window)
+	{
+		for (const auto& func : inputFunctions)
+		{
+			func();
+		}
+	}
+
+	int InputListener::pressedKey(int key)
+	{
+		return glfwGetKey(this->window, key);
+	}
+
+
 }
