@@ -2,6 +2,9 @@
 
 #include <glfw3.h>
 
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
+
 class Window {
 public:
 	Window(const char* windowTitle, int windowWidth, int windowHeight);

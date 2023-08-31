@@ -23,17 +23,17 @@ void Texture::load(const char* texturePath, ImageType imageType, GLint texWrapMe
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load(texturePath, &width, &height, &nrOfchannels, 0);
+	data = stbi_load(texturePath, &this->width, &this->height, &this->nrOfchannels, 0);
 	if (data)
 	{
-		if (imageType == JPG)
+		if (imageType == ImageType::JPG)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}		
-		else if(imageType == PNG)
+		else if(imageType == ImageType::PNG)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 	}

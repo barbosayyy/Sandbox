@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glfw3.h>
 #include <functional>
+#include "window.h"
 
 namespace Input {
 
@@ -14,16 +15,33 @@ namespace Input {
 		InputListener(GLFWwindow* window);
 		~InputListener();
 
-		void processInput(GLFWwindow* window);
-		int pressedKey(int key);
+		void processInput();
 
-		void addInputFunction(std::function<void()> inputFunction);
+		void addInputFunction(std::function<void()> function);
+		void addMouseAxisMoveFunctions(std::function<void(float xOffset, float yOffset)> function);
+
+		float xOffset = 0.0f;
+		float yOffset = 0.0f;
+
+		GLFWwindow* window;
 	private:
 		static InputListener* instance;
-		std::vector<std::function<void()>> inputFunctions;
-		GLFWwindow* window;
-
 		InputListener(const InputListener&) = delete;
+		
+		std::vector<std::function<void()>> onInputFunctions;
+		std::vector<std::function<void(float xOffset, float yOffset)>> onMouseAxisMoveFunctions;
+
+		bool firstMouse = true;
+		double mouseX = 0.0;
+		double mouseY = 0.0;
+		float mouseLastFrameX = WINDOW_WIDTH * 0.5;
+		float mouseLastFrameY = WINDOW_HEIGHT * 0.5;
+
+		void setCallbacks();
+		static void mouseAxisMoveCallback(GLFWwindow* window, double xpos, double ypos);
 	};
+
+	int pressedKey(int key);
+	int pressedMouse(int key);
 }
 

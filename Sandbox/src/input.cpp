@@ -22,6 +22,8 @@ namespace Input {
 		if (!instance)
 		{
 			instance = this;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			setCallbacks();
 		}
 	}
 
@@ -29,23 +31,70 @@ namespace Input {
 	{
 	}
 
-	void InputListener::addInputFunction(std::function<void()> inputFunction)
+	void InputListener::setCallbacks()
 	{
-		inputFunctions.push_back(inputFunction);
+		glfwSetCursorPosCallback(window, mouseAxisMoveCallback);
 	}
 
-	void InputListener::processInput(GLFWwindow* window)
+	void InputListener::mouseAxisMoveCallback(GLFWwindow* window, double xpos, double ypos)
 	{
-		for (const auto& func : inputFunctions)
+		instance->mouseX = xpos;
+		instance->mouseY = ypos;
+
+		if (instance->firstMouse)
+		{
+			instance->mouseLastFrameX = instance->mouseX;
+			instance->mouseLastFrameY = instance->mouseY;
+			instance->firstMouse = false;
+		}
+		instance->xOffset = instance->mouseX - instance->mouseLastFrameX;
+		instance->yOffset = instance->mouseLastFrameY - instance->mouseY;
+		instance->mouseLastFrameX = instance->mouseX;
+		instance->mouseLastFrameY = instance->mouseY;
+
+		for (const auto& func : instance->onMouseAxisMoveFunctions)
+		{
+			func(instance->xOffset, instance->yOffset);
+		}
+	}
+
+	void InputListener::addInputFunction(std::function<void()> function)
+	{
+		onInputFunctions.push_back(function);
+	}
+
+	void InputListener::addMouseAxisMoveFunctions(std::function<void(float xOffset, float yOffset)> function)
+	{
+		onMouseAxisMoveFunctions.push_back(function);
+	}
+
+	void InputListener::processInput()
+	{
+		for (const auto& func : onInputFunctions)
 		{
 			func();
 		}
 	}
 
-	int InputListener::pressedKey(int key)
+	//
+
+	int Input::pressedKey(int key)
 	{
-		return glfwGetKey(this->window, key);
+		return glfwGetKey(Input::InputListener::getInstance()->window, key);
 	}
 
-
+	int Input::pressedMouse(int key)
+	{
+		int state = glfwGetMouseButton(Input::InputListener::getInstance()->window, key);
+		if (state == GLFW_PRESS)
+		{
+			glfwSetInputMode(Input::InputListener::getInstance()->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			return GLFW_PRESS;
+		}
+		else if (state == GLFW_RELEASE)
+		{
+			glfwSetInputMode(Input::InputListener::getInstance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			return GLFW_RELEASE;
+		}
+	}
 }

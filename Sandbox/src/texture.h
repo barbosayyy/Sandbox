@@ -4,13 +4,13 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 
-using ImageType = enum {
-	JPG, PNG
-};
-
 class Texture
 {
 public:
+	enum class ImageType {
+		JPG, PNG
+	};
+
 	Texture();
 	Texture(const char* texturePath, ImageType imageType, GLint texWrapMethod);
 	~Texture();

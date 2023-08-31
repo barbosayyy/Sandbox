@@ -37,6 +37,8 @@ public:
     ~Square();
 
     void draw() override;
+    unsigned int texture1;
+    unsigned int texture2;
 protected:
     void create() override;
 };
@@ -50,4 +52,16 @@ public:
     void draw() override;
 private:
     void create() override;
+};
+
+class Square2 : public Primitive {
+public:
+    Square2(float x, float y);
+    ~Square2();
+
+    void draw() override;
+private:
+    void create() override;
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
 };

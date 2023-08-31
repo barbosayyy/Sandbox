@@ -159,7 +159,6 @@ void Cube::create()
     -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f, 0.0f, 1.0f
     };
-    unsigned int nOfAttrib{ 2 };
     unsigned int vertexCount{ 36 };
     vb = new VertexBuffer(vertices, vertexCount);
     //eb = new IndexBuffer(indices, indicesCount);
@@ -171,3 +170,42 @@ void Cube::draw()
     vb->draw();
 }
 
+//
+
+Square2::Square2(float x, float y)
+{
+    create();
+    setPosition(x, y);
+}
+
+Square2::~Square2()
+{
+
+}
+
+void Square2::create()
+{
+    float vertices[] = {
+         0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+         0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f
+    };
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    unsigned int nOfAttrib{ 2 };
+    unsigned int vertexCount{ 4 };
+    unsigned int indicesCount{ 6 };
+
+    vb = new VertexBuffer(vertices, vertexCount*nOfAttrib);
+    eb = new IndexBuffer(indices, indicesCount);
+}
+
+void Square2::draw()
+{
+    vb->bind();
+    eb->draw();
+}
