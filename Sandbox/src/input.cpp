@@ -63,7 +63,7 @@ namespace Input {
 		onInputFunctions.push_back(function);
 	}
 
-	void InputListener::addMouseAxisMoveFunctions(std::function<void(float xOffset, float yOffset)> function)
+	void InputListener::addMouseAxisMoveFunction(std::function<void(float xOffset, float yOffset)> function)
 	{
 		onMouseAxisMoveFunctions.push_back(function);
 	}

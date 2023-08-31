@@ -11,7 +11,7 @@ Camera::Camera(float x, float y, float z)
 	lookAt = glm::lookAt(position, position + front, up);
 
 	Input::InputListener::getInstance()->addInputFunction([this]() {onInput(); });
-	Input::InputListener::getInstance()->addMouseAxisMoveFunctions([this](float xOffset, float yOffset) {onMouseAxisMove(Input::InputListener::getInstance()->xOffset, Input::InputListener::getInstance()->yOffset); });
+	Input::InputListener::getInstance()->addMouseAxisMoveFunction([this](float xOffset, float yOffset) {onMouseAxisMove(Input::InputListener::getInstance()->xOffset, Input::InputListener::getInstance()->yOffset); });
 }
 
 Camera::~Camera()

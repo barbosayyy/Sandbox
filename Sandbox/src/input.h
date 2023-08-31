@@ -18,7 +18,7 @@ namespace Input {
 		void processInput();
 
 		void addInputFunction(std::function<void()> function);
-		void addMouseAxisMoveFunctions(std::function<void(float xOffset, float yOffset)> function);
+		void addMouseAxisMoveFunction(std::function<void(float xOffset, float yOffset)> function);
 
 		float xOffset = 0.0f;
 		float yOffset = 0.0f;

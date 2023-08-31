@@ -41,7 +41,7 @@ int main(void)
 	if (!window.window)
 	{
 		std::cout << "Failed to find window" << std::endl;
-		glfwTerminate;
+		glfwTerminate();
 		return -1;
 	}
 
@@ -60,25 +60,22 @@ int main(void)
 	Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
 
 	Texture* T_tex1 = new Texture("assets/container.jpg", Texture::ImageType::JPG, GL_REPEAT);
-	Texture* T_tex2 = new Texture("assets/confusion.png", Texture::ImageType::PNG, GL_REPEAT);
+	Texture* T_tex2 = new Texture("assets/test.png", Texture::ImageType::PNG, GL_REPEAT);
+
 	Shader S_tex("src/shaders/tex.vert", "src/shaders/tex.frag");
 	S_tex.use();
 	S_tex.setInt("texture1", 0);
 	S_tex.setInt("texture2", 1);
-	S_tex.setFloat("mixValue", 1.0f);
-
-	Square* square = new Square(0.0f, 0.0f);
-	Cube* cube = new Cube(0.0f, 0.0f);
-	Cube* cube2 = new Cube(0.5f, 1.2f);
-	Square2* square2 = new Square2(3.0f, 0.0f);
-	square->texture.push_back(T_tex1->texture);
-	square->texture.push_back(T_tex2->texture);
-	square2->texture.push_back(T_tex1->texture);
-	square2->texture.push_back(T_tex2->texture);
+	S_tex.setFloat("mixValue", 0.0f);
 
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-	glm::vec3 objectColor(54/255, 156/255, 81/255);
-	glm::vec3 result = lightColor * objectColor;
+	glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
+
+	Shader S_light("src/shaders/color.vert", "src/shaders/light_source.frag");
+	Shader S_lighting("src/shaders/color.vert", "src/shaders/lit.frag");
+
+	Cube* litObject = new Cube(2.5f, -1.0f);
+	Cube* lightSource = new Cube(0.5f, 0.0f);
 
 	while (!glfwWindowShouldClose(window.window))
 	{
@@ -91,28 +88,32 @@ int main(void)
 		glEnable(GL_DEPTH_TEST);
 
 		glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
-		proj = glm::perspective(glm::radians(60.0f), (float)window.getWidth() / (float)window.getHeight(), 0.1f, 100.0f);
+		glm::mat4 projection = glm::mat4(1.0f);
+		projection = glm::perspective(glm::radians(60.0f), (float)window.getWidth() / (float)window.getHeight(), 0.1f, 100.0f);
 		view = camera->lookAt;
 
-		S_tex.setMat4("projection", proj);
-		S_tex.setMat4("view", view);
+		S_lighting.use();
+		S_lighting.setMat4("view", view);
+		S_lighting.setMat4("projection", projection);
+		S_lighting.setVec3("objectColor", objectColor.x, objectColor.y, objectColor.z);
+		S_lighting.setVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
+		S_lighting.setVec3("lightPos", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
+		S_lighting.setFloat("ambientStrength", 0.5f);
 
-		square->setPosition(2.0f, 1.0f);
-		S_tex.setMat4("model", square->getPosition());
-		square->draw();
+		litObject->setPosition(2.5f, -1.5f);
+		//litObject->setRotation(25.0f, glm::vec3(1.0, 0.0, 0.0), GL_TRUE);
 
-		cube->setPosition(2.0f, 0.0f);
-		cube->setRotation(45.0f, glm::vec3(1.0, 0.0, 0.0), GL_TRUE);
-		S_tex.setMat4("model", cube->getPosition());
-		cube->draw();
+		S_lighting.setMat4("model", litObject->getModelMatrix());
+		litObject->draw();
 
-		cube2->setRotation((float)glfwGetTime()*0.7, glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
-		S_tex.setMat4("model", cube2->getPosition());
-		cube2->draw();
+		S_light.use();
+		S_light.setMat4("projection", projection);
+		S_light.setMat4("view", view);
+		S_light.setVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
+		//lightSource->setRotation((float)glfwGetTime()*0.7, glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
 
-		S_tex.setMat4("model", square2->getPosition());
-		square2->draw();
+		S_light.setMat4("model", lightSource->getModelMatrix());
+		lightSource->draw();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

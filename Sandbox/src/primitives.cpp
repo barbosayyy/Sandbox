@@ -21,26 +21,24 @@ Primitive::~Primitive()
 
 void Primitive::setPosition(float x, float y)
 {
-    this->x = x;
-    this->y = y;
-    ml_matrix = glm::mat4(1.0f);
-    ml_matrix = glm::translate(ml_matrix, glm::vec3(x, y, 0.0f));
+    this->position.x = x;
+    this->position.y = y;
+    glm::mat4 mat = glm::mat4(1.0);
+    ml_matrix = glm::translate(mat, position);
 }
 
 void Primitive::setRotation(float value, glm::vec3 axis, GLboolean set_by_degrees)
 {
     glm::mat4 mat = glm::mat4(1.0);
-    mat = glm::translate(mat, glm::vec3(x, y, 0.0));
+    mat = glm::translate(mat, position);
     if (set_by_degrees == GL_TRUE)
     {
-
-        mat = glm::rotate(mat, glm::radians(value), axis);
+        ml_matrix = glm::rotate(mat, glm::radians(value), axis);
     }
     else
     {
-        mat = glm::rotate(mat, value, axis);
+        ml_matrix = glm::rotate(mat, value, axis);
     }
-    ml_matrix = mat;
 }
 
 void Primitive::draw()
@@ -53,7 +51,12 @@ void Primitive::create()
 
 }
 
-glm::mat4 Primitive::getPosition()
+glm::vec3 Primitive::getPosition()
+{
+    return position;
+}
+
+glm::mat4 Primitive::getModelMatrix()
 {
     return ml_matrix;
 }
@@ -117,47 +120,48 @@ Cube::~Cube()
 void Cube::create()
 {
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        //pos                 //normal
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-    -0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
     unsigned int vertexCount{ 36 };
     vb = new VertexBuffer(vertices, vertexCount);

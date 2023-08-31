@@ -12,16 +12,17 @@ public:
     Primitive();
     ~Primitive();
 
+    // Change this definition if matrices transform unexpectedly
     void setPosition(float x, float y);
     void setRotation(float degrees, glm::vec3 axis, GLboolean set_by_degrees);
-    glm::mat4 getPosition();
+    glm::vec3 getPosition();
+    glm::mat4 getModelMatrix();
     std::vector<unsigned int> texture;
 
     virtual void draw();
 protected:
     glm::mat4 ml_matrix;
-    float x;
-    float y;
+    glm::vec3 position;
     float width;
     float height;
 
