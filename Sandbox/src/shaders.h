@@ -18,6 +18,7 @@ public:
 	void setFloat(const char* uniformName, GLfloat value) const;
 	void setVec3(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3) const;
 	void setVec4(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) const;
+	void setMat3(const char* uniformName, glm::mat3 value) const;
 	void setMat4(const char* uniformName, glm::mat4 value) const;
 
 private:

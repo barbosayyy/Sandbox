@@ -6,6 +6,7 @@
 #include <glfw3.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include <gtc/matrix_inverse.hpp>
 
 #include "window.h"
 #include "shaders.h"
@@ -74,9 +75,8 @@ int main(void)
 	Shader S_light("src/shaders/color.vert", "src/shaders/light_source.frag");
 	Shader S_lighting("src/shaders/color.vert", "src/shaders/lit.frag");
 
-	Cube* litObject = new Cube(2.5f, -1.0f);
-	Cube* lightSource = new Cube(0.5f, 0.0f);
-
+	Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
+	Cube* lightSource = new Cube(0.5f, 0.0f, 0.0f);
 	while (!glfwWindowShouldClose(window.window))
 	{
 		inputListener.processInput();
@@ -98,11 +98,16 @@ int main(void)
 		S_lighting.setVec3("objectColor", objectColor.x, objectColor.y, objectColor.z);
 		S_lighting.setVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
 		S_lighting.setVec3("lightPos", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
+		S_lighting.setVec3("viewerPos", camera->position.x, camera->position.y, camera->position.z);
 		S_lighting.setFloat("ambientStrength", 0.5f);
-
-		litObject->setPosition(2.5f, -1.5f);
+		S_lighting.setFloat("specularStrength", 0.5f);
+		S_lighting.setFloat("shininess", 32.0f);
+		
+		litObject->setPosition(2.5f, -1.5f, 0.5f);
 		//litObject->setRotation(25.0f, glm::vec3(1.0, 0.0, 0.0), GL_TRUE);
-
+		// This should be done when applying nonuniform scale to the object
+			glm::mat4 normal = glm::inverseTranspose(litObject->getModelMatrix());
+			S_lighting.setMat4("normalInverse", normal);
 		S_lighting.setMat4("model", litObject->getModelMatrix());
 		litObject->draw();
 
@@ -111,7 +116,28 @@ int main(void)
 		S_light.setMat4("view", view);
 		S_light.setVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
 		//lightSource->setRotation((float)glfwGetTime()*0.7, glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
+		
+		//TODO:
+		//	Check again setpos, rot and scale order of operation
+		//	Add setScale function to shader class
+		
 
+		lightSource->setScale(0.25f, 0.25f, 0.25f);
+		if (Input::pressedKey(GLFW_KEY_UP))
+		{
+		}
+		else if (Input::pressedKey(GLFW_KEY_DOWN))
+		{
+		}
+		if (Input::pressedKey(GLFW_KEY_LEFT))
+		{
+			lightSource->setPosition(glm::vec3(0.1f, 0.0f, 0.0f));
+		}
+		else if (Input::pressedKey(GLFW_KEY_RIGHT))
+		{
+			
+		}
+		lightSource->setRotation(glfwGetTime(), glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
 		S_light.setMat4("model", lightSource->getModelMatrix());
 		lightSource->draw();
 

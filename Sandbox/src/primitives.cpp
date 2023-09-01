@@ -19,18 +19,27 @@ Primitive::~Primitive()
     }
 }
 
-void Primitive::setPosition(float x, float y)
+void Primitive::setPosition(float x, float y, float z)
 {
     this->position.x = x;
     this->position.y = y;
+    this->position.z = z;
     glm::mat4 mat = glm::mat4(1.0);
-    ml_matrix = glm::translate(mat, position);
+    ml_matrix = glm::translate(mat, glm::vec3(this->position.x, this->position.y, this->position.z));
+}
+
+void Primitive::setPosition(glm::vec3 position)
+{
+    this->position += position;
+    glm::mat4 mat = glm::mat4(1.0);
+    ml_matrix = glm::translate(mat, this->position);
 }
 
 void Primitive::setRotation(float value, glm::vec3 axis, GLboolean set_by_degrees)
 {
     glm::mat4 mat = glm::mat4(1.0);
     mat = glm::translate(mat, position);
+    mat = glm::scale(mat, scale);
     if (set_by_degrees == GL_TRUE)
     {
         ml_matrix = glm::rotate(mat, glm::radians(value), axis);
@@ -39,6 +48,22 @@ void Primitive::setRotation(float value, glm::vec3 axis, GLboolean set_by_degree
     {
         ml_matrix = glm::rotate(mat, value, axis);
     }
+}
+
+void Primitive::setScale(float x, float y, float z)
+{
+    glm::mat4 mat = glm::mat4(1.0);
+    this->scale.x = x;
+    this->scale.y = y;
+    this->scale.z = z;
+    ml_matrix = glm::scale(mat, scale);
+}
+
+void Primitive::setScale(glm::vec3 scale)
+{
+    this->scale = scale;
+    glm::mat4 mat = glm::mat4(1.0);
+    ml_matrix = glm::scale(mat, scale);
 }
 
 void Primitive::draw()
@@ -63,10 +88,10 @@ glm::mat4 Primitive::getModelMatrix()
 
 //
 
-Square::Square(float x, float y)
+Square::Square(float x, float y, float z)
 {
     Square::create();
-    Square::setPosition(x, y);
+    Square::setPosition(x, y, z);
 }
 
 Square::~Square() {
@@ -106,10 +131,10 @@ void Square::draw() {
 
 //
 
-Cube::Cube(float x, float y)
+Cube::Cube(float x, float y, float z)
 {
     Cube::create();
-    Cube::setPosition(x, y);
+    Cube::setPosition(x, y, z);
 }
 
 Cube::~Cube()
@@ -119,6 +144,10 @@ Cube::~Cube()
 
 void Cube::create()
 {
+    //TODO:
+    //  Add texcoords to vertices and add that to vertex attrib pointer
+    //
+
     float vertices[] = {
         //pos                 //normal
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -176,10 +205,10 @@ void Cube::draw()
 
 //
 
-Square2::Square2(float x, float y)
+Square2::Square2(float x, float y, float z)
 {
     create();
-    setPosition(x, y);
+    setPosition(x, y, z);
 }
 
 Square2::~Square2()
