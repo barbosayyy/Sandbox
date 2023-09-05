@@ -1,9 +1,17 @@
 
 #include "primitives.h"
 
-Primitive::Primitive()
+Primitive::Primitive() : 
+    ml_matrix{glm::mat4(1.0)}, 
+    translationM{ glm::mat4(1.0)},
+    rotationM{ glm::mat4(1.0)},
+    scaleM{ glm::mat4(1.0)},
+    position{0.0f},
+    rotation{0.0f},
+    scale{0.0f},
+    vb{nullptr},
+    eb{nullptr}
 {
-
 }
 
 Primitive::~Primitive()
@@ -21,49 +29,57 @@ Primitive::~Primitive()
 
 void Primitive::setPosition(float x, float y, float z)
 {
+    translationM = glm::mat4(1.0f);
     this->position.x = x;
     this->position.y = y;
     this->position.z = z;
-    glm::mat4 mat = glm::mat4(1.0);
-    ml_matrix = glm::translate(mat, glm::vec3(this->position.x, this->position.y, this->position.z));
+
+    translationM = glm::translate(translationM, position);
+    ml_matrix = translationM * rotationM * scaleM;
 }
 
 void Primitive::setPosition(glm::vec3 position)
 {
-    this->position += position;
-    glm::mat4 mat = glm::mat4(1.0);
-    ml_matrix = glm::translate(mat, this->position);
+    translationM = glm::mat4(1.0f);
+    this->position = position;
+    translationM = glm::translate(translationM, position);
+    ml_matrix = translationM * rotationM * scaleM;
 }
 
 void Primitive::setRotation(float value, glm::vec3 axis, GLboolean set_by_degrees)
 {
-    glm::mat4 mat = glm::mat4(1.0);
-    mat = glm::translate(mat, position);
-    mat = glm::scale(mat, scale);
+    rotationM = glm::mat4(1.0f);
+    rotation = glm::vec3(value*axis.x, value*axis.y, value*axis.z);
+    
     if (set_by_degrees == GL_TRUE)
     {
-        ml_matrix = glm::rotate(mat, glm::radians(value), axis);
+        rotationM =glm::rotate(rotationM, glm::radians(value), rotation);
     }
     else
     {
-        ml_matrix = glm::rotate(mat, value, axis);
+        rotationM = glm::rotate(rotationM, value, rotation);
     }
+    ml_matrix = translationM * rotationM * scaleM;
 }
 
 void Primitive::setScale(float x, float y, float z)
 {
-    glm::mat4 mat = glm::mat4(1.0);
+    scaleM = glm::mat4(1.0f);
     this->scale.x = x;
     this->scale.y = y;
     this->scale.z = z;
-    ml_matrix = glm::scale(mat, scale);
+
+    scaleM = glm::scale(scaleM, scale);
+    ml_matrix = translationM * rotationM * scaleM;
 }
 
 void Primitive::setScale(glm::vec3 scale)
 {
+    scaleM = glm::mat4(1.0f);
     this->scale = scale;
-    glm::mat4 mat = glm::mat4(1.0);
-    ml_matrix = glm::scale(mat, scale);
+
+    scaleM = glm::scale(scaleM, scale);
+    ml_matrix = translationM * rotationM * scaleM;
 }
 
 void Primitive::draw()
@@ -96,16 +112,21 @@ Square::Square(float x, float y, float z)
 
 Square::~Square() {
     
-    
 }
 
 void Square::create(){
     float vertices[] = {
+        /*
         // positions          // texture coords
          0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
          0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
         -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
         -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+        */
+         0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f,  0.0f
     };
     unsigned int indices[]{
         0, 1, 3,
@@ -121,10 +142,12 @@ void Square::create(){
 }
 
 void Square::draw() {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->texture.at(0));
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, this->texture.at(1));
+    if(this->texture.size() > 1)
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, this->texture.at(0));
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, this->texture.at(1));
+
     vb->bind();
     eb->draw();
 }

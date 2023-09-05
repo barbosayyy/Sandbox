@@ -70,18 +70,23 @@ int main(void)
 	S_tex.setFloat("mixValue", 0.0f);
 
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-	glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
 
 	Shader S_light("src/shaders/color.vert", "src/shaders/light_source.frag");
 	Shader S_lighting("src/shaders/color.vert", "src/shaders/lit.frag");
 
 	Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
 	Cube* lightSource = new Cube(0.5f, 0.0f, 0.0f);
+	Square* Plane = new Square(0.0f, -5.0f, 0.0f);
+	Plane->setScale(20.0f, 20.0f, 1.0f);
+	Plane->setRotation(90.0f, glm::vec3(1.0f, 0.0f, 0.0f), GL_TRUE);
+	Plane->texture.push_back(T_tex1->texture);
+	Plane->texture.push_back(T_tex2->texture);
+
 	while (!glfwWindowShouldClose(window.window))
 	{
 		inputListener.processInput();
 
-		glClearColor(0.15f, 0.18f, 0.25f, 1.0f);
+		glClearColor(0.50f, 0.68f, 0.96f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,19 +100,24 @@ int main(void)
 		S_lighting.use();
 		S_lighting.setMat4("view", view);
 		S_lighting.setMat4("projection", projection);
-		S_lighting.setVec3("objectColor", objectColor.x, objectColor.y, objectColor.z);
-		S_lighting.setVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
-		S_lighting.setVec3("lightPos", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
-		S_lighting.setVec3("viewerPos", camera->position.x, camera->position.y, camera->position.z);
-		S_lighting.setFloat("ambientStrength", 0.5f);
-		S_lighting.setFloat("specularStrength", 0.5f);
-		S_lighting.setFloat("shininess", 32.0f);
-		
-		litObject->setPosition(2.5f, -1.5f, 0.5f);
-		//litObject->setRotation(25.0f, glm::vec3(1.0, 0.0, 0.0), GL_TRUE);
+
+		S_lighting.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		S_lighting.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		S_lighting.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		S_lighting.setFloat("material.shininess", 32.0f);
+
+		S_lighting.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+		S_lighting.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+		S_lighting.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+		S_lighting.setVec3("light.position", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
+		S_lighting.setVec3("viewer.position", camera->position.x, camera->position.y, camera->position.z);
 		// This should be done when applying nonuniform scale to the object
-			glm::mat4 normal = glm::inverseTranspose(litObject->getModelMatrix());
-			S_lighting.setMat4("normalInverse", normal);
+		glm::mat4 normal{glm::inverseTranspose(litObject->getModelMatrix())};
+		S_lighting.setMat4("normalInverse", normal);
+
+		litObject->setPosition(2.5f, -1.5f, 0.5f);	
+		litObject->setRotation(40.0f, glm::vec3(1.0f,1.0f,0.0f), 2.0f);
 		S_lighting.setMat4("model", litObject->getModelMatrix());
 		litObject->draw();
 
@@ -122,24 +132,14 @@ int main(void)
 		//	Add setScale function to shader class
 		
 
-		lightSource->setScale(0.25f, 0.25f, 0.25f);
-		if (Input::pressedKey(GLFW_KEY_UP))
-		{
-		}
-		else if (Input::pressedKey(GLFW_KEY_DOWN))
-		{
-		}
-		if (Input::pressedKey(GLFW_KEY_LEFT))
-		{
-			lightSource->setPosition(glm::vec3(0.1f, 0.0f, 0.0f));
-		}
-		else if (Input::pressedKey(GLFW_KEY_RIGHT))
-		{
-			
-		}
 		lightSource->setRotation(glfwGetTime(), glm::vec3(0.0, 1.0, 0.0), GL_FALSE);
+		lightSource->setScale(0.25f, 0.25f, 0.25f);
 		S_light.setMat4("model", lightSource->getModelMatrix());
 		lightSource->draw();
+
+		S_lighting.use();
+		S_lighting.setMat4("model", Plane->getModelMatrix());
+		Plane->draw();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

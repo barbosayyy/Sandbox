@@ -15,24 +15,30 @@ public:
     virtual void draw();
 
     // Change this definition if matrices transform unexpectedly
-    void setScale(float x, float y, float z);
-    void setScale(glm::vec3 scale);
     void setPosition(float x, float y, float z);
     void setPosition(glm::vec3 position);
+    
     void setRotation(float degrees, glm::vec3 axis, GLboolean set_by_degrees);
+    
+    void setScale(float x, float y, float z);
+    void setScale(glm::vec3 scale);
+    
     glm::vec3 getPosition();
     glm::mat4 getModelMatrix();
 
     std::vector<unsigned int> texture;
 protected:
     glm::mat4 ml_matrix;
-    glm::vec3 position;
-    glm::vec3 scale;
-    float width;
-    float height;
+    glm::mat4 translationM;
+    glm::mat4 rotationM;
+    glm::mat4 scaleM;
 
-    VertexBuffer* vb = nullptr;
-    IndexBuffer* eb = nullptr;
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+
+    VertexBuffer* vb;
+    IndexBuffer* eb;
 
     virtual void create();
 };
