@@ -1,7 +1,16 @@
 
 #include "utils.h"
 
-//File
+std::map<uint8_t, GLenum> Resources::TextureUnitMap = {
+		{0, GL_TEXTURE0},
+		{1, GL_TEXTURE1},
+		{2, GL_TEXTURE2},
+		{3, GL_TEXTURE3},
+		{4, GL_TEXTURE4},
+		{5, GL_TEXTURE5},
+		{6, GL_TEXTURE6},
+		{7, GL_TEXTURE7}
+};
 
 std::filesystem::path File::currentDirectory = std::filesystem::current_path();
 

@@ -31,8 +31,14 @@
     <ClCompile Include="src\window.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\memory_allocator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="src\camera.cpp">
-      <Filter>Headers</Filter>
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\types.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +80,14 @@
     <ClInclude Include="src\window.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="src\memory_allocator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
     <ClInclude Include="src\camera.h">
-      <Filter>Source</Filter>
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\types.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

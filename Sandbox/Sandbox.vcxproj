@@ -171,7 +171,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\memory_allocator.cpp" />
     <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\types.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\index_buffer.cpp" />
     <ClCompile Include="src\input.cpp" />
@@ -184,7 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\memory_allocator.h" />
     <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\types.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\index_buffer.h" />
     <ClInclude Include="src\input.h" />

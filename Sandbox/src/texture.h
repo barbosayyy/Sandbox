@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 
+// !!! - This is not needed, just load texture directly ?
 class Texture
 {
 public:

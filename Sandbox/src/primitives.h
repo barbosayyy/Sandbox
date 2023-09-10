@@ -6,6 +6,7 @@
 #include "shaders.h"
 #include "texture.h"
 #include "glm.hpp"
+#include "utils.h"
 
 class Primitive {
 public:
