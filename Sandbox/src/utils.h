@@ -7,7 +7,7 @@
 #include <sstream>
 #include <filesystem>
 #include <map>
-#include "GL/glew.h"
+#include "glew/glew.h"
 
 static class Resources
 {

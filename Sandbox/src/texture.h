@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <GL/glew.h>
-#include <glfw3.h>
+#include <glew/glew.h>
+#include <glfw/glfw3.h>
 
 // !!! - This is not needed, just load texture directly ?
 class Texture

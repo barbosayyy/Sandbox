@@ -2,11 +2,11 @@
 #include <string>
 #include <vector>
 
-#include <GL/glew.h>
-#include <glfw3.h>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/matrix_inverse.hpp>
+#include <glew/glew.h>
+#include <glfw/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 #include "window.h"
 #include "shaders.h"
@@ -63,6 +63,7 @@ int main(void)
 	// TODO: remove texture objects
 	Texture* T_tex1 = new Texture("assets/d_container.png", Texture::ImageType::PNG, GL_REPEAT);
 	Texture* T_tex2 = new Texture("assets/s_container.png", Texture::ImageType::PNG, GL_REPEAT);
+	Texture* T_tex3 = new Texture("assets/matrix.jpg", Texture::ImageType::JPG, GL_REPEAT);
 
 	//	Shader S_tex("src/shaders/tex.vert", "src/shaders/tex.frag");
 	//	S_tex.use();
@@ -78,12 +79,14 @@ int main(void)
 	S_lighting.use();
 	S_lighting.setInt("material.diffuse", 0);
 	S_lighting.setInt("material.specular", 1);
+	S_lighting.setInt("material.emissive", 2);
 
 	Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
 	Cube* lightSource = new Cube(0.5f, 0.0f, 0.0f);
 
 	litObject->texture.push_back(T_tex1->texture);
 	litObject->texture.push_back(T_tex2->texture);
+	litObject->texture.push_back(T_tex3->texture);
 
 	while (!glfwWindowShouldClose(window.window))
 	{
@@ -110,12 +113,12 @@ int main(void)
 		S_lighting.setMat4("view", view);
 		S_lighting.setMat4("projection", projection);
 			
-
-		S_lighting.setVec3("light.ambient", 0.4f, 0.4f, 0.4f);
+		S_lighting.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		S_lighting.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		S_lighting.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		
 		S_lighting.setFloat("material.shininess", 32.0f);
+		S_lighting.setFloat("material.emissiveStrength", 1.0);
 
 		S_lighting.setVec3("light.position", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
 		S_lighting.setVec3("viewer.position", camera->position.x, camera->position.y, camera->position.z);

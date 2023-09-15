@@ -137,14 +137,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Sandbox\vendor\includes\glm;$(SolutionDir)\Sandbox\vendor\includes\stb_image;$(SolutionDir)\Sandbox\vendor\includes\glew;$(SolutionDir)\Sandbox\vendor\includes\glfw;$(SolutionDir)\Sandbox\vendor\includes\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Sandbox\vendor\includes\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\um\x64;C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64;$(SolutionDir)\Sandbox\vendor\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\memory_allocator.cpp" />
+    <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\texture.cpp" />
     <ClCompile Include="src\types.cpp" />
     <ClCompile Include="src\utils.cpp" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\memory_allocator.h" />
+    <ClInclude Include="src\mesh.h" />
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\types.h" />
     <ClInclude Include="src\utils.h" />

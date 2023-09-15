@@ -1,4 +1,3 @@
-
 #include "primitives.h"
 
 Primitive::Primitive() : 

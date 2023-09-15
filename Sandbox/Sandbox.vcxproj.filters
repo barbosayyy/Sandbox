@@ -40,6 +40,9 @@
     <ClCompile Include="src\types.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\mesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -87,6 +90,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="src\types.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mesh.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

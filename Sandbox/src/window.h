@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glfw3.h>
+#include <glfw/glfw3.h>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720

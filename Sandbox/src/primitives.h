@@ -5,7 +5,7 @@
 #include "index_buffer.h"
 #include "shaders.h"
 #include "texture.h"
-#include "glm.hpp"
+#include "glm/glm.hpp"
 #include "utils.h"
 
 class Primitive {
