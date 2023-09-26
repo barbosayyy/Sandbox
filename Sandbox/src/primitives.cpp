@@ -159,6 +159,12 @@ Cube::Cube(float x, float y, float z)
     Cube::setPosition(x, y, z);
 }
 
+Cube::Cube()
+{
+    Cube::create();
+    Cube::setPosition(0.0f, 0.0f, 0.0f);
+}
+
 Cube::~Cube()
 {
 

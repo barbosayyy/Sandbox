@@ -57,6 +57,8 @@ protected:
 class Cube : public Primitive {
 public:
     Cube(float x, float y, float z);
+    Cube();
+
     ~Cube();
 
     void draw() override;
