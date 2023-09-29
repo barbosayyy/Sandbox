@@ -99,6 +99,14 @@ int main(void)
 	c->texture.push_back(T_tex2->texture);
 	c->texture.push_back(T_tex3->texture);
 
+	vec3 pointLightPositions[] =
+	{
+		vec3(0.7f,  0.2f,  2.0f),
+		vec3(2.3f, -3.3f, -4.0f),
+		vec3(-8.0f,  2.0f, -12.0f),
+		vec3(0.0f,  0.0f, -3.0f)
+	};
+
 	while (!glfwWindowShouldClose(window.window))
 	{
 		inputListener.processInput();
@@ -125,31 +133,60 @@ int main(void)
 		S_lighting.setMat4("view", view);
 		S_lighting.setMat4("projection", projection);
 			
-		// Material
-			S_lighting.setFloat("material.shininess", 32.0f);
-			S_lighting.setFloat("material.emissiveStrength", 1.0);
+		S_lighting.setFloat("material.shininess", 32.0f);
+		S_lighting.setFloat("material.emissiveStrength", 1.0);
 
-		// Light
-			S_lighting.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-			S_lighting.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-			S_lighting.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-			// Point and Spot
-			S_lighting.setFloat("light.constant", 1.0f);
-			S_lighting.setFloat("light.linear", 0.09f);
-			S_lighting.setFloat("light.quadratic", 0.032f);
+		S_lighting.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+		S_lighting.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+		S_lighting.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
 
-			// Point
-			//S_lighting.setVec3("light.position", lightSource->getPosition().x, lightSource->getPosition().y, lightSource->getPosition().z);
+		S_lighting.setFloat("spotLight.constant", 1.0f);
+		S_lighting.setFloat("spotLight.linear", 0.09f);
+		S_lighting.setFloat("spotLight.quadratic", 0.032f);
 
-			// Spot
-			S_lighting.setVec3("light.direction", camera->front);
-			S_lighting.setVec3("light.position", camera->position);
-			S_lighting.setFloat("light.innerRadius", glm::cos(glm::radians(spotlightInnerRadius)));
-			S_lighting.setFloat("light.outerRadius", glm::cos(glm::radians(spotlightOuterRadius)));
+		S_lighting.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+		S_lighting.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+		S_lighting.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+		S_lighting.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+		
+		S_lighting.setVec3("pointLight[0].position", pointLightPositions[0]);
+		S_lighting.setVec3("pointLight[0].ambient", 0.05f, 0.05f, 0.05f);
+		S_lighting.setVec3("pointLight[0].diffuse", 0.8f, 0.8f, 0.8f);
+		S_lighting.setVec3("pointLight[0].specular", 1.0f, 1.0f, 1.0f);
+		S_lighting.setFloat("pointLight[0].constant", 1.0f);
+		S_lighting.setFloat("pointLight[0].linear", 0.09f);
+		S_lighting.setFloat("pointLight[0].quadratic", 0.032f);
 
-			// Directional
-			//S_lighting.setVec3("light.direction", -0.2, -1.0f, -0.3f);
+		S_lighting.setVec3("pointLight[1].position", pointLightPositions[1]);
+		S_lighting.setVec3("pointLight[1].ambient", 0.05f, 0.05f, 0.05f);
+		S_lighting.setVec3("pointLight[1].diffuse", 0.8f, 0.8f, 0.8f);
+		S_lighting.setVec3("pointLight[1].specular", 1.0f, 1.0f, 1.0f);
+		S_lighting.setFloat("pointLight[1].constant", 1.0f);
+		S_lighting.setFloat("pointLight[1].linear", 0.09f);
+		S_lighting.setFloat("pointLight[1].quadratic", 0.032f);
+
+		S_lighting.setVec3("pointLight[2].position", pointLightPositions[2]);
+		S_lighting.setVec3("pointLight[2].ambient", 0.05f, 0.05f, 0.05f);
+		S_lighting.setVec3("pointLight[2].diffuse", 0.8f, 0.8f, 0.8f);
+		S_lighting.setVec3("pointLight[2].specular", 1.0f, 1.0f, 1.0f);
+		S_lighting.setFloat("pointLight[2].constant", 1.0f);
+		S_lighting.setFloat("pointLight[2].linear", 0.09f);
+		S_lighting.setFloat("pointLight[2].quadratic", 0.032f);
+
+		S_lighting.setVec3("pointLight[3].position", pointLightPositions[3]);
+		S_lighting.setVec3("pointLight[3].ambient", 0.05f, 0.05f, 0.05f);
+		S_lighting.setVec3("pointLight[3].diffuse", 0.8f, 0.8f, 0.8f);
+		S_lighting.setVec3("pointLight[3].specular", 1.0f, 1.0f, 1.0f);
+		S_lighting.setFloat("pointLight[3].constant", 1.0f);
+		S_lighting.setFloat("pointLight[3].linear", 0.09f);
+		S_lighting.setFloat("pointLight[3].quadratic", 0.032f);
+
+		S_lighting.setVec3("spotLight.direction", camera->front);
+		S_lighting.setVec3("spotLight.position", camera->position);
+
+		S_lighting.setFloat("spotLight.innerRadius", glm::cos(glm::radians(spotlightInnerRadius)));
+		S_lighting.setFloat("spotLight.outerRadius", glm::cos(glm::radians(spotlightOuterRadius)));
 
 		S_lighting.setVec3("viewer.position", camera->position.x, camera->position.y, camera->position.z);
 
