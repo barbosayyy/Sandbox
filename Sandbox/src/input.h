@@ -4,6 +4,7 @@
 #include <glfw/glfw3.h>
 #include <functional>
 #include "window.h"
+#include <imgui/imgui.h>
 
 namespace Input {
 
@@ -19,6 +20,7 @@ namespace Input {
 
 		void addInputFunction(std::function<void()> function);
 		void addMouseAxisMoveFunction(std::function<void(float xOffset, float yOffset)> function);
+		void setCallbacks();
 
 		float xOffset = 0.0f;
 		float yOffset = 0.0f;
@@ -37,7 +39,6 @@ namespace Input {
 		float mouseLastFrameX = WINDOW_WIDTH * 0.5;
 		float mouseLastFrameY = WINDOW_HEIGHT * 0.5;
 
-		void setCallbacks();
 		static void mouseAxisMoveCallback(GLFWwindow* window, double xpos, double ypos);
 	};
 

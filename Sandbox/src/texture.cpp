@@ -3,15 +3,16 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
-Texture::Texture(const char* texturePath, ImageType imageType, GLint texWrapMethod)
+Texture::Texture(const char* texturePath, ImageType imageType, TextureType textureType, GLint texWrapMethod)
 {
+	this->type = textureType;
 	load(texturePath, imageType, texWrapMethod);
 }
 
-//Texture::Texture(const char* texturePath)
-//{
-//	load();
-//}
+Texture::~Texture()
+{
+
+}
 
 void Texture::load(const char* texturePath, ImageType imageType, GLint texWrapMethod)
 {

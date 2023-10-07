@@ -7,9 +7,18 @@ in vec2 TexCoords;
 out vec4 fragColor;
 
 struct Material {
-	sampler2D diffuse;
-	sampler2D specular;
-	sampler2D emissive;
+	sampler2D diffuse1;
+	sampler2D diffuse2;
+	sampler2D diffuse3;
+
+	sampler2D specular1;
+	sampler2D specular2;
+	sampler2D specular3;
+
+	sampler2D emissive1;
+	sampler2D emissive2;
+	sampler2D emissive3;
+
 	float shininess;
 	float emissiveStrength;
 };

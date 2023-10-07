@@ -1,6 +1,10 @@
 #include <iostream>
 #include <vector>
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
 #include <glew/glew.h>
 #include <glfw/glfw3.h>
 
@@ -11,6 +15,8 @@
 #include "primitives.h"
 #include "camera.h"
 #include "types.h"
+#include "mesh.h"
+#include "model.h"
 
 void shutdown()
 {
@@ -45,6 +51,20 @@ int main(void)
 		return -1;
 	}
 
+	//ImGui
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplOpenGL3_Init();
+		ImGui::StyleColorsDark();
+
+		bool show_demo_window = true;
+		bool show_another_window = false;
+		bool show_third_window = false;
+		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 	Input::InputListener inputListener(window.window);
 	Input::InputListener::getInstance()->addInputFunction(shutdown);
 	
@@ -53,9 +73,9 @@ int main(void)
 	Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
 
 	// TODO: remove texture objects
-	Texture* T_tex1 = new Texture("assets/d_container.png", Texture::ImageType::PNG, GL_REPEAT);
-	Texture* T_tex2 = new Texture("assets/s_container.png", Texture::ImageType::PNG, GL_REPEAT);
-	Texture* T_tex3 = new Texture("assets/matrix.jpg", Texture::ImageType::JPG, GL_REPEAT);
+	//Texture* T_tex1 = new Texture("assets/d_container.png", Texture::ImageType::PNG, GL_REPEAT);
+	//Texture* T_tex2 = new Texture("assets/s_container.png", Texture::ImageType::PNG, GL_REPEAT);
+	//Texture* T_tex3 = new Texture("assets/matrix.jpg", Texture::ImageType::JPG, GL_REPEAT);
 
 	//	Shader S_tex("src/shaders/tex.vert", "src/shaders/tex.frag");
 	//	S_tex.use();
@@ -73,17 +93,31 @@ int main(void)
 	S_lighting.setInt("material.specular", 1);
 	S_lighting.setInt("material.emissive", 2);
 
-	Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
 	Cube* lightSource = new Cube(0.5f, 0.0f, 0.0f);
+
+	std::vector<Texture> txts{
+		Texture("assets/d_container.png", Texture::ImageType::PNG, Texture::TextureType::DIFFUSE, GL_REPEAT),
+		Texture("assets/s_container.png", Texture::ImageType::PNG, Texture::TextureType::SPECULAR, GL_REPEAT),
+		Texture("assets/matrix.jpg", Texture::ImageType::JPG, Texture::TextureType::EMISSIVE, GL_REPEAT)
+	};
+
+	std::vector<Vertex> vert{
+		
+	};
+	std::vector<unsigned int> ind;
+
+	Mesh test(vert, ind, txts, S_lighting);
+
+	/*Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
 	Cube* a = new Cube();
 	Cube* b = new Cube();
-	Cube* c = new Cube();
+	Cube* c = new Cube();*/
 
 	// Spotlight values
 	float spotlightInnerRadius{12.5f};
 	float spotlightOuterRadius{17.5f};
 
-	litObject->texture.push_back(T_tex1->texture);
+	/*litObject->texture.push_back(T_tex1->texture);
 	litObject->texture.push_back(T_tex2->texture);
 	litObject->texture.push_back(T_tex3->texture);	
 
@@ -97,7 +131,7 @@ int main(void)
 
 	c->texture.push_back(T_tex1->texture);
 	c->texture.push_back(T_tex2->texture);
-	c->texture.push_back(T_tex3->texture);
+	c->texture.push_back(T_tex3->texture);*/
 
 	vec3 pointLightPositions[] =
 	{
@@ -109,12 +143,18 @@ int main(void)
 
 	while (!glfwWindowShouldClose(window.window))
 	{
+		glfwPollEvents();
+
 		inputListener.processInput();
 		
 		// glClearColor(0.50f, 0.68f, 0.70f, 1.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -190,33 +230,33 @@ int main(void)
 
 		S_lighting.setVec3("viewer.position", camera->position.x, camera->position.y, camera->position.z);
 
-		litObject->setPosition(2.5f, -1.5f, 0.5f);
-		litObject->setRotation(45.0f, Yaw_Right, TRUE);
-		// This should be done when applying nonuniform scale to the object
-		mat4 normal{glm::inverseTranspose(litObject->getModelMatrix())};
-		S_lighting.setMat4("normalInverse", normal);
-		S_lighting.setMat4("model", litObject->getModelMatrix());
-		litObject->draw();
+		//litObject->setPosition(2.5f, -1.5f, 0.5f);
+		//litObject->setRotation(45.0f, Yaw_Right, TRUE);
+		//// This should be done when applying nonuniform scale to the object
+		//mat4 normal{glm::inverseTranspose(litObject->getModelMatrix())};
+		//S_lighting.setMat4("normalInverse", normal);
+		//S_lighting.setMat4("model", litObject->getModelMatrix());
+		//litObject->draw();
 
-		a->setPosition(5.0f, -1.5f, 2.0f);
-		a->setRotation(75.0f, Pitch_Up, TRUE);
-		normal = glm::inverseTranspose(a->getModelMatrix());
-		S_lighting.setMat4("normalInverse", normal);
-		S_lighting.setMat4("model", a->getModelMatrix());
-		a->draw();
+		//a->setPosition(5.0f, -1.5f, 2.0f);
+		//a->setRotation(75.0f, Pitch_Up, TRUE);
+		//normal = glm::inverseTranspose(a->getModelMatrix());
+		//S_lighting.setMat4("normalInverse", normal);
+		//S_lighting.setMat4("model", a->getModelMatrix());
+		//a->draw();
 
-		b->setPosition(1.0f, -1.5f, 2.0f);
-		normal = glm::inverseTranspose(b->getModelMatrix());
-		S_lighting.setMat4("normalInverse", normal);
-		S_lighting.setMat4("model", b->getModelMatrix());
-		b->draw();
+		//b->setPosition(1.0f, -1.5f, 2.0f);
+		//normal = glm::inverseTranspose(b->getModelMatrix());
+		//S_lighting.setMat4("normalInverse", normal);
+		//S_lighting.setMat4("model", b->getModelMatrix());
+		//b->draw();
 
-		c->setPosition(4.0f, -5.0f, 5.0f);
-		c->setRotation(20.f, Yaw_Left, TRUE);
-		normal = glm::inverseTranspose(c->getModelMatrix());
-		S_lighting.setMat4("normalInverse", normal);
-		S_lighting.setMat4("model", c->getModelMatrix());
-		c->draw();
+		//c->setPosition(4.0f, -5.0f, 5.0f);
+		//c->setRotation(20.f, Yaw_Left, TRUE);
+		//normal = glm::inverseTranspose(c->getModelMatrix());
+		//S_lighting.setMat4("normalInverse", normal);
+		//S_lighting.setMat4("model", c->getModelMatrix());
+		//c->draw();
 
 		S_light.use();
 		S_light.setMat4("projection", projection);
@@ -230,9 +270,24 @@ int main(void)
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		glfwPollEvents();
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Sandbox");                          // Create a window called "Hello, world!" and append into it.
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+			ImGui::End();
+		}
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window.window);
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwTerminate();
 	return 0;

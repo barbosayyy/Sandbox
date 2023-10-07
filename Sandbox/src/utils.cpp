@@ -12,6 +12,12 @@ std::map<uint8_t, GLenum> Resources::TextureUnitMap = {
 		{7, GL_TEXTURE7}
 };
 
+std::map<Texture::TextureType, String> Resources::TextureTypeMap = {
+	{Texture::TextureType::DIFFUSE, "diffuse"},
+	{Texture::TextureType::SPECULAR,"specular"},
+	{Texture::TextureType::EMISSIVE,"emissive"},
+};
+
 std::filesystem::path File::currentDirectory = std::filesystem::current_path();
 
 std::string File::read(const char* filePath)

@@ -1,5 +1,6 @@
 #include "camera.h"
 
+
 Camera::Camera(float x, float y, float z)
 {
 	position = glm::vec3(x, y, z);
@@ -35,11 +36,13 @@ void Camera::onInput()
 {
 	if (Input::pressedMouse(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 	{
-		canMove = true;
+		if (!canMove)
+			canMove = true;
 	}
 	else if(Input::pressedMouse(GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
 	{
-		canMove = false;
+		if (canMove)
+			canMove = false;
 	}
 
 	if (canMove)

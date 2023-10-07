@@ -12,6 +12,12 @@ public:
 	GLFWwindow* window;
 	int getWidth();
 	int getHeight();
+	void setWidth();
+	void setHeight();
+
+	operator GLFWwindow* const() {
+		return window;
+	}
 private:
 	int windowWidth;
 	int windowHeight;

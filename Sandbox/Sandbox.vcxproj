@@ -184,12 +184,21 @@
     <ClCompile Include="src\vertex_buffer.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="vendor\includes\glad\src\glad.c" />
+    <ClCompile Include="vendor\includes\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\includes\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\memory_allocator.h" />
     <ClInclude Include="src\mesh.h" />
+    <ClInclude Include="src\model.h" />
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\types.h" />
     <ClInclude Include="src\utils.h" />
@@ -199,6 +208,16 @@
     <ClInclude Include="src\shaders.h" />
     <ClInclude Include="src\vertex_buffer.h" />
     <ClInclude Include="src\window.h" />
+    <ClInclude Include="vendor\includes\imgui\imconfig.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui_internal.h" />
+    <ClInclude Include="vendor\includes\imgui\imgui_stdlib.h" />
+    <ClInclude Include="vendor\includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="vendor\includes\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="vendor\dlls\glew32.dll">

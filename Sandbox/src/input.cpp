@@ -22,8 +22,8 @@ namespace Input {
 		if (!instance)
 		{
 			instance = this;
+			Input::InputListener::getInstance()->window = window;
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			setCallbacks();
 		}
 	}
 
@@ -51,11 +51,6 @@ namespace Input {
 		instance->yOffset = instance->mouseLastFrameY - instance->mouseY;
 		instance->mouseLastFrameX = instance->mouseX;
 		instance->mouseLastFrameY = instance->mouseY;
-
-		for (const auto& func : instance->onMouseAxisMoveFunctions)
-		{
-			func(instance->xOffset, instance->yOffset);
-		}
 	}
 
 	void InputListener::addInputFunction(std::function<void()> function)
@@ -73,6 +68,14 @@ namespace Input {
 		for (const auto& func : onInputFunctions)
 		{
 			func();
+		}
+		if (instance->mouseLastFrameX != ImGui::GetMousePos().x || instance->mouseLastFrameY != ImGui::GetMousePos().y)
+		{
+			mouseAxisMoveCallback(Input::InputListener::getInstance()->window, ImGui::GetMousePos().x, ImGui::GetMousePos().y);
+			for (const auto& func : instance->onMouseAxisMoveFunctions)
+			{
+				func(instance->xOffset, instance->yOffset);
+			}
 		}
 	}
 

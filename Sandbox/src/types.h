@@ -27,6 +27,11 @@ public:
 		temp._string = this->_string + str._string;
 		return temp;
 	}
+	String operator+(const char* str) const {
+		String temp;
+		temp._string = str + this->_string;
+		return temp;
+	}
 	String operator+=(const String& str) {
 		this->_string += str._string;
 	}
@@ -39,6 +44,10 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const String& str) {
 		os << str._string;
 		return os;
+	}
+
+	const char* c_str() const {
+		return _string.c_str();
 	}
 
 	operator std::string() const{

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="vendor\includes\glad\src\glad.c">
-      <Filter>GLAD</Filter>
+      <Filter>Vendor\GLAD</Filter>
     </ClCompile>
     <ClCompile Include="src\input.cpp">
       <Filter>Source</Filter>
@@ -43,6 +43,30 @@
     <ClCompile Include="src\types.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_demo.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_draw.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_impl_glfw.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_stdlib.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_tables.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\includes\imgui\imgui_widgets.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -51,11 +75,17 @@
     <Filter Include="Source">
       <UniqueIdentifier>{7413f6bc-ffcd-4a06-84d2-61329d86a2b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GLAD">
-      <UniqueIdentifier>{75e2ac32-db58-43f8-a90c-16d70bfddc83}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DLLs">
       <UniqueIdentifier>{27272866-6212-435f-93ae-7088b8aad847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor">
+      <UniqueIdentifier>{1167c3cc-7aeb-4287-9d9a-1c356d0c4c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\GLAD">
+      <UniqueIdentifier>{75e2ac32-db58-43f8-a90c-16d70bfddc83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\ImGui">
+      <UniqueIdentifier>{28004b76-ee55-45dc-9445-885f0eded134}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +128,37 @@
     <ClInclude Include="src\math.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imconfig.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_glfw.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_opengl3.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui_internal.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui_stdlib.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imstb_rectpack.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imstb_textedit.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imstb_truetype.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\includes\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="vendor\dlls\glew32.dll">
