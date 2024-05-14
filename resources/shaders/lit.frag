@@ -59,7 +59,7 @@ struct Observer {
 uniform Material material;
 uniform Observer viewer;
 
-#define NR_POINT_LIGHTS		4
+#define NR_POINT_LIGHTS		1
 uniform Light_Point pointLight[NR_POINT_LIGHTS];
 
 uniform Light_Directional dirLight;

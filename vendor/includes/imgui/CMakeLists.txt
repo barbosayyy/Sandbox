@@ -19,4 +19,4 @@ add_library(imgui STATIC
     imstb_truetype.h
 )
 
-target_include_directories(imgui PUBLIC ../)
+target_include_directories(imgui PRIVATE ../)

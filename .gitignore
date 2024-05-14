@@ -19,4 +19,4 @@ bld/
 /[Ii]nstall/
 [Uu]ser/
 CMakeUserPresets.json
-/imgui.ini
+imgui.ini

@@ -3,7 +3,7 @@
         {
             "type": "shell",
             "label": "Sandbox: Clean build",
-            "command": "rm -r build",
+            "command": "cd ${workspaceFolder}; rm -r build",
             "problemMatcher": [],
             "detail": "Clean the sandbox build folder"
         },
