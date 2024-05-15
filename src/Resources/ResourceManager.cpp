@@ -25,12 +25,15 @@ String ResourceManager::GetYamlResourceNameFromResourceID(ResourceID rId)
     }
 }
 
+#include "yaml-cpp/yaml.h"
+
 Resource ResourceManager::GetDataFromID(ResourceID rId, int id)
 {
     String rName = GetYamlResourceNameFromResourceID(rId);
     Resource rData {0, "", ""};
     YAML::Node resourceNode = YamlUtil::GetNode("resources/resource-data.yaml", rName.c_str());
 
+    // Wrap this in yaml util function
     int entryId {0};
     auto entries = resourceNode;
 	if(entries){

@@ -15,7 +15,10 @@ ShaderManager::ShaderManager() : _shaderCount(1), _defaultShader(new Shader("res
 
 ShaderManager::~ShaderManager()
 {
-	delete _defaultShader;
+    for(Shader* shader : _shaders)
+    {
+        delete shader;
+    }
 }
 
 Shader* ShaderManager::GetShader(int vRId, int fRId)

@@ -1,25 +1,13 @@
 
+#include <fstream>
+#include <sstream>
+
 #include "Utils.h"
 #include "Debug.h"
 
+#include "yaml-cpp/yaml.h"
+
 using namespace Sandbox;
-
-std::map<uint8_t, GLenum> Resources::_textureUnitMap = {
-		{0, GL_TEXTURE0},
-		{1, GL_TEXTURE1},
-		{2, GL_TEXTURE2},
-		{3, GL_TEXTURE3},
-		{4, GL_TEXTURE4},
-		{5, GL_TEXTURE5},
-		{6, GL_TEXTURE6},
-		{7, GL_TEXTURE7}
-};
-
-std::map<TextureType, String> Resources::_textureTypeMap = {
-	{TextureType::DIFFUSE, "diffuse"},
-	{TextureType::SPECULAR,"specular"},
-	{TextureType::EMISSIVE,"emissive"},
-};
 
 std::filesystem::path File::_currentDirectory = std::filesystem::current_path();
 

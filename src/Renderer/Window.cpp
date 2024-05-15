@@ -11,29 +11,9 @@ Window::Window(const char* windowTitle, int windowWidth, int windowHeight)
 	glfwSetFramebufferSizeCallback(_window, FramebufferSizeCallback);
 }
 
-Window::~Window()
-{
-
-}
-
-GLFWwindow* Window::GLWindow()
-{
-	return _window;
-}
-
 void Window::createWindow(const char* windowTitle)
 {
 	this->_window = glfwCreateWindow(_windowWidth, _windowHeight, "Sandbox", NULL, NULL);
-}
-
-int Window::GetHeight()
-{
-	return this->_windowHeight;
-}
-
-int Window::GetWidth()
-{
-	return this->_windowWidth;
 }
 
 //
@@ -41,4 +21,9 @@ int Window::GetWidth()
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+Window::~Window()
+{
+	glfwDestroyWindow(_window);
 }

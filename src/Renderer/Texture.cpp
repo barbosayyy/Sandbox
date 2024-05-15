@@ -1,10 +1,18 @@
-#include "texture.h"
+#include "Texture.h"
 #include "../Core/Types.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
 using namespace Sandbox;
+
+// std::map<uint8_t, GLenum> textureUnitMap = 
+
+// std::map<TextureType, String> textureTypeMap = {
+// 	{TextureType::DIFFUSE, "diffuse"},
+// 	{TextureType::SPECULAR,"specular"},
+// 	{TextureType::EMISSIVE,"emissive"},
+// };
 
 Texture::Texture(const char* texturePath, ImageFormat imageType, TextureType textureType, GLint texWrapMethod)
 {

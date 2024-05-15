@@ -85,4 +85,5 @@ int InputManager::PressedMouse(int key)
 		glfwSetInputMode(InputManager::GetInstance()->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		return SB_RELEASE;
 	}
+	return -1;
 }

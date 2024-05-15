@@ -30,16 +30,22 @@ Renderer::~Renderer()
     delete _windowHandle;
 }
 
-Window* Renderer::GetWindow()
+mat4 Renderer::GetProjection()
 {
-    return _windowHandle;
+	if(this->GetRenderCamera()->GetProjectionMode() == CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE){
+		return glm::perspective(glm::radians(60.0f), (float)this->GetWindow()->GetWidth() / (float)this->GetWindow()->GetHeight(), 0.1f, 100.0f);
+	}
+	else{ // WIP: CAMERA_PROJECTION_ORTHO
+		assert("Not Implemented");
+	}
+	return mat4(1.0f);
 }
 
 void Renderer::Loop()
 {
     glfwPollEvents();
-		
-    glClearColor(0.32f, 0.58f, 0.45f, 1.0f);
+
+	glClearColor(0.25f, 0.1f, 0.4f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

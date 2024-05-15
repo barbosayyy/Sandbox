@@ -18,6 +18,8 @@ add_library(Sandbox_Src STATIC
     Core/Debug.cpp
     Renderer/Mesh.cpp
     Renderer/Mesh.h
+    Renderer/Renderable.h
+    Renderer/Renderable.cpp
     Renderer/Primitives.cpp
     Renderer/Primitives.h
     Renderer/Shader.cpp

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include "../Core/Singleton.h"
 #include "../Core/Types.h"
 #include <glew/glew.h>
@@ -10,9 +11,25 @@
 // TODO
 // Aliases for texture types and image types
 
-// !!! - This is not needed, just load texture directly ?
+// !!! - This is not needed, just load texture directly ? 
 
 namespace Sandbox{
+	static std::map<uint8_t, GLenum> textureUnitMap{
+		{0, GL_TEXTURE0},
+		{1, GL_TEXTURE1},
+		{2, GL_TEXTURE2},
+		{3, GL_TEXTURE3},
+		{4, GL_TEXTURE4},
+		{5, GL_TEXTURE5},
+		{6, GL_TEXTURE6},
+		{7, GL_TEXTURE7}
+	};
+	static std::map<TextureType, String> textureTypeMap{
+	{TextureType::DIFFUSE, "diffuse"},
+	{TextureType::SPECULAR,"specular"},
+	{TextureType::EMISSIVE,"emissive"},
+	};
+
 	class Texture
 	{
 	private:

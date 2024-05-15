@@ -15,6 +15,7 @@ struct Material {
 
 	float shininess;
 	float emissiveStrength;
+	vec4 col;
 };
 
 struct Light_Point {
@@ -151,5 +152,5 @@ void main()
 	
 	color += emissiveFinal;
 	
-	fragColor = vec4(color, 1.0);
+	fragColor = material.col + vec4(color, 1.0);
 }

@@ -86,6 +86,14 @@ namespace Sandbox
 		vec2 texCoords;
 	};
 
+	struct Color {
+		float r;
+		float g;
+		float b;
+		float a;
+		Color(float red, float green, float blue, float alpha) : r(red), g(green), b(blue), a(alpha){};
+	};
+
 	struct ShaderData {
 		u16 vertexID;
 		u16 fragmentID;

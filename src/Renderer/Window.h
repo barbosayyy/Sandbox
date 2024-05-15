@@ -10,9 +10,9 @@ public:
 	Window(const char* windowTitle, int windowWidth, int windowHeight);
 	~Window();
 	
-	GLFWwindow* GLWindow();
-	int GetWidth();
-	int GetHeight();
+	GLFWwindow* GLWindow() {return _window;};
+	int GetWidth() const {return _windowWidth;};
+	int GetHeight() const {return _windowHeight;};
 	void SetWidth();
 	void SetHeight();
 

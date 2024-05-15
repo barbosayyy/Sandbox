@@ -1,4 +1,5 @@
-#include "mesh.h"
+#include "Mesh.h"
+#include "Texture.h"
 
 using namespace Sandbox;
 
@@ -57,9 +58,9 @@ void Mesh::BindTextures()
 	{
 		for (unsigned int i = 0; i < _textures.size(); i++)
 		{
-			glActiveTexture(Resources::_textureUnitMap.at(i));
+			glActiveTexture(textureUnitMap.at(i));
 			std::map<TextureType, String>::iterator it;
-			it = Resources::_textureTypeMap.find(_textures.at(i)._type);
+			it = textureTypeMap.find(_textures.at(i)._type);
 			// TODO this can be refactored by casting String
 			String nr;
 			String name = it->second;
@@ -72,7 +73,7 @@ void Mesh::BindTextures()
 			this->_shader.SetInt((mat+name+nr).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, _textures.at(i)._texture);
 		}
-		glActiveTexture(Resources::_textureUnitMap.at(0));
+		glActiveTexture(textureUnitMap.at(0));
 	}
 }
 
