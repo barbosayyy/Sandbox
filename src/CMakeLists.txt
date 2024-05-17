@@ -16,8 +16,12 @@ add_library(Sandbox_Src STATIC
     Input/Input.cpp
     Core/Debug.h
     Core/Debug.cpp
-    Renderer/Mesh.cpp
+    Renderer/Assimp.h
+    Renderer/Assimp.cpp
     Renderer/Mesh.h
+    Renderer/Mesh.cpp
+    Renderer/Model.h
+    Renderer/Model.cpp
     Renderer/Renderable.h
     Renderer/Renderable.cpp
     Renderer/Primitives.cpp

@@ -1,13 +1,15 @@
 #include "IndexBuffer.h"
 
+using namespace Sandbox;
+
 IndexBuffer::IndexBuffer()
 {
 
 }
 
-IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int indicesCount)
+IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int indexCount)
 {
-	this->_count = indicesCount;
+	this->_count = indexCount;
 	this->_indices = indices;
 
 	IndexBuffer::CreateBuffer(this->_indices, this->_count);
@@ -18,9 +20,8 @@ IndexBuffer::IndexBuffer(unsigned int* indices)
 	IndexBuffer::CreateBuffer(indices);
 }
 
-IndexBuffer::IndexBuffer(std::vector<unsigned int> indices)
+IndexBuffer::IndexBuffer(std::vector<unsigned int> indices) : _indicesVec{indices}
 {
-	this->_indicesVec = indices;
 	this->_count = _indicesVec.size();
 	IndexBuffer::CreateBuffer(_indicesVec);
 }

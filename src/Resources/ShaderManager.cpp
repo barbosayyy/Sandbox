@@ -43,7 +43,7 @@ Shader* ShaderManager::GetShader(int vRId, int fRId)
 
 Shader* ShaderManager::NewShader(int vRId, int fRId)
 {
-    Logger::Trace(LogLevel::INFO, "Creating new Shader...");
+    Logger::Trace(LogLevel::RUNTIME, "Creating new Shader...");
     Resource vSh = GetDataFromID(ResourceID::SHADER_VERTEX, vRId);
     Resource fSh = GetDataFromID(ResourceID::SHADER_FRAGMENT, fRId);
 

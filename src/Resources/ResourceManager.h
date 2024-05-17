@@ -14,13 +14,11 @@ namespace Sandbox{
 		TEXTURE_PNG = 17
     };
 
-    // TODO -> This could be improved in the future
+    // TODO: This could be improved in the future
     class ResourceManager : public Singleton<ResourceManager, int>{
     public:
         ResourceManager() {};
         String GetYamlResourceNameFromResourceID(ResourceID rId);
         Resource GetDataFromID(ResourceID rId, int id);
-        //template <typename R>
-        //R* GetResource(int rId);
     };
 }

@@ -3,12 +3,8 @@
 
 using namespace Sandbox;
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, Shader& shader) : _shader(shader)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) : _vertices(vertices), _indices(indices),_textures(textures)
 {
-	this->_vertices = vertices;
-	this->_indices = indices;
-	this->_textures = textures;
-
 	CreateMesh();
 }
 
@@ -25,15 +21,14 @@ void Mesh::CreateMesh()
 
 	glBindVertexArray(_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	if(_vertices.size() > 0)
+	if(_vertices.size() > 0){
 		glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
-	else
+	}
+	else{
 		std::cout << "Mesh_createMesh: Vertex vector is empty!" << std::endl;
+	}
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-	if (_indices.size() > 0)
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned int), &_indices[0], GL_STATIC_DRAW);
-	else
-		std::cout << "Mesh_createMesh: Indices vector is empty!" << std::endl;
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned int), &_indices[0], GL_STATIC_DRAW);
 	if (_vertices.size() > 0)
 	{
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -48,38 +43,45 @@ void Mesh::CreateMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::BindTextures()
+void Mesh::BindTextures(Shader* shader)
 {
-	int aux_diffuse{ 1 };
-	int aux_specular{ 1 };
-	int aux_emissive{ 1 };
-	String mat = "material.";
+	int tmpDiffuse{ 1 };
+	int tmpSpecular{ 1 };
 	if (this->_textures.size() > 0)
 	{
-		for (unsigned int i = 0; i < _textures.size(); i++)
+		u8 i {0};
+		String n;
+		String name;
+		String final;
+		for (Texture texture : _textures)
 		{
 			glActiveTexture(textureUnitMap.at(i));
+			
 			std::map<TextureType, String>::iterator it;
 			it = textureTypeMap.find(_textures.at(i)._type);
-			// TODO this can be refactored by casting String
-			String nr;
-			String name = it->second;
+			name = it->second;
+			//// TODO this can be refactored by casting String
+			//String nr;
+			//String name = it->second;
 			if (it->first == TextureType::DIFFUSE)
-				nr = std::to_string(aux_diffuse++);
+				n = std::to_string(tmpDiffuse++);
 			else if(it->first == TextureType::SPECULAR)
-				nr = std::to_string(aux_specular++);
-			else if (it->first == TextureType::EMISSIVE)
-				nr = std::to_string(aux_emissive++);
-			this->_shader.SetInt((mat+name+nr).c_str(), i);
+				n = std::to_string(tmpSpecular++);
+				
+			shader->SetInt(String(String("texture_")+name+n).c_str(), i);
 			glBindTexture(GL_TEXTURE_2D, _textures.at(i)._texture);
+			i++;
 		}
 		glActiveTexture(textureUnitMap.at(0));
 	}
 }
 
-void Mesh::Draw()
+void Mesh::Draw(Shader* shader)
 {
-	BindTextures();
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
-	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+	BindTextures(shader);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
+	glBindVertexArray(_vao);
+	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(_indices.size()), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+	glActiveTexture(GL_TEXTURE0);
 }

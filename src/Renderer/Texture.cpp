@@ -6,17 +6,8 @@
 
 using namespace Sandbox;
 
-// std::map<uint8_t, GLenum> textureUnitMap = 
-
-// std::map<TextureType, String> textureTypeMap = {
-// 	{TextureType::DIFFUSE, "diffuse"},
-// 	{TextureType::SPECULAR,"specular"},
-// 	{TextureType::EMISSIVE,"emissive"},
-// };
-
-Texture::Texture(const char* texturePath, ImageFormat imageType, TextureType textureType, GLint texWrapMethod)
+Texture::Texture(const char* texturePath, ImageFormat imageType, TextureType textureType, GLint texWrapMethod) : _type(textureType)
 {
-	this->_type = textureType;
 	Load(texturePath, imageType, texWrapMethod);
 }
 
@@ -47,6 +38,9 @@ void Texture::Load(const char* texturePath, ImageFormat imageType, GLint texWrap
 
 	stbi_set_flip_vertically_on_load(true);
 	_data = stbi_load(texturePath, &this->_width, &this->_height, &this->_nrOfchannels, 0);
+
+	//TODO: check for number of channels
+
 	if (_data)
 	{
 		if (imageType == ImageFormat::JPG)

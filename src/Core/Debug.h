@@ -10,11 +10,10 @@
 namespace Sandbox{
 
     enum class LogLevel{
-        LOGGING_ERROR   = 1,
-        CRITICAL        = 2,
-        ERROR           = 3,
-        WARNING         = 4,
-        INFO            = 5
+        CRITICAL        = 1,
+        ERROR           = 2,
+        WARNING         = 3,
+        RUNTIME         = 4
     };
 
     static String LogLevelToString(LogLevel level){
@@ -22,8 +21,8 @@ namespace Sandbox{
 
         switch(level)
         {
-            case(LogLevel::INFO):
-                ret = "Info";
+            case(LogLevel::RUNTIME):
+                ret = "Runtime";
             break;
             case(LogLevel::WARNING):
                 ret = "Warning";
@@ -33,9 +32,6 @@ namespace Sandbox{
             break;
             case(LogLevel::CRITICAL):
                 ret = "Critical Error";
-            case(LogLevel::LOGGING_ERROR):
-                ret = "Logging Error";
-            break;
         }
         return ret;
     };
@@ -49,7 +45,7 @@ namespace Sandbox{
             if((u32)level > Logger::applicationLogLevel)
                 return;
             if(LogLevelToString(level).empty()){
-                Logger::Trace(LogLevel::LOGGING_ERROR, "Provide a Log Level");
+                Logger::Trace(LogLevel::CRITICAL, "Logger: Provide a Log Level");
                 return;
             }
             std::cout << '[' << LogLevelToString(level) << ']' << ' ';
@@ -64,11 +60,13 @@ namespace Sandbox{
 
     class Debugger{
     public:
+        static std::string _buffer;
         static void Assert(const String message);
         template<typename ...Args>
         static void FlushError(Args... args){
             std::cerr << '[' << LogLevelToString(LogLevel::ERROR) << ']' << ' ';
             (std::cerr << ... << args) << std::endl;
+                _buffer.clear();
         };
         template <typename ...Args>
         static void Print(Args... args){

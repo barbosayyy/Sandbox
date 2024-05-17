@@ -7,10 +7,18 @@
 #include "../Math/Vectors.h"
 
 namespace Sandbox{
+    constexpr byte RENDERER_OPENGL    = 0x1;
+    constexpr byte RENDERER_VULKAN    = 0x2;
+    constexpr byte RENDERER_DX12      = 0x3;
+}
+
+namespace Sandbox{
+
     class Renderer : Singleton<Renderer, int>{
         private:
             Window* _windowHandle;
             Camera* _renderCamera;
+            byte rMode;
         public:
             Renderer();
             ~Renderer();

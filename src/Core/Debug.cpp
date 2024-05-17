@@ -3,11 +3,13 @@
 
 using namespace Sandbox;
 
-int Logger::applicationLogLevel {(u32)LogLevel::INFO}; 
+std::string Debugger::_buffer = "";
+
+int Logger::applicationLogLevel {(u32)LogLevel::RUNTIME}; 
 
 void Logger::SetLogLevel(LogLevel level)
 {  
-    if(level >= LogLevel::INFO || level <= (LogLevel)0)
+    if(level >= LogLevel::RUNTIME || level <= (LogLevel)0)
         level = LogLevel::CRITICAL;
     Logger::applicationLogLevel = (u32)level;
 }

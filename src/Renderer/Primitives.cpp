@@ -2,14 +2,18 @@
 
 using namespace Sandbox;
 
-Square::Square(float x, float y, float z)
+Square::Square(float x, float y, float z) : Renderable(x, y, z)
 {
     Square::Create();
-    Square::SetPosition(x, y, z);
 }
 
-Square::~Square() {
-    
+Square::Square() : Renderable()
+{
+    Square::Create();
+}
+
+Square::~Square()
+{
 }
 
 void Square::Create(){
@@ -21,52 +25,39 @@ void Square::Create(){
         -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
         -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
         */
-         0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f,  0.0f
+         0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 
+        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 0.0f, 0.0f
     };
     unsigned int indices[]{
         0, 1, 3,
         1, 2, 3
     };
 
-    unsigned int nOfAttrib{ 2 };
     unsigned int vertexCount{ 4 };
-    unsigned int indicesCount{ 6 };
+    unsigned int indexCount{ 6 };
 
-    _vb = new VertexBuffer(vertices, vertexCount*nOfAttrib);
-    _eb = new IndexBuffer(indices, indicesCount);
+    _vb = new VertexBuffer(vertices, vertexCount);
+    _eb = new IndexBuffer(indices, indexCount);
 }
 
 void Square::Draw(Renderer* renderer) {
-    if(this->_mat.textures.size() > 1){
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, this->texture.at(0));
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, this->texture.at(1));
-    }
-    _vb->Bind();
-    _eb->Draw();
+    Renderable::Draw(renderer);
 }
 
-//
-
-Cube::Cube(float x, float y, float z)
+Cube::Cube(float x, float y, float z) : Renderable(x, y, z)
 {
     Cube::Create();
-    Cube::SetPosition(x, y, z);
 }
 
-Cube::Cube()
+Cube::Cube() : Renderable()
 {
     Cube::Create();
-    Cube::SetPosition(0.0f, 0.0f, 0.0f);
 }
 
 Cube::~Cube()
 {
-
 }
 
 void Cube::Create()
@@ -129,42 +120,36 @@ void Cube::Draw(Renderer* renderer)
     Renderable::Draw(renderer);
 }
 
-
-
-Square2::Square2(float x, float y, float z)
+Plane::Plane(float x, float y, float z) : Renderable(x, y, z)
 {
-    Create();
-    SetPosition(x, y, z);
+    Plane::Create();
 }
 
-Square2::~Square2()
+Plane::Plane() : Renderable()
 {
-
+    Plane::Create();
 }
 
-void Square2::Create()
+void Plane::Create()
 {
     float vertices[] = {
-         0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
-         0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f
+        0.5f, 0.0f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.5f, 0.0f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        -0.5f, 0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
     };
+
     unsigned int indices[] = {
         0, 1, 3,
         1, 2, 3
     };
+    unsigned int vertexCount{4}; 
+    unsigned int indexCount{6};
 
-    unsigned int nOfAttrib{ 2 };
-    unsigned int vertexCount{ 4 };
-    unsigned int indicesCount{ 6 };
-
-    _vb = new VertexBuffer(vertices, vertexCount*nOfAttrib);
-    _eb = new IndexBuffer(indices, indicesCount);
+    _vb = new VertexBuffer(vertices, vertexCount);
+    _eb = new IndexBuffer(indices, indexCount); 
 }
 
-void Square2::Draw(Renderer* renderer)
-{
-    _vb->Bind();
-    _eb->Draw();
+void Plane::Draw(Renderer* renderer){
+    Renderable::Draw(renderer);
 }

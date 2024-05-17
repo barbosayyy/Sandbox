@@ -14,9 +14,16 @@ VertexBuffer::VertexBuffer(float* vertices, GLsizei vertexCount)
 	VertexBuffer::CreateBuffer(this->_vertices, this->_vertexCount);
 }
 
-VertexBuffer::VertexBuffer(std::vector<float> vertices)
+// VertexBuffer::VertexBuffer(float* vertices, GLsizei vertexCount, size_t dataSize)
+// {
+// 	this->_vertices = vertices;
+// 	this->_vertexCount = vertexCount;
+// 	VertexBuffer::CreateBuffer(this->_vertices, this->_vertexCount, dataSize);
+// }
+
+VertexBuffer::VertexBuffer(std::vector<float> vertices) : _verticesVec{vertices}
 {
-	this->_verticesVec = vertices;
+	assert("Not implemented yet");
 	this->_vertexCount = 0;
 	VertexBuffer::CreateBuffer(this->_verticesVec);
 }
@@ -35,7 +42,6 @@ void VertexBuffer::CreateBuffer(float* vertices, GLsizei vertexCount)
 	glBindVertexArray(this->_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, this->_vbo);
 
-	// FIXME Data size
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);

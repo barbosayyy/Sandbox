@@ -1,5 +1,6 @@
 
 #include <fstream>
+#include <random>
 #include <sstream>
 
 #include "Utils.h"
@@ -53,4 +54,12 @@ YAML::Node YamlUtil::GetNode(const char* filePath, const char* nodeName)
 		Logger::Trace(LogLevel::WARNING, "YamlUtil: Failed to get YAML node from string: ", filePath);
 
 	return data[nodeName];
+}
+
+int Random::GetRange(int from, int to)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(from, to);
+	return int(dist(gen));
 }

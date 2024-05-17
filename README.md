@@ -1,7 +1,7 @@
 # Sandbox Renderer
 
 ## Overview
-A <b>work-in-progress</b> 3D Engine written in C++.
+A <b>work-in-progress</b> 3D Game Engine. Currently supports OpenGL.
 
 ## Building
 

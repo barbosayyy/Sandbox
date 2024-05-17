@@ -11,16 +11,59 @@
 #include "Renderer/Camera.h"
 #include "Core/Types.h"
 #include "Core/Debug.h"
+#include "Core/Utils.h"
+#include "Renderer/Model.h"
 
 using namespace Sandbox;
 
+float test1;
+float test2;
+float test3;
+
+void ChangeSkbColor(){
+	if(InputManager::PressedKey(SB_KEYBOARD_1)){
+		test1 += 0.01f;
+		Debugger::Print("test1: ", test1);
+	}
+	else if(InputManager::PressedKey(SB_KEYBOARD_2)){
+		test2 += 0.01f;
+		Debugger::Print("test2: ", test2);
+	}
+	else if(InputManager::PressedKey(SB_KEYBOARD_3)){
+		test3 += 0.01f;	
+		Debugger::Print("test3: ", test3);
+	}	
+	else if(InputManager::PressedKey(SB_KEYBOARD_4)){
+		test1 -= 0.01f;
+		Debugger::Print("test1: ", test1);
+	}
+	else if(InputManager::PressedKey(SB_KEYBOARD_5)){
+		test2 -= 0.01f;	
+		Debugger::Print("test2: ", test2);
+	}	
+	else if(InputManager::PressedKey(SB_KEYBOARD_6)){
+		test3 -= 0.01f;
+		Debugger::Print("test3: ", test3);
+	}
+
+	if(test1 > 1.0f)
+		test1 = 0.0f;
+
+	if(test2 > 1.0f)
+		test2 = 0.0f;
+
+	if(test3 > 1.0f)
+		test3 = 0.0f;
+}
+
 void Shutdown(){
-	Logger::Trace(LogLevel::INFO, "Application Quit");
+	Logger::Trace(LogLevel::RUNTIME, "Application Quit");
 	glfwTerminate();
 }
 
 int main()
 {
+	Logger::Trace(LogLevel::RUNTIME, "Started Sandbox");
 	Renderer* renderer = new Renderer();
 
 	// ImGui
@@ -34,73 +77,80 @@ int main()
 	ShaderManager shaderManager = ShaderManager();
 	//TextureManager textureManager = TextureManager();
 
-	Cube* lightSource = new Cube(0.5f, 0.0f, 0.0f);
-
-	lightSource->RequestShader(2, 2, shaderManager);
-
 	std::vector<Texture> txts{
 		Texture("resources/assets/d_container.png", ImageFormat::PNG, TextureType::DIFFUSE, GL_REPEAT),
 		Texture("resources/assets/s_container.png", ImageFormat::PNG, TextureType::SPECULAR, GL_REPEAT),
 		Texture("resources/assets/matrix.jpg", ImageFormat::JPG, TextureType::EMISSIVE, GL_REPEAT)
 	};
-	
-	// Objects
-		// Mesh Test
-		// 	std::vector<Vertex> vert{
-		// 		
-		// 	};
-		// 	std::vector<unsigned int> ind;
-		// 	Mesh test(vert, ind, txts, S_lighting);
-		
-		Cube* litObject = new Cube(2.5f, -1.0f, 1.0f);
-		litObject->RequestShader(2, 3, shaderManager);
-		litObject->_mat.roughnessStrength = 32.0f;
-		litObject->_mat.emissiveStrength = 1.0f;
-		litObject->_mat.textures.push_back(txts.at(0)._texture);
-		litObject->_mat.textures.push_back(txts.at(1)._texture);
-		litObject->_mat.textures.push_back(txts.at(2)._texture);
+	Texture txt("resources/assets/confusion.png", ImageFormat::PNG, TextureType::DIFFUSE, GL_REPEAT);
 
-		Cube* helloCube = new Cube(4.0f, 2.0f, 1.0f);
-		helloCube->RequestShader(2, 3, shaderManager);
-		helloCube->_mat.roughnessStrength = 32.0f;
-		helloCube->_mat.emissiveStrength = 1.0f;
-		//helloCube->_mat.textures.push_back(txts.at(0)._texture);
-		//helloCube->_mat.textures.push_back(txts.at(1)._texture);
-		//helloCube->_mat.textures.push_back(txts.at(2)._texture);
+	std::vector<Cube*> cubes = {};
+	u16 nOfCubes = 20;
+	for(u16 i = 0; i < nOfCubes; i++){
+		Cube* newCube = new Cube(Random::GetRange(float(-5.0f), float(5.0f)), Random::GetRange(float(-5.0f), float(5.0f)), Random::GetRange(float(-5.0f), float(5.0f)));
+		cubes.push_back(newCube);
+		cubes.at(i)->RequestShader(2, 3, shaderManager);
+		cubes.at(i)->SetMatRough(32.0f);
+		cubes.at(i)->SetMatEm(1.0f);
+		cubes.at(i)->AddMatTexture(txts.at(0));
+		cubes.at(i)->SetRotation(Random::GetRange(float(5.0f), float(70.0f)), vec3(Random::GetRange(0, 1), Random::GetRange(0, 1), Random::GetRange(0, 1)), GL_TRUE);
+		float a = Random::GetRange(float(0.2f), float(2.0f));
+		cubes.at(i)->SetScale(a,a,a);
+	}
 
-		helloCube->SetPosition(vec3(16.0f,2.0f,3.0f));
-		helloCube->SetMatColor(1.0f,1.0f,1.0f);
+	Cube* objLightBulb = new Cube(0.0f, 0.0f, 0.0f);
+	objLightBulb->RequestShader(2, 2, shaderManager);
+	objLightBulb->SetMatColor(1.0f,1.0f,1.0f);
+	objLightBulb->SetScale(0.25f, 0.25f, 0.25f);
 
+	Plane* plane = new Plane(0.0f, -5.0f, 0.0f);
+	plane->RequestShader(2, 3, shaderManager);
+	plane->AddMatTexture(txts.at(0));
+	plane->SetMatRough(32.0f);
+	plane->SetMatEm(1.0f);
+	plane->SetScale(60.0f, 60.0f, 60.0f);
+
+	Model* model = new Model("resources/model/backpack.obj");
+	Shader* modelShader = new Shader("resources/shaders/model.vert", "resources/shaders/model.frag");
+
+	Logger::Trace(LogLevel::RUNTIME, "Number of shaders: " ,shaderManager._shaderCount);
+	Logger::Trace(LogLevel::RUNTIME, "Starting Sandbox Render Context...");
 	while (!glfwWindowShouldClose(renderer->GetWindow()->GLWindow()))
 	{
 		InputManager->ProcessInput();
+
+		ChangeSkbColor();
+		glClearColor(test1, test2, test3, 1.0f);
 
 		renderer->Loop();
 
 		imGuiManager->NewRendererFrame();
 
-		helloCube->Draw(renderer);
-		litObject->Draw(renderer);
+		for(Cube* cube : cubes){
+			cube->Draw(renderer);
+		}
 
-		// lightSource->_mat.shaders.at(0)->Use();
-		// lightSource->_mat.shaders.at(0)->SetMat4("projection", projection);
-		// lightSource->_mat.shaders.at(0)->SetMat4("view", renderer->GetRenderCamera()->GetView());
-		// lightSource->_mat.shaders.at(0)->SetVec3("lightColor", lightColor.x, lightColor.y, lightColor.z);
+		objLightBulb->Draw(renderer);
 
-		// lightSource->SetRotation(glfwGetTime(), Yaw_Right, GL_FALSE);
-		// lightSource->SetScale(0.25f, 0.25f, 0.25f);
-		// lightSource->_mat.shaders.at(0)->SetMat4("model", lightSource->GetModelMatrix());
-		// lightSource->Draw();
+		plane->Draw(renderer);
+
+		modelShader->Use();
+		modelShader->SetMat4("view", renderer->GetRenderCamera()->GetView());
+		modelShader->SetMat4("projection", renderer->GetProjection());
+		mat4 modelM {1.0f};
+		modelM = glm::translate(modelM, vec3(0.0f,0.0f,0.0f));
+		modelM = glm::scale(modelM, vec3(1.0f,1.0f,1.0f));
+		shaderManager.GetShader(3,4)->SetMat4("model", modelM);
+
+		model->Draw(modelShader);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 		imGuiManager->RenderMain();
-
 		glfwSwapBuffers(renderer->GetWindow()->GLWindow());
 	}
 
-	delete litObject;
-	delete lightSource;
+	// delete objCube1;
+	// delete objLightBulb;
 	delete camera;
 	delete InputManager;
 	delete imGuiManager;

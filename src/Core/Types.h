@@ -5,6 +5,8 @@
 #include <string>
 #include <ostream>
 #include <glew/glew.h>
+#include <variant>
+#include <xstring>
 
 namespace Sandbox
 {
@@ -13,7 +15,10 @@ namespace Sandbox
 	};
 
 	enum class TextureType {
-		SPECULAR, DIFFUSE, EMISSIVE
+		NONE 		= 0,
+		DIFFUSE 	= 1,
+		SPECULAR 	= 2,
+		EMISSIVE 	= 3
 	};
 
 	// std::string Wrapper
@@ -31,7 +36,7 @@ namespace Sandbox
 		void append(const std::string& str);
 		char& at(int index);
 		bool empty();
-
+		
 		String operator+(const String& str) const {
 			String temp;
 			temp._string = this->_string + str._string;

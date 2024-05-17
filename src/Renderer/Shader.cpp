@@ -5,7 +5,9 @@ using namespace Sandbox;
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
-	this->_shader = Load(File::Read(vertexPath).c_str(), File::Read(fragmentPath).c_str());
+	Debugger::_buffer = "vertex: " + std::string(vertexPath) + " frag: " + std::string(fragmentPath);
+	
+	this->_shader = Load(File::Read(vertexPath).c_str(), File::Read(fragmentPath).c_str());	
 }
 
 GLuint Shader::Load(const char* vertexPath, const char* fragmentPath)
@@ -65,7 +67,7 @@ GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
 				shaderTypeStr = "VERTEX";
 			break;
 		}
-		Debugger::FlushError("Failed to compile shader ", " Shader Type: ", shaderTypeStr, "\n", infoLog);
+		Debugger::FlushError("Failed to compile shader ", " Shader Type: ", shaderTypeStr, " Path: ", Debugger::_buffer, "\n", infoLog);
 
 		glDeleteShader(shader);
 		return 0;

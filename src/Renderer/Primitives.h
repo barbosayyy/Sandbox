@@ -8,7 +8,6 @@ namespace Sandbox{
     public:
         Cube(float x, float y, float z);
         Cube();
-
         ~Cube();
 
         void Draw(Renderer* renderer) override;
@@ -19,6 +18,7 @@ namespace Sandbox{
     class Square : public Renderable{
     public:
         Square(float x, float y, float z);
+        Square();
         ~Square();
 
         void Draw(Renderer* renderer) override;
@@ -26,16 +26,15 @@ namespace Sandbox{
         void Create() override;
     };
 
-    class Square2 : public Renderable {
+    class Plane : public Renderable{
     public:
-        Square2(float x, float y, float z);
-        ~Square2();
+        Plane(float x, float y, float z);
+        Plane();
+        ~Plane();
 
         void Draw(Renderer* renderer) override;
-    private:
+    protected:
         void Create() override;
-        std::vector<float> _vertices;
-        std::vector<unsigned int> _indices;
     };
 }
 

@@ -3,26 +3,34 @@
 
 using namespace Sandbox;
 
-Renderer::Renderer(){
-    // GLFW initialization
-		if (!glfwInit())
-		{
-			Logger::Trace(LogLevel::CRITICAL, "Failed to initialize GLFW. Exiting");
-			// return -1;
+Renderer::Renderer() : rMode(0x0){
+	if(_instance == nullptr){
+		_instance = this;
+		
+		rMode |= RENDERER_OPENGL;
+		if(rMode & RENDERER_OPENGL){
+			if (!glfwInit())
+			{
+				assert("Failed to initialize GLFW.");
+			}
+			_windowHandle = new Window("Sandbox", WINDOW_WIDTH, WINDOW_HEIGHT);
+			if (!_windowHandle->GLWindow())
+			{
+				glfwTerminate();
+				assert("Failed to find window.");
+			}
+			// GLEW initialization
+			if (glewInit() != GLEW_OK)
+			{
+				glfwTerminate();
+				assert("Failed to initialize GLEW.");
+			}
+			Logger::Trace(LogLevel::RUNTIME, "Started Sandbox Renderer, Mode: ", static_cast<int>(rMode));
 		}
-		_windowHandle = new Window("Sandbox", WINDOW_WIDTH, WINDOW_HEIGHT);
-		if (!_windowHandle->GLWindow())
-		{
-			Logger::Trace(LogLevel::CRITICAL, "Failed to find window. Exiting");
-			glfwTerminate();
-			// return -1;
+		else if(rMode & RENDERER_VULKAN){
+			assert("Vulkan isn't ready yet!");
 		}
-		// GLEW initialization
-		if (glewInit() != GLEW_OK)
-		{
-			Logger::Trace(LogLevel::CRITICAL, "Failed to initialize GLEW. Exiting");
-			// return -1;
-		}
+	}
 }
 
 Renderer::~Renderer()
@@ -33,10 +41,10 @@ Renderer::~Renderer()
 mat4 Renderer::GetProjection()
 {
 	if(this->GetRenderCamera()->GetProjectionMode() == CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE){
-		return glm::perspective(glm::radians(60.0f), (float)this->GetWindow()->GetWidth() / (float)this->GetWindow()->GetHeight(), 0.1f, 100.0f);
+		return glm::perspective(glm::radians(60.0f), (float)this->GetWindow()->GetWidth() / (float)this->GetWindow()->GetHeight(), 0.1f, 1000.0f);
 	}
 	else{ // WIP: CAMERA_PROJECTION_ORTHO
-		assert("Not Implemented");
+		assert("Not implemented yet");
 	}
 	return mat4(1.0f);
 }
@@ -45,13 +53,13 @@ void Renderer::Loop()
 {
     glfwPollEvents();
 
-	glClearColor(0.25f, 0.1f, 0.4f, 1.0f);
+	glClearColor(0.52f, 0.36f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glEnable(GL_DEPTH_TEST);
 
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
 }

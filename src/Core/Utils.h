@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "../Core/Types.h"
 #include "yaml-cpp/node/node.h"
+#include <random>
 
 namespace Sandbox{
 	class File
@@ -21,6 +22,12 @@ namespace Sandbox{
 		
 	public:	
 		static YAML::Node GetNode(const char* filePath, const char* nodeName);
+	};
+	
+	class Random{
+	public:
+		// Inclusive
+		static int GetRange(int from, int to);
 	};
 }
 
