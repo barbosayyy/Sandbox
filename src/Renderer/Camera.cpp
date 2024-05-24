@@ -14,6 +14,8 @@ Camera::Camera(float x, float y, float z)
 	_roll = 0.0f;
 	_lookAt = glm::lookAt(_position, _position + _front, _up);
 	_projMode = CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE;
+	_near = CAMERA_DEFAULT_NEAR;
+	_far = CAMERA_DEFAULT_FAR;
 
 	InputManager::GetInstance()->AddInputFunction([this]() {OnInput(); });
 	InputManager::GetInstance()->AddMouseAxisMoveFunction([this](float xOffset, float yOffset) {OnMouseAxisMove(InputManager::GetInstance()->xOffset, InputManager::GetInstance()->yOffset); });

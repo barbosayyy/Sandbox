@@ -1,3 +1,5 @@
+# Sandbox - Source
+
 add_library(Sandbox_Src STATIC
     Core/Base.h
     Core/Types.h
@@ -16,8 +18,8 @@ add_library(Sandbox_Src STATIC
     Input/Input.cpp
     Core/Debug.h
     Core/Debug.cpp
-    Renderer/Assimp.h
-    Renderer/Assimp.cpp
+    # Renderer/Assimp.h
+    # Renderer/Assimp.cpp
     Renderer/Mesh.h
     Renderer/Mesh.cpp
     Renderer/Model.h

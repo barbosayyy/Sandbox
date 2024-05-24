@@ -50,7 +50,7 @@ void ImGuiManager::RenderMain(){
         ImGui::Begin("Sandbox");
         ImGui::SetWindowPos(ImVec2(1,2), 0);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / _io->Framerate, _io->Framerate);
-
+        ImGui::Text("Tris: %d", 0);
         ImGui::End();
     }
     ImGui::Render();

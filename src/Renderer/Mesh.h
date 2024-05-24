@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "../Core/Types.h"
+#include "Renderer.h"
 
 namespace Sandbox{
 
@@ -16,7 +17,7 @@ namespace Sandbox{
 		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
 		~Mesh();
 		
-		void Draw(Shader* shader);
+		void Draw(Shader* shader, Renderer* renderer);
 		void BindTextures(Shader* shader);
 	
 	private:

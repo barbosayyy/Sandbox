@@ -3,6 +3,7 @@
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
 [Bb]uild/
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -18,5 +19,8 @@ bld/
 [Cc]ache/
 /[Ii]nstall/
 [Uu]ser/
+
 CMakeUserPresets.json
+
 imgui.ini
+*.yaml

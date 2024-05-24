@@ -6,6 +6,7 @@
 #include "../Resources/ShaderManager.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include <cstddef>
 
 namespace Sandbox{
     class Renderable {
@@ -28,10 +29,11 @@ namespace Sandbox{
 
         void RequestShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
         void ReleaseShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
+        size_t GetShadersAmount() const {return _mat.shaders.size();};
         
         Material GetMaterial() {return _mat;};
 
-        void AddMatTexture(Texture& tex) {this->_mat.textures.push_back(tex._texture);};
+        void AddMatTexture(Texture& tex) {this->_mat.textures.push_back(tex);};
 
         void SetMatEm(u32 param) {this->_mat.emissiveStrength = param;};
         void SetMatRough(u32 param) {this->_mat.roughnessStrength = param;};

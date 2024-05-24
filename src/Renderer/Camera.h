@@ -12,6 +12,9 @@ namespace Sandbox {
 		CAMERA_PROJECTION_PERSPECTIVE 	= 0,
 		CAMERA_PROJECTION_ORTHO			= 1
 	};
+
+	constexpr float CAMERA_DEFAULT_NEAR = 0.1;
+	constexpr float CAMERA_DEFAULT_FAR = 500.0;
 	
 	class Camera {
 	public:
@@ -24,9 +27,11 @@ namespace Sandbox {
 		float _pitch;
 		float _yaw;
 		float _roll;
-		const float _sensitivity = 0.1;
-		const float _moveSpeed = 0.1;
+		float _sensitivity = 0.1;
+		float _moveSpeed = 0.1;
 		bool _canMove = false;
+		float _near;
+		float _far;
 
 		void UpdatePosition();
 		void OnInput();

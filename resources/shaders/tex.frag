@@ -17,5 +17,9 @@ void main()
 {
     vec4 tex1 = texture(texture1, TexCoord);
     vec4 tex2 = texture(texture2, TexCoord);
-    fragColor = mix(vec4(tex1.rgb, 1.0), vec4(tex2.rgb, tex2.a), mixValue) + material.col;
+    vec4 texColor = mix(vec4(tex1.rgb, 1.0), vec4(tex2.rgb, tex2.a), mixValue) + material.col;
+    if(tex1.a < 0.1){
+        discard;
+    }
+    fragColor = tex1;
 }

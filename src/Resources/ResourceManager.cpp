@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 #include "../Core/Utils.h"
 #include "../Core/Debug.h"
+#include "Resources.h"
 
 using namespace Sandbox;
 
@@ -31,7 +32,7 @@ Resource ResourceManager::GetDataFromID(ResourceID rId, int id)
 {
     String rName = GetYamlResourceNameFromResourceID(rId);
     Resource rData {0, "", ""};
-    YAML::Node resourceNode = YamlUtil::GetNode("resources/resource-data.yaml", rName.c_str());
+    YAML::Node resourceNode = YamlUtil::GetNode(SB_RESOURCE_DATA_PATH.c_str(), rName.c_str());
 
     // Wrap this in yaml util function
     int entryId {0};

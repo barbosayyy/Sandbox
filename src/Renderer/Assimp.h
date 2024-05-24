@@ -8,6 +8,5 @@
 #include "assimp/scene.h"
 
 namespace Sandbox{
-    std::vector<Texture> LoadAssimpMaterialTextures(aiMaterial* mat, aiTextureType type);
-    Mesh ProcessAssimpMesh(aiMesh* mesh, const aiScene* scene);
+    
 }

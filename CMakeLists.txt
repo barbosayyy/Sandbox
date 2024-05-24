@@ -1,3 +1,6 @@
+
+# Sandbox - Base
+
 cmake_minimum_required(VERSION 3.10)
 
 project(Sandbox 
@@ -27,17 +30,19 @@ add_compile_definitions(SANDBOX_ENGINE)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(SANDBOX_TARGET_PLATFORM "Windows")  
-    add_compile_definitions(WINDOWS)
+    add_compile_definitions(WIN)
+elseif()
+    message(FATAL_ERROR "Other platforms not supported yet.")
 endif() 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(SANDBOX_TARGET_MODE "Debug")
-    add_compile_definitions(DEBUG_MODE)
+    add_compile_definitions(SANDBOX_DEBUG)
     endif()
     
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(SANDBOX_TARGET_MODE "Release")
-    add_compile_definitions(RELEASE_MODE)
+    add_compile_definitions(SANDBOX_RELEASE)
 endif()
 
 if(SANDBOX_TARGET_PLATFORM)
@@ -75,17 +80,22 @@ file(COPY ${SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${SANDBOX_RESOURCES_DIR} DESTINATION ${CMAKE_BINARY_DIR})
 
-# Configure Resource Data 
+# Configure Resource Data
 
 set(SANDBOX_SCRIPTS_RUN_SCRIPTS     1)
-set(SANDBOX_SCRIPTS_DEBUG           0)
 
 if(${SANDBOX_SCRIPTS_RUN_SCRIPTS} EQUAL 1)
-    message("\nRunning Script: resource-serializer.py")
-    if(${SANDBOX_SCRIPTS_DEBUG} EQUAL 1)
-            execute_process(COMMAND python ${SANDBOX_SCRIPTS_DIR}/resource-serializer.py)
-    else()
-            execute_process(COMMAND python -O ${SANDBOX_SCRIPTS_DIR}/resource-serializer.py)
+    message("\nRunning Scripts:")
+    if(${SANDBOX_TARGET_MODE} STREQUAL "Debug")
+        if(${SANDBOX_TARGET_PLATFORM} STREQUAL "Windows")
+            message("resource-serializer.py")
+            execute_process(COMMAND python -O ${SANDBOX_SCRIPTS_DIR}/resource-serializer.py --target=0 --cmake=1)
+            file(COPY ${SANDBOX_RESOURCES_DIR}/resource-data.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
+        endif()
+    elseif(${SANDBOX_TARGET_MODE} STREQUAL "Release")
+        if(${SANDBOX_TARGET_PLATFORM} STREQUAL "Windows")
+            execute_process(COMMAND python ${SANDBOX_SCRIPTS_DIR}/resource-serializer.py --target=1 --cmake=1)
+        endif()
     endif()
 else()
     message("Scripts are disabled")

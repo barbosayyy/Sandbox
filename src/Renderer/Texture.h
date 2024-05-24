@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string_view>
 #include <vector>
 #include <map>
 #include "../Core/Singleton.h"
@@ -42,22 +43,26 @@ namespace Sandbox{
 	private:
 		int _width;
 		int _height;
-		int _nrOfchannels;
+		int _nrOfChannels;
+		unsigned int _id;
+		TextureType _type;
 
-		unsigned char* _data = nullptr;
-
-		void Load(const char* texturePath, ImageFormat imageType, GLint texWrapMethod);
 	public:
-		Texture();
-		Texture(const char* texturePath, ImageFormat imageType, TextureType textureType, GLint texWrapMethod);
+		String _name;
+		Texture(const char* path, TextureType tType, GLint wrapMethod, bool flipVertical, bool gammaCorrection);
+		//Texture() {};
 		~Texture();
 
-		unsigned int _texture;
-		TextureType _type;
+		unsigned int GetID() const {return _id;};
+		TextureType GetType() const {return _type;};
+		int GetNrOfChannels() const {return _nrOfChannels;};
+
+		unsigned int& SetID() {return _id;};
+		TextureType& SetType() {return _type;};
+
 	};
 
-	class 
-	TextureManager : public Singleton<TextureManager, int>{
+	class TextureManager : public Singleton<TextureManager, int>{
 		private:
 			std::vector<Texture> _textures;
 		public:

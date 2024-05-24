@@ -1,6 +1,27 @@
 import os
 from datetime import datetime
 import yaml
+import argparse
+
+parser = argparse.ArgumentParser(description='')
+parser.add_argument("--target", type=int, default=0)
+parser.add_argument("--cmake", type=int, default=0)
+
+args = parser.parse_args()
+
+if(args.cmake == 0):
+    print("Resource Serializer Script Error: Not running as resource config")
+    exit(-1)
+
+if args.target < 0 or args.target > 1:
+    print("Resource Serializer Script Error: No target mode")
+    exit(-1)
+
+# 0 - Debug
+# 1 - Release
+target_mode = args.target
+
+
 
 resource_starting_id = 1
 
@@ -31,7 +52,7 @@ def sandbox_yaml_dump_resource_data(output_path, data):
         yaml.dump(data, file)
 
 def sandbox_yaml_dump_header_info(output_path):
-    header = "#\n# Sandbox Engine Resource Data - generated at: " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S") + "\n#\n\n"
+    header = "#\n# Sandbox Engine Resource Data - generated at: " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S") + "\n# Mode: " + str(target_mode) + "\n#\n\n"
     with open(output_path, "w") as file:
         file.write(header)
 
@@ -46,7 +67,11 @@ extension_dict = {
 }
 
 # Separate folder for resource-data.yaml?
-resource_path = os.getcwd() + "\\resources"
+if target_mode == 0:
+    resource_path = os.getcwd().replace("\\build", "") + "\\resources"
+elif target_mode == 1:
+    resource_path = os.getcwd() + "\\resources"
+
 resource_data_path = resource_path + "\\resource-data.yaml"
 data = {}
 

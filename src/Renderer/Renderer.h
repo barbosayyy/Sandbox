@@ -27,6 +27,7 @@ namespace Sandbox{
             Camera* GetRenderCamera() {return _renderCamera;};
             mat4 GetProjection();
             void SetRenderCamera(Camera* camera) {_renderCamera = camera;};
+            void Setup();
             void Loop();
     };
 }

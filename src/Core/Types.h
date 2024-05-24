@@ -44,7 +44,7 @@ namespace Sandbox
 		}
 		String operator+(const char* str) const {
 			String temp;
-			temp._string = str + this->_string;
+			temp._string = this->_string + str;
 			return temp;
 		}
 		String operator+=(const String& str) {
@@ -53,6 +53,14 @@ namespace Sandbox
 		}
 		String operator+=(const int& value) {
 			this->_string += std::to_string(value);
+			return _string;
+		}
+		String operator+(char value){
+			this->_string = _string + value;
+			return _string;
+		}
+		String operator+=(char value){
+			this->_string += value;
 			return _string;
 		}
 		bool operator==(const String& str) const{

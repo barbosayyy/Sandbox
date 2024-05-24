@@ -1,6 +1,7 @@
 #include "Renderable.h"
 #include "../Core/Debug.h"
 #include "Texture.h"
+#include <string>
 
 using namespace Sandbox;
 
@@ -15,7 +16,7 @@ Renderable::Renderable() :
     _vb{nullptr},
     _eb{nullptr},
     _mat{
-        std::vector<unsigned int>{},
+        std::vector<Texture>{},
         std::vector<Shader*>{},
         0,
         0,
@@ -35,7 +36,7 @@ Renderable::Renderable(float x, float y, float z) :
     _vb{nullptr},
     _eb{nullptr},
     _mat{
-        std::vector<unsigned int>{},
+        std::vector<Texture>{},
         std::vector<Shader*>{},
         0,
         0,
@@ -131,12 +132,12 @@ glm::mat4 Renderable::GetModelMatrix()
 
 void Renderable::RequestShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager)
 {
-    Shader* pSh = shaderManager.GetShader(shaderVertexRID, shaderFragmentRID);
+    Shader* pSh {shaderManager.GetShader(shaderVertexRID, shaderFragmentRID)};
     if(pSh != nullptr){
-        pSh->Use();
-        pSh->SetInt("material.diffuse", 0);
-        pSh->SetInt("material.specular", 1);
-        pSh->SetInt("material.emissive", 2);
+        // pSh->Use();
+        // pSh->SetInt("material.diffuse", 0);
+        // pSh->SetInt("material.specular", 1);
+        // pSh->SetInt("material.emissive", 2);
         this->_mat.shaders.push_back(pSh);
     }
     else{
@@ -144,15 +145,34 @@ void Renderable::RequestShader(int shaderVertexRID, int shaderFragmentRID, Shade
     }
 }
 
+void Renderable::ReleaseShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager){
+    Shader* pSh = shaderManager.GetShader(shaderVertexRID, shaderFragmentRID);
+    if(pSh != nullptr){
+        for(int i = 0; i < this->_mat.shaders.size();i++){
+            if(pSh == this->_mat.shaders.at(i)){
+                std::vector<Shader*>::iterator iter {this->_mat.shaders.begin()};
+                this->_mat.shaders.erase(iter+i);
+            }
+        }
+    }
+}
+
 void Renderable::Draw(Renderer* renderer)
 {
+    u8 i = 0;
+    u8 j = 0;
+    u8 diff = 1;
+    u8 spec = 1;
+    String num = "";
+    String name = "";
+    std::map<TextureType, String>::iterator it;
     if(this->_mat.shaders.size() > 0){
         for(Shader* shader : this->_mat.shaders){
             if(shader != nullptr){
                 shader->Use();
                 shader->SetMat4("view", renderer->GetRenderCamera()->GetView());
                 shader->SetMat4("projection", renderer->GetProjection());
-                
+                    
                 shader->SetFloat("material.shininess", _mat.roughnessStrength);
                 shader->SetFloat("material.emissiveStrength", _mat.emissiveStrength);
                 shader->SetVec4("material.col", _mat.colorOverlay.r, _mat.colorOverlay.g, _mat.colorOverlay.b, _mat.colorOverlay.a);
@@ -198,25 +218,27 @@ void Renderable::Draw(Renderer* renderer)
                 normal = glm::inverseTranspose(this->GetModelMatrix());
 		        shader->SetMat4("normalInverse", normal);
 		        shader->SetMat4("model", this->GetModelMatrix());
+
+                if (this->_mat.textures.size() > 0){
+                    for (Texture tex : this->_mat.textures){
+                        glActiveTexture(textureUnitMap.at(j));
+                        it = textureTypeMap.find(tex.GetType());
+                        name = it->second;
+                        if(it->first == TextureType::DIFFUSE){
+                            num = std::to_string(diff++);
+                        }
+                        else if(it->first == TextureType::SPECULAR){
+                            num = std::to_string(spec++);
+                        }
+                        shader->SetInt(String(String("material.") + name + num).c_str(), j);
+                        glBindTexture(GL_TEXTURE_2D, tex.GetID());
+                        j++;
+                    }
+                }
+                shader->SetInt(String("material.emissive").c_str(), 2);
             }
-        }
-    }
-    u8 i = 0;
-    if (this->_mat.textures.size() > 0){
-        for (unsigned int tex : this->_mat.textures)
-        {
-            glActiveTexture(textureUnitMap.at(i));
-            glBindTexture(GL_TEXTURE_2D, this->_mat.textures.at(i));
             i++;
         }
-    }
-    else{
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, 1);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, 2);
     }
 
     if(_vb != nullptr){
