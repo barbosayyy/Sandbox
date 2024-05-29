@@ -1,37 +1,40 @@
 #include "Renderer.h"
 #include "../Core/Debug.h"
+#include "Shader.h"
+#include <iostream>
 
 using namespace Sandbox;
 
-Renderer::Renderer() : rMode(0x0){
+Renderer::Renderer() : _renMode(0x0), _screenWidth(DEFAULT_SCREEN_W), _screenHeight(DEFAULT_SCREEN_H){
 	if(_instance == nullptr){
 		_instance = this;
-		
-		rMode |= RENDERER_OPENGL;
-		if(rMode & RENDERER_OPENGL){
+
+		_renMode |= RENDERER_OPENGL;
+		Logger::Trace(LogLevel::RUNTIME, "Starting Sandbox Renderer, Mode: ", static_cast<int>(_renMode));
+		if(_renMode & RENDERER_OPENGL){
 			if (!glfwInit())
 			{
-				assert("Failed to initialize GLFW.");
+				SB_ASSERT("Failed to initialize GLFW.");
 			}
 			_windowHandle = new Window("Sandbox", WINDOW_WIDTH, WINDOW_HEIGHT);
 			if (!_windowHandle->GLWindow())
 			{
 				glfwTerminate();
-				assert("Failed to find window.");
+				SB_ASSERT("Failed to find window.");
 			}
 			// GLEW initialization
 			if (glewInit() != GLEW_OK)
 			{
 				glfwTerminate();
-				assert("Failed to initialize GLEW.");
+				SB_ASSERT("Failed to initialize GLEW.");
 			}
-			Logger::Trace(LogLevel::RUNTIME, "Started Sandbox Renderer, Mode: ", static_cast<int>(rMode));
 		}
-		else if(rMode & RENDERER_VULKAN){
-			assert("Vulkan isn't ready yet!");
+		else if(_renMode & RENDERER_VULKAN){
+			SB_ASSERT("Vulkan isn't ready yet!");
 		}
-		else if(rMode & RENDERER_DX12){
-			assert("DirectX isn't ready yet!");
+		else if(_renMode & RENDERER_DX12){
+			std::cout << "A";
+			SB_ASSERT("DirectX isn't ready yet!");
 		}
 	}
 }
@@ -47,7 +50,7 @@ mat4 Renderer::GetProjection()
 		return glm::perspective(glm::radians(60.0f), (float)this->GetWindow()->GetWidth() / (float)this->GetWindow()->GetHeight(), this->GetRenderCamera()->_near, this->GetRenderCamera()->_far);
 	}
 	else{ // WIP: CAMERA_PROJECTION_ORTHO
-		assert("Not implemented yet");
+		SB_NOT_IMPL;
 	}
 	return mat4(1.0f);
 }
@@ -55,23 +58,28 @@ mat4 Renderer::GetProjection()
 void Renderer::Setup()
 {
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	glStencilMask(0xFF);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// glEnable(GL_STENCIL_TEST);
+	// glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	// glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	// glStencilMask(0xFF);
 }
 
 void Renderer::Loop()
 {
     glfwPollEvents();
-	glClearColor(0.52f, 0.36f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	
+	glEnable(GL_DEPTH_TEST);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClearColor(0.52f, 0.36f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glStencilOp()
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
+
 }

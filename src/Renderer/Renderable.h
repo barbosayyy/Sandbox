@@ -24,23 +24,14 @@ namespace Sandbox{
         void SetScale(float x, float y, float z);
         void SetScale(glm::vec3 scale);
         
-        glm::vec3 GetPosition();
-        glm::mat4 GetModelMatrix();
+        glm::vec3 GetPosition() const ;
+        glm::mat4 GetModelMatrix() const ;
 
         void RequestShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
         void ReleaseShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
         size_t GetShadersAmount() const {return _mat.shaders.size();};
-        
-        Material GetMaterial() {return _mat;};
 
-        void AddMatTexture(Texture& tex) {this->_mat.textures.push_back(tex);};
-
-        void SetMatEm(u32 param) {this->_mat.emissiveStrength = param;};
-        void SetMatRough(u32 param) {this->_mat.roughnessStrength = param;};
-
-        void SetMatColor(vec4 color) {this->_mat.colorOverlay = color;};
-        void SetMatColor(float x, float y, float z, float a) {this->_mat.colorOverlay = vec4(x,y,z,a);};
-        void SetMatColor(float x, float y, float z) {this->_mat.colorOverlay = vec4(x,y,z,this->_mat.colorOverlay.a);};
+        Material& GetMaterial() {return this->_mat;};
 
         virtual void Draw(Renderer* renderer) = 0;
 
@@ -54,10 +45,10 @@ namespace Sandbox{
         glm::vec3 _rotation;
         glm::vec3 _scale;
 
-        Material _mat;
-
         VertexBuffer* _vb;
         IndexBuffer* _eb;
+
+        Material _mat;
 
         virtual void Create() = 0;
     };

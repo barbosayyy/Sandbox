@@ -43,7 +43,7 @@ void* FreelistAllocator::Allocate(size_t size, u8 alignment){
             pBlock = pBlock->pNextBlock;
             continue;
         }
-        static_assert(sizeof(AllocHeader) >= sizeof(Block), "Allocation Header must be at least as large as the size of the free block");
+        SB_S_ASSERT(sizeof(AllocHeader) >= sizeof(Block), "Allocation Header must be at least as large as the size of the free block");
 
         // Check if allocation is possible
         if(pBlock->size - totalBlockSize <= sizeof(AllocHeader)){
@@ -125,6 +125,7 @@ void FreelistAllocator::Free(void* pBlockPointer){
 * WIP
 */
 void* FreelistAllocator::Reallocate(void* p, size_t newSize){
+    SB_NOT_IMPL;
     return p;
 }
 

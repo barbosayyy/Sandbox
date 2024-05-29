@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/Base.h"
+#include "../Core/Types.h"
 
 namespace Sandbox{
     class PMath{
@@ -54,6 +55,23 @@ namespace Sandbox{
         Block* _pFreeBlocks;
     };
 
+    class PoolAllocator : public Allocator {
+    public:
+        PoolAllocator(size_t size) : Allocator(size) {SB_NOT_IMPL;};
+        void *Allocate(size_t size, u8 alignment) override;
+        void Free(void* p) override;
+        void* Reallocate(void* p, size_t newSize) override;
+    private:
+    };
+
+    class StackAllocator : public Allocator {
+    public:
+        void *Allocate(size_t size, u8 alignment) override;
+        void Free(void* p) override;
+        void* Reallocate(void* p, size_t newSize) override;
+    private:
+    };
+
     /////////////////////////////////////////////////////////////////////////////
 
     class TestClass{
@@ -64,6 +82,13 @@ namespace Sandbox{
         int a;
         int b;
         int c;
+    };
+    class TestClass3{
+    public: 
+        long a;
+        int b;
+        u8 c;
+        String d;
     };
 }
 

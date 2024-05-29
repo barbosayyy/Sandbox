@@ -51,6 +51,13 @@ void Camera::OnInput()
 			_canMove = false;
 	}
 
+	if(InputManager::PressedKey(SB_KEYBOARD_LEFT_SHIFT)){
+		_moveSpeed = 0.6f;
+	}
+	else{
+		_moveSpeed = 0.1f;
+	}
+
 	if (_canMove)
 	{
 		if (InputManager::PressedKey(SB_KEYBOARD_W))

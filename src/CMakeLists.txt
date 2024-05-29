@@ -20,6 +20,8 @@ add_library(Sandbox_Src STATIC
     Core/Debug.cpp
     # Renderer/Assimp.h
     # Renderer/Assimp.cpp
+    Renderer/Material.h
+    Renderer/Material.cpp
     Renderer/Mesh.h
     Renderer/Mesh.cpp
     Renderer/Model.h

@@ -32,6 +32,7 @@ namespace Sandbox {
 		bool _canMove = false;
 		float _near;
 		float _far;
+		mat4 _lookAt;
 
 		void UpdatePosition();
 		void OnInput();
@@ -46,7 +47,6 @@ namespace Sandbox {
 
 		float _lastCameraMouseX = 0.0f;
 		float _lastCameraMouseY = 0.0f;
-		mat4 _lookAt;
 		CameraProjectionMode _projMode;
 	};
 }

@@ -34,6 +34,8 @@ namespace Sandbox{
         }
         return ret;
     };
+ 
+    // (Static) - Class for logging engine behavior
 
     class Logger{
     public:
@@ -56,6 +58,8 @@ namespace Sandbox{
     private:
         static int applicationLogLevel;
     };
+
+    // (Static) - Use for runtime debugging
 
     class Debugger{
     public:

@@ -75,7 +75,6 @@ Mesh Model::AssimpProcessMesh(aiMesh* mesh, const aiScene* scene){
     }
     for(u32 i = 0; i < mesh->mNumFaces; i++){
         aiFace face = mesh->mFaces[i];
-        //Debugger::Print((int)i, " of: ", mesh->mNumFaces);
         for(u32 j = 0; j < face.mNumIndices; j++){
             indices.push_back(face.mIndices[j]);
         }
