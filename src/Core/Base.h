@@ -4,12 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-#define SB_ASSERT(x)				assert(x)
-#define SB_NOT_IMPL					assert("Not implemented yet")
-#define SB_S_ASSERT(x, y)				static_assert(x, y)
-
 namespace Sandbox{
-
     using byte = unsigned char;
 	using u8 = uint8_t;
 	using s8 = int8_t;	

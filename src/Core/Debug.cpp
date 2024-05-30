@@ -1,5 +1,4 @@
 #include "Debug.h"
-#include "Base.h"
 #include <cassert>
 
 using namespace Sandbox;
@@ -21,5 +20,5 @@ void Debugger::Assert(const String message)
 }
 
 void Logger::FlushLog(){
-    SB_NOT_IMPL;
+    assert("Not implemented yet");
 }

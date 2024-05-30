@@ -3,9 +3,7 @@
 
 using namespace Sandbox;
 
-// TODO: Load with Yaml loader
-
-ShaderManager::ShaderManager() : _shaderCount(1), _defaultShader(new Shader("resources/shaders/default.vert","resources/shaders/default.frag"))
+ShaderManager::ShaderManager() : _shaderCount(1), _defaultShader(new Shader("resources/shaders/default.vert","resources/shaders/default.vert"))
 {
 	if(_instance == nullptr)
 	{

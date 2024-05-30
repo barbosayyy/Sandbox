@@ -1,6 +1,5 @@
 #include "Renderable.h"
 #include "../Core/Debug.h"
-#include "Material.h"
 #include "Texture.h"
 #include <string>
 
@@ -16,7 +15,12 @@ Renderable::Renderable() :
     _scale{0.0f},
     _vb{nullptr},
     _eb{nullptr},
-    _mat()
+    _mat{
+        std::vector<Texture>{},
+        std::vector<Shader*>{},
+        0,
+        0,
+        vec4{0.0f,0.0f,0.0f,1.0f}}
 {
     Renderable::SetPosition(0.0f,0.0f,0.0f);
 }
@@ -31,7 +35,12 @@ Renderable::Renderable(float x, float y, float z) :
     _scale{0.0f},
     _vb{nullptr},
     _eb{nullptr},
-    _mat()
+    _mat{
+        std::vector<Texture>{},
+        std::vector<Shader*>{},
+        0,
+        0,
+        vec4{0.0f,0.0f,0.0f,1.0f}}
 {
     Renderable::SetPosition(x,y,z);
 }
@@ -111,12 +120,12 @@ void Renderable::Create()
 
 }
 
-glm::vec3 Renderable::GetPosition() const
+glm::vec3 Renderable::GetPosition()
 {
     return _position;
 }
 
-glm::mat4 Renderable::GetModelMatrix() const
+glm::mat4 Renderable::GetModelMatrix()
 {
     return _mLmatrix;
 }
@@ -125,6 +134,10 @@ void Renderable::RequestShader(int shaderVertexRID, int shaderFragmentRID, Shade
 {
     Shader* pSh {shaderManager.GetShader(shaderVertexRID, shaderFragmentRID)};
     if(pSh != nullptr){
+        // pSh->Use();
+        // pSh->SetInt("material.diffuse", 0);
+        // pSh->SetInt("material.specular", 1);
+        // pSh->SetInt("material.emissive", 2);
         this->_mat.shaders.push_back(pSh);
     }
     else{
@@ -161,16 +174,12 @@ void Renderable::Draw(Renderer* renderer)
                 shader->SetMat4("projection", renderer->GetProjection());
                     
                 shader->SetFloat("material.shininess", _mat.roughnessStrength);
+                shader->SetFloat("material.emissiveStrength", _mat.emissiveStrength);
+                shader->SetVec4("material.col", _mat.colorOverlay.r, _mat.colorOverlay.g, _mat.colorOverlay.b, _mat.colorOverlay.a);
 
-                if(this->_mat.flags & SB_MAT_COLOVERLAY){
-                    shader->SetVec4("material.col", _mat.colorOverlay.r, _mat.colorOverlay.g, _mat.colorOverlay.b, _mat.colorOverlay.a);
-                }
-                if(this->_mat.flags & SB_MAT_EMISS){
-                    shader->SetFloat("material.emissiveStrength", _mat.emissiveStrength);
-                }
-
-                // FIXME: Temporary
-                if(this->_mat.flags & SB_MAT_LIT){
+                // TEMP
+                // TODO: REMOVE
+                //  TEST LIGHTING INFO
 
                     vec3 lightColor(1.0f, 1.0f, 1.0f);
                     float spotlightInnerRadius{8.0f};
@@ -201,16 +210,16 @@ void Renderable::Draw(Renderer* renderer)
                     shader->SetVec3("spotLight.position", renderer->GetRenderCamera()->_position);
                     shader->SetFloat("spotLight.innerRadius", glm::cos(glm::radians(spotlightInnerRadius)));
                     shader->SetFloat("spotLight.outerRadius", glm::cos(glm::radians(spotlightOuterRadius)));
-                }
+            
                 shader->SetVec3("viewer.position", renderer->GetRenderCamera()->_position.x, renderer->GetRenderCamera()->_position.y, renderer->GetRenderCamera()->_position.z);
             
                 // TODO: Apply inverse transponse only when detecting changes in position rotation and scale
-                    mat4 normal{glm::inverseTranspose(this->GetModelMatrix())};
-                    normal = glm::inverseTranspose(this->GetModelMatrix());
+                mat4 normal{glm::inverseTranspose(this->GetModelMatrix())};
+                normal = glm::inverseTranspose(this->GetModelMatrix());
 		        shader->SetMat4("normalInverse", normal);
 		        shader->SetMat4("model", this->GetModelMatrix());
 
-                if (this->_mat.flags & SB_MAT_TEX){
+                if (this->_mat.textures.size() > 0){
                     for (Texture tex : this->_mat.textures){
                         glActiveTexture(textureUnitMap.at(j));
                         it = textureTypeMap.find(tex.GetType());
@@ -225,8 +234,8 @@ void Renderable::Draw(Renderer* renderer)
                         glBindTexture(GL_TEXTURE_2D, tex.GetID());
                         j++;
                     }
-                    shader->SetInt(String("material.emissive").c_str(), 2);
                 }
+                shader->SetInt(String("material.emissive").c_str(), 2);
             }
             i++;
         }
