@@ -8,11 +8,18 @@ A <b>work-in-progress</b> 3D Game Engine. Currently supports OpenGL.
 ### Required
 
 Only builds to Windows at the moment
+
+1. Install and Add to the PATH environment variable:
+
+[Python](https://www.python.org/downloads/)
+
 [CMake](https://cmake.org/download/)
 
-[LLVM Clang](https://github.com/llvm/llvm-project/releases) (other compilers will be supported in the future)
+[LLVM Clang](https://github.com/llvm/llvm-project/releases)
 
 [Ninja](https://github.com/ninja-build/ninja/releases) build system
+
+2. Install yaml python module ```pip install pyyaml``` 
 
 ### Clone
 
@@ -34,3 +41,7 @@ Generate executable (Release/Debug)
 ```
 cmake --build <repository path>/build --config Release --target all
 ```
+
+### Developing in VS Code (Windows)
+
+1. Set cmake.generator extension setting to "Ninja"
