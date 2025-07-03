@@ -73,11 +73,25 @@ void ImGuiSbContext::NewRendererFrame(){
     ImGui::NewFrame();
 }
 
-void ImGuiSbContext::RenderMain(int x, int y, const char* name){
+void ImGuiSbContext::RenderMain(int x, int y, const char* name, int faces, int renderMode){
     {
+        static float f = 0.0f;
+        static int counter = 0;
         ImGui::Begin(name);
         ImGui::SetWindowPos(ImVec2(x,y), 0);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / _io->Framerate, _io->Framerate);
+        ImGui::Text("Faces: %d", faces);
+        switch(renderMode){
+            case(1):
+                ImGui::Text("Mode: Position");
+            break;
+            case(2):
+                ImGui::Text("Mode: Normal");
+            break;
+            case(3):
+                ImGui::Text("Mode: Albedo");
+            break;
+        }
         ImGui::End();
     }
 }

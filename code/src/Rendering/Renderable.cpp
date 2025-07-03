@@ -1,5 +1,5 @@
 #include "Renderable.h"
-#include "Core/Debug.h"
+#include "../Core/Debug.h"
 #include "Material.h"
 #include "Texture.h"
 #include <string>

@@ -1,4 +1,4 @@
-#include "Core/Debug.h"
+#include "../Core/Debug.h"
 #include "Assimp.h"
 #include "Model.h"
 
@@ -18,11 +18,11 @@ Model::Model(const char* path) : _vCount(0), _fCount(0)
     Logger::Print("Loaded model: ", _meshes.size(), " meshes ", _loadedTextures.size(), " textures ", _fCount," faces ", _vCount, " vertices");
 }
 
-void Model::Draw(Shader* shader, Renderer* renderer )
+void Model::Draw(Shader* shader, Renderer* renderer, vec3 pos)
 {
     if(_meshes.size() > 0){
         for(Mesh mesh : _meshes){
-            mesh.Draw(shader, renderer);
+            mesh.Draw(shader, renderer, pos);
         }
     }
 }

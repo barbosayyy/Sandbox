@@ -75,7 +75,7 @@ void Mesh::BindTextures(Shader* shader)
 	}
 }
 
-void Mesh::Draw(Shader* shader, Renderer* renderer)
+void Mesh::Draw(Shader* shader, Renderer* renderer, vec3 pos)
 {
 	//BindTextures(shader);
 	////glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
@@ -95,45 +95,9 @@ void Mesh::Draw(Shader* shader, Renderer* renderer)
 		shader->Use();
 		shader->SetMat4("view", renderer->GetRenderCamera()->GetView());
 		shader->SetMat4("projection", renderer->GetProjection());
-		
-		shader->SetFloat("material.shininess", 32.0f);
-		shader->SetFloat("material.emissiveStrength", 1.0f);
-
-		// TEMP LIGHTING INFO
-			vec3 lightColor(1.0f, 1.0f, 1.0f);
-			float spotlightInnerRadius{8.0f};
-			float spotlightOuterRadius{8.0f};
-			vec3 pointLightPositions[] =
-			{
-				vec3(0.5f, 0.0f, 0.0f)
-			};
-			shader->SetVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-			shader->SetVec3("spotLight.diffuse", 0.7f, 0.7f, 0.7f);
-			shader->SetVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
-			shader->SetFloat("spotLight.constant", 1.0f);
-			shader->SetFloat("spotLight.linear", 0.09f);
-			shader->SetFloat("spotLight.quadratic", 0.032f);
-			shader->SetVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-			shader->SetVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-			shader->SetVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-			shader->SetVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-			shader->SetVec3("pointLight[0].position", pointLightPositions[0]);
-			shader->SetVec3("pointLight[0].ambient", 0.5f, 0.5f, 0.5f);
-			shader->SetVec3("pointLight[0].diffuse", 0.8f, 0.8f, 0.8f);
-			shader->SetVec3("pointLight[0].specular", 1.0f, 1.0f, 1.0f);
-			shader->SetFloat("pointLight[0].constant", 1.0f);
-			shader->SetFloat("pointLight[0].linear", 0.09f);
-			shader->SetFloat("pointLight[0].quadratic", 0.032f);
-			shader->SetVec3("spotLight.direction", renderer->GetRenderCamera()->_front);
-			shader->SetVec3("spotLight.position", renderer->GetRenderCamera()->_position);
-			shader->SetFloat("spotLight.innerRadius", glm::cos(glm::radians(spotlightInnerRadius)));
-			shader->SetFloat("spotLight.outerRadius", glm::cos(glm::radians(spotlightOuterRadius)));
-	
-		shader->SetVec3("viewer.position", renderer->GetRenderCamera()->_position.x, renderer->GetRenderCamera()->_position.y, renderer->GetRenderCamera()->_position.z);
-	
 		// TODO: Apply inverse transponse only when detecting changes in position rotation and scale
 		mat4 modelM {1.0f};
-		modelM = glm::translate(modelM, vec3(0.0f,0.0f,-3.0f));
+		modelM = glm::translate(modelM, pos);
 		modelM = glm::scale(modelM, vec3(1.0f,1.0f,1.0f));
 		shader->SetMat4("model", modelM);
 	}
@@ -156,7 +120,7 @@ void Mesh::Draw(Shader* shader, Renderer* renderer)
 	}
 	i++;
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(_indices.size()), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

@@ -58,7 +58,7 @@ void IndexBuffer::Bind(bool bind)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->_ebo);
 	}
-	else
+	else	
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}

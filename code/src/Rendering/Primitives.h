@@ -11,7 +11,7 @@ namespace SbEngine{
         ~Cube();
 
         void Draw(Renderer* renderer) override;
-    private:
+    protected:
         void Create() override;
     };
 
@@ -31,10 +31,24 @@ namespace SbEngine{
         Plane(float x, float y, float z);
         Plane();
         ~Plane();
-
+        
         void Draw(Renderer* renderer) override;
     protected:
         void Create() override;
     };
-}
 
+    class Sphere : public Renderable{
+    public:
+        Sphere(float radius, int sectors, int stacks);
+        Sphere(float radius, int sectors, int stacks, vec3 position);
+        ~Sphere();
+        
+        void Draw(Renderer* renderer) override;
+    protected:
+        void Create() override;
+    private:
+        size_t _nIndices;
+        float _radius;
+        int _sectors, _stacks;
+    };
+}

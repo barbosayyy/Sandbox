@@ -3,6 +3,8 @@
 add_library(Sandbox_Game STATIC
     SbGame.h
     SbGame.cpp
+    SbGameUI.h
+    SbGameUI.cpp
 )
 
 target_include_directories(Sandbox_Game PRIVATE ${SANDBOX_VENDOR_DIR}/includes)

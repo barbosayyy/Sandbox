@@ -9,8 +9,10 @@ namespace SbEngine{
     class Model{
     public:
         Model(const char* path);
-        void Draw(Shader* shader, Renderer* renderer);
-
+        void Draw(Shader* shader, Renderer* renderer, vec3 pos);
+        
+        u32 _fCount;
+        vec3 _pos;
     protected:
         std::vector<Mesh> _meshes;
         std::vector<Texture> _loadedTextures;
@@ -18,7 +20,6 @@ namespace SbEngine{
         String _directory;
         
         u32 _vCount;
-        u32 _fCount;
         
         void LoadModel(String path);
         void ProcessNode(aiNode* node, const aiScene *scene);

@@ -40,6 +40,8 @@ namespace SbEngine{
 
         // Call after game stop and before application exit 
         void Stop();
+
+        void OnInput();
     private:
 
         Renderer* _renderer;

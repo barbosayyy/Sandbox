@@ -20,7 +20,7 @@ namespace SbEngine{
             ~ImGuiSbContext();
             void Init(Window* window, SbImGuiStyle imGuiStyle, u8 renMode);
             void NewRendererFrame();
-            void RenderMain(int x, int y, const char* name);
+            void RenderMain(int x, int y, const char* name, int faces, int renderMode);
             void RenderEnd();
             ImGuiIO* _io;
         protected:

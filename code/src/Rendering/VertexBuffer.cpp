@@ -24,8 +24,7 @@ VertexBuffer::VertexBuffer(float* vertices, GLsizei vertexCount)
 
 VertexBuffer::VertexBuffer(std::vector<float> vertices) : _verticesVec{vertices}
 {
-	SB_NOT_IMPL;
-	this->_vertexCount = 0;
+	this->_vertexCount = vertices.size();
 	VertexBuffer::CreateBuffer(this->_verticesVec);
 }
 

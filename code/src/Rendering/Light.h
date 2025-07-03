@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math/Vectors.h"
+#include "../Math/Vectors.h"
 
 namespace SbEngine{
     struct Light {

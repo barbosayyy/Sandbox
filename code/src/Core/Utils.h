@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/Types.h"
+
+#define YAML_CPP_STATIC_DEFINE
 #include "yaml-cpp/node/node.h"
 
 #include <string>

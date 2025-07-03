@@ -12,7 +12,7 @@
 namespace SbEngine{
 	// Internal types
 	using u8 = uint8_t;
-	using s8 = uint8_t;
+	using s8 = int8_t;
 	using u16 = uint16_t;
 	using s16 = int16_t;
 	using u32 = uint32_t;
@@ -23,6 +23,7 @@ namespace SbEngine{
 	
 	constexpr u8 FALSE						{0};
 	constexpr u8 TRUE						{1};
+	constexpr float PI 						{3.14159265358979323846f};
 
 	// Renderer API
 	constexpr u8 SB_OPENGL    = 1 << 0;
@@ -178,6 +179,13 @@ namespace SbEngine{
 		-1.0f, 1.0f, 0.0f, 1.0f,
 		1.0f, -1.0f, 1.0f, 0.0f,
 		1.0f, 1.0f, 1.0f, 1.0f
+	};
+
+	constexpr float SB_TEX_QUAD[] {
+		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 	};
 
 	constexpr float SB_CUBE[] = {

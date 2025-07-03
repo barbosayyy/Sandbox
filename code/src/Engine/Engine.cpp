@@ -1,5 +1,7 @@
 #include "Engine/Engine.h"
+#include "Core/Base.h"
 #include "Core/Debug.h"
+#include "Input/Input.h"
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
 
@@ -58,6 +60,8 @@ void Engine::Start(){
     #elif SB_RELEASE
         Logger::SetLogLevel(LogLevel::ERROR);
     #endif
+    
+    InputManager::GetInstance().AddInputFunction([this]() {OnInput(); });
 
     Logger::Print("SbEng: Finished start");
 }
@@ -71,7 +75,9 @@ void Engine::BeginNewFrame(){
 }
 
 void Engine::Render(){
-    _renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox");
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    _renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->renderMode);
     _renderer->GetImGuiSbContext().RenderEnd();
 
     glfwPollEvents();
@@ -81,4 +87,18 @@ void Engine::Render(){
 void Engine::Stop(){
     _renderer = nullptr;
     _internalInput = nullptr;
+    // delete _sceneManager;
+}
+
+void Engine::OnInput()
+{
+    if(InputManager::PressedKey(SB_KEYBOARD_1)){
+        _renderer->renderMode = 1;
+    }
+    else if(InputManager::PressedKey(SB_KEYBOARD_2)){
+    _renderer->renderMode = 2;
+    }
+    else if(InputManager::PressedKey(SB_KEYBOARD_3)){
+        _renderer->renderMode = 3;
+    }
 }

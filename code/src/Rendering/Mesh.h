@@ -19,7 +19,7 @@ namespace SbEngine{
 		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
 		~Mesh();
 		
-		void Draw(Shader* shader, Renderer* renderer);
+		void Draw(Shader* shader, Renderer* renderer, vec3 pos);
 		void BindTextures(Shader* shader);
 	
 	private:
