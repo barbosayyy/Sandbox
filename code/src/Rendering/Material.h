@@ -6,7 +6,7 @@
 
 #include <vector>
 
-namespace SbEngine{
+namespace Sb {
     constexpr u16 SB_MAT_TEX            = 1 << 0;
     constexpr u16 SB_MAT_LIT            = 1 << 1;
     constexpr u16 SB_MAT_COLOVERLAY     = 1 << 2;

@@ -5,7 +5,7 @@
 #include "../Core/Base.h"
 #include <glew/glew.h>
 
-namespace SbEngine{
+namespace Sb {
 	class IndexBuffer
 	{
 	public:

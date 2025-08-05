@@ -8,7 +8,7 @@
 
 #include "yaml-cpp/yaml.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 std::filesystem::path File::_currentDirectory = std::filesystem::current_path();
 
@@ -29,7 +29,7 @@ std::string File::Read(const char* filePath){
 		fileContent = fileStream.str();
 	}
 	catch (std::ifstream::failure exc){
-		Logger::Error("Failed to read file from: ", filePath);
+		Log::Error("Failed to read file from: ", filePath);
 	}
 
 	return fileContent;
@@ -46,7 +46,7 @@ YAML::Node YamlUtil::GetNode(const char* filePath, const char* nodeName){
 
 	YAML::Node data = YAML::Load(strStream.str()); //TODO -> replace with file::read(filepath)
 	if(!data)
-		Logger::Warn("YamlUtil: Failed to get YAML node from string: ", filePath);
+		Log::Warn("YamlUtil: Failed to get YAML node from string: ", filePath);
 
 	return data[nodeName];
 }

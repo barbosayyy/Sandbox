@@ -2,7 +2,7 @@
 
 #include "Core/Debug.h"
 
-namespace SbEngine {
+namespace Sb {
     template<typename T>
     void SparseSet<T>::Insert(size_t element, T data){
         // element to dense set
@@ -15,7 +15,7 @@ namespace SbEngine {
             }
         }
         else if(_sparse.at(element) > -1){
-            Logger::Warn("Collections; Sparse Set: Sparse already points to value in dense set");
+            Log::Warn("Collections; Sparse Set: Sparse already points to value in dense set");
             return;
         }
 

@@ -2,7 +2,7 @@
 #include "Rendering/IndexBuffer.h"
 #include <vector>
 
-using namespace SbEngine;
+using namespace Sb;
 
 Square::Square(float x, float y, float z) : Renderable(x, y, z){
     Square::Create();

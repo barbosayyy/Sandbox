@@ -70,6 +70,7 @@ add_library(Sandbox_Eng STATIC
     ECS/System.h
 
     # Game
+    Game/Game.h
     Game/IGame.h
 )
 

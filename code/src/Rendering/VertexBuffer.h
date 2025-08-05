@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace SbEngine{
+namespace Sb {
 	class VertexBuffer
 	{
 	public:

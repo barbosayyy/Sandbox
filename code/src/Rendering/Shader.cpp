@@ -1,11 +1,11 @@
 #include "Shader.h"
 #include "Core/Debug.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
-	Debugger::_buffer = "vertex: " + std::string(vertexPath) + " frag: " + std::string(fragmentPath);
+	Debug::_buffer = "vertex: " + std::string(vertexPath) + " frag: " + std::string(fragmentPath);
 	
 	this->_shader = Load(File::Read(vertexPath).c_str(), File::Read(fragmentPath).c_str());	
 }
@@ -67,7 +67,7 @@ GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
 				shaderTypeStr = "VERTEX";
 			break;
 		}
-		Debugger::FlushError("Failed to compile shader ", " Shader Type: ", shaderTypeStr, " Path: ", Debugger::_buffer, "\n", infoLog);
+		Debug::FlushError("Failed to compile shader ", " Shader Type: ", shaderTypeStr, " Path: ", Debug::_buffer, "\n", infoLog);
 
 		glDeleteShader(shader);
 		return 0;

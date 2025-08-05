@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <random>
 
-namespace SbEngine{
+namespace Sb {
 
 	class File{
 	private:

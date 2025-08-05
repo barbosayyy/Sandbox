@@ -2,7 +2,7 @@
 
 #include "Core/Base.h"
 
-namespace SbEngine{
+namespace Sb {
 
     // Component IDs
     constexpr size_t DUMMY_COMPONENT = 0;
@@ -10,7 +10,7 @@ namespace SbEngine{
     constexpr size_t RENDERER_COMPONENT = 10;
 }
 
-namespace SbEngine{
+namespace Sb {
 
     struct Component{
     };

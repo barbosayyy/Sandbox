@@ -3,7 +3,7 @@
 #include "Core/Debug.h"
 #include "Resources.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 ResourceManager::ResourceManager() : _init(false){
 
@@ -25,7 +25,7 @@ String ResourceManager::GetYamlResourceNameFromResourceID(ResourceID rId)
         case ResourceID::TEXTURE_PNG:
             return "png";
         break;
-        Logger::Warn("Resource Manager: Failed to find resource of matching ID.");
+        Log::Warn("Resource Manager: Failed to find resource of matching ID.");
         return "";
     }
 }

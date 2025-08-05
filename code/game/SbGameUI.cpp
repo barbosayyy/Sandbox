@@ -1,10 +1,8 @@
 #include "SbGameUI.h"
 
-using namespace SbGame;
-
 bool SbGameUI::_uiVisibility = true;
 
-void SbGameUI::ShowUI(SbEngine::ImGuiSbContext& imGuiSbContext){
+void SbGameUI::ShowUI(Sb::ImGuiSbContext& imGuiSbContext){
     if(_uiVisibility){
         imGuiSbContext.RenderMain(1, 200, "Game Window", 0, 3);
     }

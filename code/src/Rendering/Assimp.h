@@ -7,6 +7,6 @@
 #include "assimp/mesh.h"
 #include "assimp/scene.h"
 
-namespace SbEngine{
+namespace Sb {
     
 }

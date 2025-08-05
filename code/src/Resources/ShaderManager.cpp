@@ -1,7 +1,7 @@
 #include "ShaderManager.h"
 #include "Core/Debug.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 // TODO: Load with Yaml loader
 
@@ -40,7 +40,7 @@ Shader* ShaderManager::GetShader(int vRId, int fRId)
 
     if(pSh == nullptr){
         pSh = _shaders.at(0);
-        Logger::Warn("Shader Manager: Assigned default shader");
+        Log::Warn("Shader Manager: Assigned default shader");
     }
 
     return pSh;
@@ -48,7 +48,7 @@ Shader* ShaderManager::GetShader(int vRId, int fRId)
 
 Shader* ShaderManager::NewShader(int vRId, int fRId)
 {
-    Logger::Print("Creating new Shader...");
+    Log::Info("Shader Manager: Compiling Shader...", " vRId: ", vRId, " fRId: ", fRId);
     Resource vSh = GetDataFromID(ResourceID::SHADER_VERTEX, vRId);
     Resource fSh = GetDataFromID(ResourceID::SHADER_FRAGMENT, fRId);
 

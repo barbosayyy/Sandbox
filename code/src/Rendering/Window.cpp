@@ -1,29 +1,45 @@
-#include "Window.h"
+#include "Core/Debug.h"
+#include "Rendering/Renderer.h"
+#include "glfw/glfw3.h"
+#include "Rendering/Window.h"
 
-Window::Window(const char* windowTitle, int windowWidth, int windowHeight)
-{
-	this->_windowWidth = windowWidth;
-	this->_windowHeight = windowHeight;
+namespace Sb {
 
-	Window::createWindow(windowTitle);
+	void Window::GlWindowSizeCallback(GLFWwindow* window, int width, int height) {
+		Renderer& ren = Renderer::GetInstance();
+		Log::Print(ren.GetWindow()->GLWindow());
+		ren.GetWindow()->SetWindowWidth(width);
+		ren.GetWindow()->SetWindowHeight(height);
 
-	glfwMakeContextCurrent(_window);
-	glfwSetFramebufferSizeCallback(_window, FramebufferSizeCallback);
-}
+		if(ren.GetViewportWidth() != width || ren.GetViewportHeight() != height) {
+			ren.SetViewportWidth(width);
+			ren.SetViewportHeight(height);
+			glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);
+		}
 
-void Window::createWindow(const char* windowTitle)
-{
-	this->_window = glfwCreateWindow(_windowWidth, _windowHeight, "Sandbox", NULL, NULL);
-}
+		Log::Info("Renderer: Window resize: ", "Width: ", width, " Height: ", height);
+	}
 
-//
+	Window::Window(const char* windowTitle, int width, int height)
+	{
+		this->_windowWidth = width;
+		this->_windowHeight = height;
 
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
+		Window::CreateWindow(windowTitle);
+		Log::Print(_window);
+		glfwMakeContextCurrent(_window);
+		glfwSetWindowSizeCallback(_window, this->GlWindowSizeCallback);
+	}
 
-Window::~Window()
-{
-	glfwDestroyWindow(_window);
+	void Window::CreateWindow(const char* windowTitle)
+	{
+		this->_window = glfwCreateWindow(_windowWidth, _windowHeight, "Sandbox", nullptr, nullptr);
+	}
+
+	//
+
+	Window::~Window()
+	{
+		glfwDestroyWindow(_window);
+	}
 }

@@ -8,7 +8,7 @@
 
 #include <cstddef>
 
-namespace SbEngine{
+namespace Sb {
     class Renderable {
     public:
         Renderable();

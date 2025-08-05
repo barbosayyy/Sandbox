@@ -7,7 +7,7 @@
 #include <imgui/imgui.h>
 #include <functional>
 
-namespace SbEngine{
+namespace Sb {
 
 	class InputManager : public Singleton<InputManager, GLFWwindow*> {
 	public:

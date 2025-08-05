@@ -1,41 +1,38 @@
 #include "Application.h"
-#include "Core/Base.h"
-#include "Core/Debug.h"
 #include "Game/IGame.h"
 #include "Engine/Engine.h"
-#include "SbGame.h"
+#include "Game/Game.h"
 
 #include <memory>
 
 using namespace SbApplication;
-using namespace SbEngine;
 
-static std::unique_ptr<SbGame::IGame> CreateGame(IEngine* sbEngine){
-    auto game = std::make_unique<SbGame::Game>(*sbEngine);
-    if(game){
-        game->Init();
-    }
-    return game;
+static std::unique_ptr<Sb::IGame> CreateGame(Sb::IEngine* sbEngine) {
+	auto game = std::make_unique<Game>(*sbEngine);
+	if(game) {
+		game->Init();
+	}
+	return game;
 }
 
-void Application::Run(){
-    Engine sbEngine;
+void Application::Run() {
+	Sb::Engine sbEngine;
 
-    sbEngine.Start();
+	sbEngine.Start();
 
-    std::unique_ptr<SbGame::IGame> game = CreateGame(&sbEngine);
-    game->Start();
-    
-    while(sbEngine.Validate() && !ShouldStop()){
-        sbEngine.Update();
-        sbEngine.BeginNewFrame();
+	std::unique_ptr<Sb::IGame> game = CreateGame(&sbEngine);
+	game->Start();
 
-        game->Update();
-        game->Render();
+	while(sbEngine.Validate() && !ShouldStop()) {
+		sbEngine.Update();
+		sbEngine.BeginNewFrame();
 
-        sbEngine.Render();
-    }
+		game->Update();
+		game->Render();
 
-    game->Stop();
-    sbEngine.Stop();
+		sbEngine.Render();
+	}
+
+	game->Stop();
+	sbEngine.Stop();
 }

@@ -6,7 +6,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-namespace SbEngine{
+namespace Sb {
 
     enum class SbImGuiStyle {
         IMGUI_DARK,

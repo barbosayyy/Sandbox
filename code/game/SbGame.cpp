@@ -1,33 +1,32 @@
-#include "SbGame.h"
-#include "Core/Base.h"
+
 #include "Core/Debug.h"
-#include "Core/Types.h"
-#include "Engine/Engine.h"
-#include "Math/Vectors.h"
 #include "Rendering/Primitives.h"
-#include "Core/Utils.h"
 #include "Rendering/Renderer.h"
+#include "Rendering/Shader.h"
 #include "Resources/ShaderManager.h"
 #include "stb_image/stb_image.h"
 #include "Rendering/Camera.h"
-
-// Game
-#include "SbGameUI.h"
-
 #include "Rendering/Model.h"
+
+#include <cmath>
 #include <string>
 
-using namespace SbEngine;
-using namespace SbGame;
+#include "Game/Game.h"
+#include "SbGameBase.h"
+#include "SbGameUI.h"
 
+using namespace Sb;
+
+// Game scope variables
 namespace SbGameGlobals{
-	// Game Global variables
-	
+
 	Shader* skyboxShader;
 	Shader* geometryPassShader;
 	Shader* lightingPassShader;
-
+	
 	Model* backpack;
+
+	u32 textureColorBuffer;
 
 	unsigned int skyboxVAO, skyboxVBO;
 
@@ -36,59 +35,59 @@ namespace SbGameGlobals{
 	const u32 nrOfLights = 32;
 
 	std::vector<Sphere> lightVolumeSpheres;
-
-	// TODO: Wrap Cubemap declaration
-		u32 cubemap;
-
-		std::vector<String>faces = {
+	
+	// TODO: Wrap Cubemap declaration 
+	u32 cubemap;
+	
+	std::vector<String>faces = {
 		"resources/assets/cubemap/right.jpg",
 		"resources/assets/cubemap/left.jpg",
 		"resources/assets/cubemap/top.jpg",
 		"resources/assets/cubemap/bot.jpg",
 		"resources/assets/cubemap/front.jpg",
 		"resources/assets/cubemap/back.jpg"
-		};
+	};
 
-		u32 loadCubeMap(std::vector<String> faces) {
-			u32 cbMap;
-			glGenTextures(1, &cbMap);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, cbMap);
-			stbi_set_flip_vertically_on_load(false);
-			int width, height, nChannels;
-			for(u32 i = 0; i < faces.size(); i++){
-				unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nChannels, 0);
-				if(data){
-					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-					stbi_image_free(data);
-				}	
-				else{
-					std::cout << "err texture" << std::endl;
-					stbi_image_free(data);
-				}
+	u32 loadCubeMap(std::vector<String> faces) {
+		u32 cbMap;
+		glGenTextures(1, &cbMap);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cbMap);
+		stbi_set_flip_vertically_on_load(false);
+		int width, height, nChannels;
+		for(u32 i = 0; i < faces.size(); i++){
+			unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nChannels, 0);
+			if(data){
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+				stbi_image_free(data);
+			}	
+			else{
+				std::cout << "err texture" << std::endl;
+				stbi_image_free(data);
 			}
-			stbi_set_flip_vertically_on_load(true);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-			return cbMap;
 		}
+		stbi_set_flip_vertically_on_load(true);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		return cbMap;
+	}
 }
 
 using namespace SbGameGlobals;
 
-Game::Game(IEngine& sbEngine) : _sbEngine(sbEngine){
+Game::Game(IEngine& sbEngine) : _sbEngine(sbEngine) {
 }
 
-void Game::Init(){
+void Game::Init() {
 }
 
-void Game::Start(){
+void Game::Start() {
 	
-	geometryPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(3, 5);
-	lightingPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(4, 7);
+	geometryPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(3, 4);
+	lightingPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(4, 6);
 
 	// Cubemap
 		glGenVertexArrays(1, &skyboxVAO);
@@ -103,13 +102,13 @@ void Game::Start(){
 		skyboxShader = _sbEngine.GetRenderer()._shaderManager.GetShader(1, 2);
 		skyboxShader->SetInt("skybox", 0);
 
-
 		backpack = new Model("resources/model/backpack.obj");
 		// backpack1 = new Model("resources/model/backpack.obj");
 		// backpack2 = new Model("resources/model/backpack.obj");
 		_sbEngine.GetRenderer()._faceAmount += backpack->_fCount*3;
 
-	// Lightpass prep
+	// Light pass prep
+
 		lightingPassShader->Use();
 		lightingPassShader->SetInt("gPosition", 0);
 		lightingPassShader->SetInt("gNormal", 1);
@@ -134,14 +133,14 @@ void Game::Start(){
 
 	SbGameUI::SetUIVisibility(false);
 
-	Logger::Print("SbGame: Finished start");
+	Log::Info("SbGame: Started");
 }
 
 void Game::Update(){
 	
 }
 
-void Game::Render(){
+void Game::Render() {
 
 	// Geometry pass
 
@@ -179,16 +178,15 @@ void Game::Render(){
 
 	// Copy geometry depth to default framebuffer
 
+	// Skybox pass
+
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, _sbEngine.GetRenderer()._gBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	
-	glBlitFramebuffer(0, 0, _sbEngine.GetRenderer().GetWindow()->GetWidth(), _sbEngine.GetRenderer().GetWindow()->GetHeight(), 0, 0, _sbEngine.GetRenderer().GetWindow()->GetWidth(), _sbEngine.GetRenderer().GetWindow()->GetHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBlitFramebuffer(0, 0, _sbEngine.GetRenderer().GetViewportWidth(), _sbEngine.GetRenderer().GetViewportHeight(), 0, 0, _sbEngine.GetRenderer().GetViewportWidth(), _sbEngine.GetRenderer().GetViewportHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// Skybox pass
-
+	
 	glDepthMask(GL_FALSE);
-	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	skyboxShader->Use();
 	glm::mat4 view = glm::mat4(glm::mat3(_sbEngine.GetRenderer().GetRenderCamera()->GetView()));
@@ -198,11 +196,12 @@ void Game::Render(){
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDepthFunc(GL_LESS);
 	glDepthMask(GL_TRUE);
-	
+	glDepthFunc(GL_LESS);
+
 	SbGameUI::ShowUI(_sbEngine.GetRenderer().GetImGuiSbContext());
 }
 
-void Game::Stop(){
+void Game::Stop() {
+
 }

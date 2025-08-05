@@ -2,7 +2,7 @@
 #include "Core/Types.h"
 #include "Input/Input.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Camera::Camera(float x, float y, float z)
 {

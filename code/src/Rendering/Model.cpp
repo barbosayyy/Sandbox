@@ -6,7 +6,7 @@
 #include "assimp/postprocess.h"
 #include "stb_image/stb_image.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Model::Model(const char* path) : _vCount(0), _fCount(0)
 {
@@ -15,7 +15,7 @@ Model::Model(const char* path) : _vCount(0), _fCount(0)
     for(Mesh mesh : _meshes){
         _vCount += mesh._vertices.size();
     };
-    Logger::Print("Loaded model: ", _meshes.size(), " meshes ", _loadedTextures.size(), " textures ", _fCount," faces ", _vCount, " vertices");
+    Log::Info("Assimp Importer: Loaded model with ", _meshes.size(), " meshes ", _loadedTextures.size(), " textures ", _fCount," faces ", _vCount, " vertices");
 }
 
 void Model::Draw(Shader* shader, Renderer* renderer, vec3 pos)
@@ -33,10 +33,10 @@ void Model::LoadModel(String path)
     const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-        Logger::Error("Assimp Importer: ", importer.GetErrorString());
+        Log::Warn("Assimp Importer: ", importer.GetErrorString());
         return;
     }
-    Logger::Print("Assimp Importer: ", "importing model");
+    Log::Info("Assimp Importer: Importing .obj model...");
     _directory = std::string(path).substr(0, std::string(path).find_last_of("/"));
     ProcessNode(scene->mRootNode, scene);
 }

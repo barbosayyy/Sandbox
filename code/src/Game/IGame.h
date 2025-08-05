@@ -2,12 +2,12 @@
 
 #include "Engine/IEngine.h"
 
-namespace SbGame{
+namespace Sb {
 
     // Engine interface for the game class. The game class should utilize this interface
     // in order to have isolated communication from the application
 
-    class IGame{
+    class IGame {
     protected:
         IGame() = default;
     public:

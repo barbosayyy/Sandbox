@@ -5,7 +5,7 @@
 #include "Rendering/Renderer.h"
 #include "Input/Input.h"
 
-namespace SbEngine{
+namespace Sb {
     class IEngine {
     protected:
         IEngine() = default;

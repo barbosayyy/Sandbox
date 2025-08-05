@@ -1,6 +1,6 @@
 #include "../Core/Base.h"
 
-namespace SbEngine{
+namespace Sb {
 
 class ISystem {
     virtual ~ISystem() = default;

@@ -3,7 +3,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "ImGuiSbContext.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 ImGuiSbContext::ImGuiSbContext() : _io(nullptr){
 }

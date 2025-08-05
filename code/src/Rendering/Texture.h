@@ -13,7 +13,7 @@
 	// Aliases for texture types and image format
 	// Just load texture directly ? 
 
-namespace SbEngine{
+namespace Sb {
 	static std::map<uint8_t, GLenum> textureUnitMap{
 		{0, GL_TEXTURE0},
 		{1, GL_TEXTURE1},

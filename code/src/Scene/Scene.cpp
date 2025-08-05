@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-using namespace SbEngine;
+using namespace Sb;
 Scene::Scene() : _nextEntityId(0){}
 
 Scene::~Scene(){}
@@ -28,7 +28,7 @@ void Scene::AddEntityComponent(u32 entityID, size_t componentMask){
         }
     }
     else{
-        Logger::Warn("ECS: Entity which you are trying to add a component to does not exist.");
+        Log::Warn("ECS: Entity which you are trying to add a component to does not exist.");
     }
 }
 void Scene::RemoveEntityComponent(u32 entityID, size_t componentMask){

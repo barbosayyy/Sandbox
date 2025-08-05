@@ -2,7 +2,7 @@
 
 #include "Renderable.h"
 
-namespace SbEngine{
+namespace Sb {
     
     class Cube : public Renderable {
     public:

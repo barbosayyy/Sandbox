@@ -7,7 +7,7 @@
 #include "Core/Base.h"
 #include "Math/Vectors.h"
 
-namespace SbEngine{
+namespace Sb {
 	enum class CameraProjectionMode{
 		CAMERA_PROJECTION_PERSPECTIVE 	= 0,
 		CAMERA_PROJECTION_ORTHO			= 1

@@ -2,7 +2,7 @@
 
 #include <string>
 
-using namespace SbEngine;
+using namespace Sb;
 
 void String::append(String& str)
 {

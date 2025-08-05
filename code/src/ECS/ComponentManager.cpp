@@ -4,7 +4,7 @@
 #include <iterator>
 #include <unordered_map>
 
-using namespace SbEngine;
+using namespace Sb;
 
     void ComponentManager::AddComponent(u32 entityID, size_t componentID){
         auto it = _activeComponents.find(componentID);

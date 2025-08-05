@@ -3,7 +3,7 @@
 #include "Core/Types.h"
 #include "Core/Singleton.h"
 
-namespace SbEngine{
+namespace Sb {
     enum class ResourceID{
 		// Shaders -> 0-15
         SHADER_FRAGMENT = 0,

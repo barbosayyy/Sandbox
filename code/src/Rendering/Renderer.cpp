@@ -5,32 +5,43 @@
 #include "Core/Types.h"
 #include "ImGui/ImGuiSbContext.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
-Renderer::Renderer() : _apiMode(0x0), _screenWidth(DEFAULT_WINDOW_WIDTH), _screenHeight(DEFAULT_WINDOW_HEIGHT){
+void Renderer::GlFramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+	Renderer& ren = Renderer::GetInstance();
+	ren.SetViewportWidth(width);
+	ren.SetViewportHeight(height);
+	glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);
+	Log::Info("Renderer: Framebuffer resize: ", "Width: ", width, "Height: ", height);
+}
+
+Renderer::Renderer() : _apiMode(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _viewportHeight(DEFAULT_VIEWPORT_HEIGHT), _viewportX(DEFAULT_VIEWPORT_X), _viewportY(DEFAULT_VIEWPORT_Y){
 	_apiMode |= SB_OPENGL;
 
-	Logger::Print("Starting Sandbox Renderer, Mode: ", static_cast<int>(_apiMode));
+	Log::Info("Renderer: Starting with Mode: ", static_cast<int>(_apiMode));
 
 	if(_apiMode & SB_OPENGL){
 		if (!glfwInit())
 		{
-			SB_ASSERT("Failed to initialize GLFW.");
+			SB_ASSERT("Renderer: Failed to initialize GLFW.");
 		}
 		_windowHandle = new Window("Sandbox", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 		if (!_windowHandle->GLWindow())
 		{
 			glfwTerminate();
-			SB_ASSERT("Failed to create window.");
+			SB_ASSERT("Renderer: Failed to create window.");
 		}
+
+		glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GlFramebufferSizeCallback);
+
 		// GLEW initialization
 		if (glewInit() != GLEW_OK)
 		{
 			glfwTerminate();
-			SB_ASSERT("Failed to initialize GLEW.");
+			SB_ASSERT("Renderer: Failed to initialize GLEW.");
 		}
 		else{
-			Logger::Print("Renderer: Init OGL");
+			Log::Info("Renderer: Init OGL");
 		}
 	}
 	else if(_apiMode & SB_VULKAN){
@@ -59,7 +70,7 @@ Renderer::~Renderer(){
 
 mat4 Renderer::GetProjection(){
 	if(this->GetRenderCamera()->GetProjectionMode() == CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE){
-		return glm::perspective(glm::radians(60.0f), (float)this->GetWindow()->GetWidth() / (float)this->GetWindow()->GetHeight(), this->GetRenderCamera()->_near, this->GetRenderCamera()->_far);
+		return glm::perspective(glm::radians(60.0f), (float)this->GetViewportWidth() / (float)this->GetViewportHeight(), this->GetRenderCamera()->_near, this->GetRenderCamera()->_far);
 	}
 	else{ // WIP: CAMERA_PROJECTION_ORTHO
 		SB_NOT_IMPL;
@@ -83,21 +94,21 @@ void Renderer::Setup(){
 	
 	glGenTextures(1, &gPosition);
 	glBindTexture(GL_TEXTURE_2D, gPosition);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetWindow()->GetWidth(), this->GetWindow()->GetHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetViewportWidth(), this->GetViewportHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
 	
 	glGenTextures(1, &gNormal);
 	glBindTexture(GL_TEXTURE_2D, gNormal);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetWindow()->GetWidth(), this->GetWindow()->GetHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetViewportWidth(), this->GetViewportHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
 
 	glGenTextures(1, &gAlbedoSpec);
 	glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->GetWindow()->GetWidth(), this->GetWindow()->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->GetViewportWidth(), this->GetViewportHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
@@ -108,10 +119,10 @@ void Renderer::Setup(){
 	// RBO Depth
 	glGenRenderbuffers(1, &_renderBufferObject);
 	glBindRenderbuffer(GL_RENDERBUFFER, _renderBufferObject);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, this->GetWindow()->GetWidth(), this->GetWindow()->GetHeight());
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, this->GetViewportWidth(), this->GetViewportHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _renderBufferObject);
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
-		Logger::Print("Buffer incomplete");
+		Log::Warn("Renderer: Render buffer object incomplete");
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -123,6 +134,9 @@ void Renderer::OnBeginFrame(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	GetImGuiSbContext().NewRendererFrame();
 }

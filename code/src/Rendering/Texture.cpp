@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Texture::Texture(const char* path, TextureType tType, GLint wrapMethod, bool flipVertical, bool gammaCorrection) : _type(tType)
 {
@@ -37,7 +37,7 @@ Texture::Texture(const char* path, TextureType tType, GLint wrapMethod, bool fli
 	}
 	else
 	{
-		Logger::Error("Texture: Failed to load texture from: ", path);
+		Log::Error("Texture: Failed to load texture from: ", path);
 	}
 	
 	stbi_image_free(data);

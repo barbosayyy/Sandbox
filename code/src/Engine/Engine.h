@@ -6,56 +6,55 @@
 #include "Scene/SceneManager.h"
 
 #include <memory>
-namespace SbEngine{
+namespace Sb {
+	class Engine : public IEngine {
+	public:
+		Engine();
+		~Engine();
+		void SetRenderer(Renderer& renderer);
+		void SetInputManager(InputManager& inputManager);
 
-    class Engine : public IEngine{
-    public:
-        Engine();
-        ~Engine();
-        void SetRenderer(Renderer& renderer);
-        void SetInputManager(InputManager& inputManager);
+		Renderer& GetRenderer() const { return *_renderer; };
+		InputManager& GetInputManager() const { return *_internalInput; };
 
-        Renderer& GetRenderer() const {return *_renderer;};
-        InputManager& GetInputManager() const {return *_internalInput;};
+		// Returns internal struct containing engine stats
+		Stats GetStats() const { return _gameStats; };
 
-        // Returns internal structure containing engine stats
-        Stats GetStats() const{return _gameStats;};
+		Config GetConfig() const { return _engineConfig; };
 
-        Config GetConfig() const{return _engineConfig;};
+		// Verifies engine subsystems' status
+		bool Validate();
 
-        // Verifies multiple engine components' status
-        bool Validate();
+		// Runs initial setup
+		void Start();
 
-        // Runs initial setup
-        void Start();
+		// Update backend state
+		void Update();
 
-        // Update backend variables 
-        void Update();
+		// Prepare the renderer's new frame
+		void BeginNewFrame();
 
-        // Prepare the renderer's new frame
-        void BeginNewFrame();
+		// Render Engine-side elements
+		void Render();
 
-        // Render Engine-side elements
-        void Render();
+		// Call after game stop and before application exit
+		void Stop();
 
-        // Call after game stop and before application exit 
-        void Stop();
+		void OnInput();
 
-        void OnInput();
-    private:
+	private:
+		Renderer* _renderer;
+		InputManager* _internalInput;
+		// SceneManager* _sceneManager;
 
-        Renderer* _renderer;
-        InputManager* _internalInput;
-        // SceneManager* _sceneManager;
-        
-        // Exposed stats
-        Stats _gameStats;
+		// Exposed sgame stats
+		Stats _gameStats;
 
-        // Internal stats, Debug + Editor Only
-        Stats _engineStats;
+		// Internal stats
+		Stats _engineStats;
 
-        Config _engineConfig;
+		Config _engineConfig;
 
-        static bool _error;
-    };
+		static bool _error;
+	};
 }

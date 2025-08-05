@@ -1,7 +1,7 @@
 #include "Mesh.h"
 #include "Texture.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) : _vertices(vertices), _indices(indices),_textures(textures)
 {

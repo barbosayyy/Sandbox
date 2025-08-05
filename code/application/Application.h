@@ -1,19 +1,17 @@
 #pragma once
 
-namespace SbApplication{
+namespace SbApplication {
+	class Application {
+	public:
+		void Run();
 
-    class Application {
-    public:
+		// Query application to stop on next processing cycle
+		void QueryStop() { _flag = true; };
 
-        void Run();
+		// Returns Application-side flag for stopping the application
+		bool ShouldStop() { return _flag; };
 
-        // Query application to stop on next processing cycle
-        void QueryStop(){_flag = true;};
-
-        // Returns Application-side flag for stopping the application
-        bool ShouldStop(){return _flag;};
-    private:
-        bool _flag = false;
-    };
-
+	private:
+		bool _flag = false;
+	};
 }

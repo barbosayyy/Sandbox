@@ -4,7 +4,7 @@
 #include "Texture.h"
 #include <string>
 
-using namespace SbEngine;
+using namespace Sb;
 
 Renderable::Renderable() : 
     _mLmatrix{glm::mat4(1.0)}, 
@@ -126,7 +126,7 @@ void Renderable::RequestShader(int shaderVertexRID, int shaderFragmentRID, Shade
         this->_mat.shaders.push_back(pSh);
     }
     else{
-        Logger::Warn("Failed to retrieve pointer to shader of ID: ", shaderVertexRID, " ", shaderFragmentRID);
+        Log::Warn("Failed to retrieve pointer to shader of ID: ", shaderVertexRID, " ", shaderFragmentRID);
     }
 }
 

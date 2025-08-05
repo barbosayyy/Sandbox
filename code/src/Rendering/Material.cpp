@@ -2,7 +2,7 @@
 #include "Texture.h"
 #include "Core/Debug.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 Material::Material() : textures(std::vector<Texture>{}), shaders(std::vector<Shader*>{}), roughnessStrength(32.0f), emissiveStrength(1.0f), colorOverlay(vec4(0.0f,0.0f,0.0f,1.0f)), flags(0x0) {
 

@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-namespace SbEngine{
+namespace Sb {
     using vec4 = glm::vec4;
     using vec3 = glm::vec3;
     using vec2 = glm::vec2;

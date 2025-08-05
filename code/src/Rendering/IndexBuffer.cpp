@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 IndexBuffer::IndexBuffer()
 {

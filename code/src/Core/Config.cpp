@@ -1,12 +1,12 @@
 #include "Config.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
-Config::Config(){
+Config::Config() {
 
-    // Debug (force) or no configuration file found
-    #ifdef SB_DEBUG
-        windowWidth = DEFAULT_WINDOW_WIDTH;
-        windowHeight = DEFAULT_WINDOW_HEIGHT;
-    #endif
+// Debug (force) or no configuration file found
+#ifdef SB_DEBUG
+	windowWidth	 = DEFAULT_WINDOW_WIDTH;
+	windowHeight = DEFAULT_WINDOW_HEIGHT;
+#endif
 }

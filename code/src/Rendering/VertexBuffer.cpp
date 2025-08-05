@@ -1,7 +1,7 @@
 #include "VertexBuffer.h"
 #include "Core/Debug.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 VertexBuffer::VertexBuffer() 
 {

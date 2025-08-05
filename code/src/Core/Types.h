@@ -9,7 +9,7 @@
 #include <variant>
 #include <xstring>
 
-namespace SbEngine{
+namespace Sb {
 	enum class ImageFormat {
 		JPG, PNG
 	};

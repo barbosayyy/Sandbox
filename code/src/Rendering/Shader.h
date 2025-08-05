@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-namespace SbEngine{
+namespace Sb {
 	class Shader {
 	public:
 		GLuint _shader;

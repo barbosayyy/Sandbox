@@ -1,7 +1,7 @@
 # Sandbox - Game
 
 add_library(Sandbox_Game STATIC
-    SbGame.h
+    SbGameBase.h
     SbGame.cpp
     SbGameUI.h
     SbGameUI.cpp

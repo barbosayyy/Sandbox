@@ -1,7 +1,7 @@
 #include "Input/Input.h"
 #include "glfw/glfw3.h"
 
-using namespace SbEngine;
+using namespace Sb;
 
 InputManager::InputManager()
 {

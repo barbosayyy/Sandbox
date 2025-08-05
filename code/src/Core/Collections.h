@@ -2,7 +2,7 @@
 
 #include "vector"
 
-namespace SbEngine{
+namespace Sb {
     template<typename T>
     struct SparseSet{
     public:

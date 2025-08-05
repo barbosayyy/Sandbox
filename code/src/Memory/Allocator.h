@@ -3,7 +3,7 @@
 #include "Core/Base.h"
 #include "Core/Types.h"
 
-namespace SbEngine{
+namespace Sb {
     class PMath{
     public:
         static u8 AlignForwardAdjustment(void* pAddress, u8 alignment);
@@ -13,7 +13,7 @@ namespace SbEngine{
     };
 }
 
-namespace SbEngine{
+namespace Sb {
     struct Block {
         size_t size;
         Block* pNextBlock;
@@ -25,7 +25,7 @@ namespace SbEngine{
     };
 }
 
-namespace SbEngine{
+namespace Sb {
     class Allocator {
     public:
         Allocator(size_t size);
@@ -94,8 +94,8 @@ namespace SbEngine{
     public: 
         long a;
         int b;
-        SbEngine::u8 c;
-        SbEngine::String d;
+        Sb::u8 c;
+        Sb::String d;
     };
 }
 

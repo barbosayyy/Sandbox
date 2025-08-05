@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <bitset>
 
-namespace SbEngine{
+namespace Sb {
     class Scene{
     public:
         Scene();

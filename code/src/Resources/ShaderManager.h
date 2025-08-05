@@ -4,7 +4,7 @@
 #include "Rendering/Shader.h"
 #include "Resources/ResourceManager.h"
 
-namespace SbEngine{
+namespace Sb {
     class ShaderManager : public ResourceManager{
     public:
         ShaderManager();

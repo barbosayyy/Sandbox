@@ -2,7 +2,7 @@
 
 #include "../Math/Vectors.h"
 
-namespace SbEngine{
+namespace Sb {
     struct Light {
         vec4 color;
         float intensity {0.5f};

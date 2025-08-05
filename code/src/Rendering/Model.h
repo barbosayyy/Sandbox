@@ -5,7 +5,7 @@
 
 #include "assimp/scene.h"
 
-namespace SbEngine{
+namespace Sb {
     class Model{
     public:
         Model(const char* path);

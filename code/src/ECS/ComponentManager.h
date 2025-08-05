@@ -4,7 +4,7 @@
 #include "unordered_map"
 #include "set"
 
-namespace SbEngine{
+namespace Sb {
     class ComponentManager {
     public:
         void AddComponent(u32 entityID, size_t componentID);
