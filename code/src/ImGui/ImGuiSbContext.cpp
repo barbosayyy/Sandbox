@@ -1,3 +1,4 @@
+#include "Core/Base.h"
 #include "Core/Debug.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -90,6 +91,9 @@ void ImGuiSbContext::RenderMain(int x, int y, const char* name, int faces, int r
             break;
             case(3):
                 ImGui::Text("Mode: Albedo");
+            break;
+            default:
+                ImGui::Text("Default");
             break;
         }
         ImGui::End();

@@ -5,25 +5,20 @@ using namespace Sb;
 
 std::string Debug::_buffer = "";
 
-int Log::_applicationLogLevel {(int)LogLevel::INFO};
+int Log::_applicationLogLevel {(int)Level::INFO};
 
-void Log::SetLogLevel(LogLevel level)
+void Log::SetLogLevel(Level level)
 {  
-    if(level >= LogLevel::DEBUG || level <= (LogLevel)0)
-        level = LogLevel::DEBUG;
+    if(level >= Level::DEBUG || level <= (Level)0)
+        level = Level::DEBUG;
     Log::_applicationLogLevel = (int)level;
-}
-
-void Debug::Assert(const String message)
-{
-    SB_NOT_IMPL;
 }
 
 void Log::FlushLog(){
     SB_NOT_IMPL;
 }
 
-bool Log::IsLoggable(LogLevel level){
+bool Log::IsLoggable(Level level){
     if(u32(level) <= _applicationLogLevel){
         return true;
     }

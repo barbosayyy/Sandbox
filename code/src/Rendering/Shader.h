@@ -12,8 +12,6 @@
 namespace Sb {
 	class Shader {
 	public:
-		GLuint _shader;
-	
 		Shader(const char* vertexPath, const char* fragmentPath);
 
 		void Use();
@@ -29,10 +27,12 @@ namespace Sb {
 		//u16& ShaderInstanceId() {return _shaderInstanceId;};
 		//const u16 ShaderResourceId() const {return _shaderResourceId;};
 		//u16& ShaderResourceId() {return _shaderResourceId;};
+		GLuint _shader;
+
 	private:
-		//u16 _shaderInstanceId;
-		//u16 _shaderResourceId;
 		GLuint CompileShader(GLenum shaderType, const char* shaderSource);
 		GLuint Load(const char* vertexPath, const char* fragmentPath);
+		//u16 _shaderInstanceId;
+		//u16 _shaderResourceId;
 	};
 }

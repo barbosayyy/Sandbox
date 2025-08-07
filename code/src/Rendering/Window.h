@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Types.h"
 #include <glfw/glfw3.h>
 
 namespace Sb {
@@ -17,6 +18,7 @@ namespace Sb {
 		void SetWindowHeight(int height) { _windowHeight = height; };
 
 		static void GlWindowSizeCallback(GLFWwindow* window, int width, int height);
+		void SetWindowTitle(String windowTitle);
 
 		operator GLFWwindow* const() { return _window; }
 

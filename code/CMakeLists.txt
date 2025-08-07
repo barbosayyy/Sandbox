@@ -1,5 +1,12 @@
-# Sandbox - Main
+# Sandbox - Code Root
 
 add_subdirectory(src)
-add_subdirectory(game)
-add_subdirectory(application)
+
+if(BUILD_GAME)
+    add_subdirectory(game)
+    add_subdirectory(application)
+endif()
+
+if(BUILD_EDITOR)
+    add_subdirectory(editor)
+endif()

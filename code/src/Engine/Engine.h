@@ -7,20 +7,20 @@
 
 #include <memory>
 namespace Sb {
-	class Engine : public IEngine {
+	class Engine final : public IEngine {
 	public:
 		Engine();
 		~Engine();
 		void SetRenderer(Renderer& renderer);
 		void SetInputManager(InputManager& inputManager);
 
-		Renderer& GetRenderer() const { return *_renderer; };
-		InputManager& GetInputManager() const { return *_internalInput; };
+		Renderer& GetRenderer() const final override { return *_renderer; };
+		InputManager& GetInputManager() const final override { return *_internalInput; };
 
 		// Returns internal struct containing engine stats
-		Stats GetStats() const { return _gameStats; };
+		Stats GetStats() const final override { return _gameStats; };
 
-		Config GetConfig() const { return _engineConfig; };
+		Config GetConfig() const final override { return _engineConfig; };
 
 		// Verifies engine subsystems' status
 		bool Validate();

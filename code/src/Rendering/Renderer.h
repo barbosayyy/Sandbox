@@ -14,22 +14,19 @@
 namespace Sb {
 	class Renderer : public Singleton<Renderer, int> {
 	public:
-		std::vector<Texture> _textures;
-		ShaderManager _shaderManager;
-		u32 _fbo;
-		u32 _gBuffer;
-		u32 _renderBufferObject;
-		u32 gPosition, gNormal, gAlbedoSpec;
-
-		u8 renderMode {1};
-		u32 _faceAmount {0};
-
 		Renderer();
 		~Renderer();
 
-		u8 GetRendererMode() const { return _apiMode; };
-		Window* GetWindow() { return _windowHandle; };
+		void Init();
+		void Setup();
+		void OnBeginFrame();
+		void GenerateFramebufferTextures();
+
+		u8 GetRendererMode() const { return _currentAPI; };
 		Camera* GetRenderCamera() { return _renderCamera; };
+		void SetRenderCamera(Camera* camera) { _renderCamera = camera; };
+		Window* GetWindow() { return _windowHandle; };
+		ImGuiSbContext& GetImGuiSbContext() const { return *_imGuiSbContext; };
 		int GetViewportWidth() const { return _viewportWidth; };
 		int GetViewportHeight() const { return _viewportHeight; };
 		int GetViewportX() const { return _viewportX; };
@@ -38,33 +35,35 @@ namespace Sb {
 		void SetViewportHeight(int height) { _viewportHeight = height; };
 		void SetViewportX(int x) { _viewportX = x; };
 		void SetViewportY(int y) { _viewportY = y; };
+		u8 GetStateDirtyFlags() const { return _stateDirtyFlags; };
 
-		mat4 GetProjection();
-		ImGuiSbContext& GetImGuiSbContext() const { return *_imGuiSbContext; };
-
-		void SetRenderCamera(Camera* camera) { _renderCamera = camera; };
-		// Functionality is dependent on specific shaders that support screen texture
-		void DrawFramebufferQuad();
-
+		// Depends on screen texture shaders. Use Default screen quad shader only when debugging framebuffers
+		void DrawFramebufferQuad(bool useDefaultQuadShader);
 		static void GlFramebufferSizeCallback(GLFWwindow* window, int width, int height);
+		void ClearStateDirtyFlags(u8 mask) { _stateDirtyFlags &= ~mask; };
 
-		void Init();
-		void Setup();
-		void OnBeginFrame();
+		u8 _stateShowBufferMask {0};
+		u32 _faceAmount {0};
+		u32 _gBuffer;
+		u32 gPosition, gNormal, gAlbedoSpec;
+		u32 _renderBufferObject;
+		u32 _fbo;
+		ShaderManager _shaderManager;
+		std::vector<Texture> _textures;
 
 	private:
-		u8 _apiMode;
+		void SetupFramebufferQuad();
+
+		u8 _currentAPI;
 		u16 _viewportWidth;
 		u16 _viewportHeight;
 		u16 _viewportX;
 		u16 _viewportY;
+		Camera* _renderCamera;
+		Window* _windowHandle;
+		ImGuiSbContext* _imGuiSbContext;
 		u32 framebufferVao, framebufferVbo;
 		Shader* framebufferQuadShader;
-
-		Window* _windowHandle;
-		Camera* _renderCamera;
-		ImGuiSbContext* _imGuiSbContext;
-
-		void SetupFramebufferQuad();
+		u8 _stateDirtyFlags;
 	};
 }

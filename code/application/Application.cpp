@@ -2,6 +2,7 @@
 #include "Game/IGame.h"
 #include "Engine/Engine.h"
 #include "Game/Game.h"
+#include "Core/Debug.h"
 
 #include <memory>
 
@@ -17,13 +18,16 @@ static std::unique_ptr<Sb::IGame> CreateGame(Sb::IEngine* sbEngine) {
 
 void Application::Run() {
 	Sb::Engine sbEngine;
-
 	sbEngine.Start();
+
+#ifdef SB_PROJECT_NAME
+	sbEngine.GetRenderer().GetWindow()->SetWindowTitle(Sb::String(SB_PROJECT_NAME));
+#endif
 
 	std::unique_ptr<Sb::IGame> game = CreateGame(&sbEngine);
 	game->Start();
 
-	while(sbEngine.Validate() && !ShouldStop()) {
+	while(sbEngine.Validate() && !this->ShouldStop()) {
 		sbEngine.Update();
 		sbEngine.BeginNewFrame();
 

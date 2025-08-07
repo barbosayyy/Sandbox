@@ -7,27 +7,17 @@
 
 using namespace Sb;
 
-void Renderer::GlFramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-	Renderer& ren = Renderer::GetInstance();
-	ren.SetViewportWidth(width);
-	ren.SetViewportHeight(height);
-	glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);
-	Log::Info("Renderer: Framebuffer resize: ", "Width: ", width, "Height: ", height);
-}
+Renderer::Renderer() : _currentAPI(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _viewportHeight(DEFAULT_VIEWPORT_HEIGHT), _viewportX(DEFAULT_VIEWPORT_X), _viewportY(DEFAULT_VIEWPORT_Y) {
+	_currentAPI |= SB_OPENGL;
 
-Renderer::Renderer() : _apiMode(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _viewportHeight(DEFAULT_VIEWPORT_HEIGHT), _viewportX(DEFAULT_VIEWPORT_X), _viewportY(DEFAULT_VIEWPORT_Y){
-	_apiMode |= SB_OPENGL;
+	Log::Info("Renderer: Starting with Mode: ", static_cast<int>(_currentAPI));
 
-	Log::Info("Renderer: Starting with Mode: ", static_cast<int>(_apiMode));
-
-	if(_apiMode & SB_OPENGL){
-		if (!glfwInit())
-		{
+	if(_currentAPI & SB_OPENGL) {
+		if(!glfwInit()) {
 			SB_ASSERT("Renderer: Failed to initialize GLFW.");
 		}
-		_windowHandle = new Window("Sandbox", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-		if (!_windowHandle->GLWindow())
-		{
+		_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		if(!_windowHandle->GLWindow()) {
 			glfwTerminate();
 			SB_ASSERT("Renderer: Failed to create window.");
 		}
@@ -35,22 +25,17 @@ Renderer::Renderer() : _apiMode(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _v
 		glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GlFramebufferSizeCallback);
 
 		// GLEW initialization
-		if (glewInit() != GLEW_OK)
-		{
+		if(glewInit() != GLEW_OK) {
 			glfwTerminate();
 			SB_ASSERT("Renderer: Failed to initialize GLEW.");
-		}
-		else{
+		} else {
 			Log::Info("Renderer: Init OGL");
 		}
-	}
-	else if(_apiMode & SB_VULKAN){
+	} else if(_currentAPI & SB_VULKAN) {
 		SB_NOT_IMPL;
-	}
-	else if(_apiMode & SB_DX11){
+	} else if(_currentAPI & SB_DX11) {
 		SB_NOT_IMPL;
-	}
-	else if(_apiMode & SB_DX12){
+	} else if(_currentAPI & SB_DX12) {
 		SB_NOT_IMPL;
 	}
 
@@ -59,46 +44,64 @@ Renderer::Renderer() : _apiMode(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _v
 	_imGuiSbContext = new ImGuiSbContext();
 }
 
-Renderer::~Renderer(){
+Renderer::~Renderer() {
 	delete _renderCamera;
-    delete _windowHandle;
+	delete _windowHandle;
 	delete _imGuiSbContext;
 
-	if(_apiMode & SB_OPENGL)
+	if(_currentAPI & SB_OPENGL)
 		glfwTerminate();
 }
 
-mat4 Renderer::GetProjection(){
-	if(this->GetRenderCamera()->GetProjectionMode() == CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE){
-		return glm::perspective(glm::radians(60.0f), (float)this->GetViewportWidth() / (float)this->GetViewportHeight(), this->GetRenderCamera()->_near, this->GetRenderCamera()->_far);
-	}
-	else{ // WIP: CAMERA_PROJECTION_ORTHO
-		SB_NOT_IMPL;
-	}
-	return mat4(1.0f);
-}
+void Renderer::Setup() {
 
-void Renderer::DrawFramebufferQuad(){
-	glBindVertexArray(this->framebufferVao);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glBindVertexArray(0);
-}
+	_imGuiSbContext->Init(this->_windowHandle, SbImGuiStyle::IMGUI_DARK, this->_currentAPI);
 
-void Renderer::Setup(){
-	_imGuiSbContext->Init(this->_windowHandle, SbImGuiStyle::IMGUI_DARK,this->_apiMode);
-	
 	SetupFramebufferQuad();
-	
+
 	glGenFramebuffers(1, &_gBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
-	
+	glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
+
+	GenerateFramebufferTextures();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glPolygonMode(GL_FRONT, GL_FILL);
+}
+
+void Renderer::OnBeginFrame() {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GetImGuiSbContext().NewRendererFrame();
+}
+
+void Renderer::GenerateFramebufferTextures(){
+	if(gPosition)
+		glDeleteTextures(1, &this->gPosition);
+	if(gNormal)
+		glDeleteTextures(1, &this->gNormal);
+	if(gAlbedoSpec)
+		glDeleteTextures(1, &this->gAlbedoSpec);
+
+	if(_renderBufferObject) {
+		glDeleteRenderbuffers(1, &this->_renderBufferObject);
+		_renderBufferObject = 0;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
+
 	glGenTextures(1, &gPosition);
 	glBindTexture(GL_TEXTURE_2D, gPosition);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetViewportWidth(), this->GetViewportHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
-	
+
 	glGenTextures(1, &gNormal);
 	glBindTexture(GL_TEXTURE_2D, gNormal);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->GetViewportWidth(), this->GetViewportHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
@@ -112,43 +115,47 @@ void Renderer::Setup(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
-	
-	u32 attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+
+	u32 attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
 	glDrawBuffers(3, attachments);
-	
-	// RBO Depth
+
+	// Depth render buffer
 	glGenRenderbuffers(1, &_renderBufferObject);
 	glBindRenderbuffer(GL_RENDERBUFFER, _renderBufferObject);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, this->GetViewportWidth(), this->GetViewportHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _renderBufferObject);
-	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		Log::Warn("Renderer: Render buffer object incomplete");
 	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glPolygonMode(GL_FRONT, GL_FILL);
 }
 
-void Renderer::OnBeginFrame(){
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, _gBuffer);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glDepthMask(GL_TRUE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	GetImGuiSbContext().NewRendererFrame();
+void Renderer::DrawFramebufferQuad(bool useDefaultQuadShader) {
+	if(useDefaultQuadShader) {
+		framebufferQuadShader->Use();
+	}
+	glBindVertexArray(this->framebufferVao);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
 }
 
-void Renderer::SetupFramebufferQuad(){
+void Renderer::GlFramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+	Renderer& ren = Renderer::GetInstance();
+	ren.SetViewportWidth(width);
+	ren.SetViewportHeight(height);
+	glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);
+	ren.GenerateFramebufferTextures();
+	ren._stateDirtyFlags |= SB_DIRTY_PROJECTION;
+	Log::Info("Renderer: Framebuffer resize: ", "Width: ", width, " Height: ", height);
+}
+
+void Renderer::SetupFramebufferQuad() {
 	glGenVertexArrays(1, &this->framebufferVao);
 	glGenBuffers(1, &this->framebufferVbo);
 	glBindVertexArray(this->framebufferVao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->framebufferVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SB_TEX_QUAD), &SB_TEX_QUAD, GL_STATIC_DRAW);
-	
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);

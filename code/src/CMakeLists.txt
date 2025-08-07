@@ -1,6 +1,6 @@
 # Sandbox - Source
 
-add_library(Sandbox_Eng STATIC
+add_library(Sandbox_Engine STATIC
     
     # Core
     Core/Base.h
@@ -74,5 +74,7 @@ add_library(Sandbox_Eng STATIC
     Game/IGame.h
 )
 
-target_include_directories(Sandbox_Eng PRIVATE ${SANDBOX_VENDOR_DIR}/includes)
-target_include_directories(Sandbox_Eng PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Sandbox_Engine PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+target_include_directories(Sandbox_Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+message("Finished Sandbox Engine library")

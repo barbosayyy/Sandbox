@@ -1,10 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Core/Base.h"
 #include "Math/Vectors.h"
 
 namespace Sb {
@@ -13,6 +8,8 @@ namespace Sb {
 		CAMERA_PROJECTION_ORTHO			= 1
 	};
 
+	constexpr float CAMERA_DEFAULT_FOV = 60.0f;
+	constexpr float CAMERA_DEFAULT_DIRECTION = 90.0f;
 	constexpr float CAMERA_DEFAULT_NEAR = 0.1;
 	constexpr float CAMERA_DEFAULT_FAR = 500.0;
 	
@@ -22,13 +19,13 @@ namespace Sb {
 		~Camera();
 
 		void UpdatePosition();
-		
 		void OnInput();
 		void OnMouseAxisMove(float xOffset, float yOffset);
-		CameraProjectionMode GetProjectionMode() const {return _projMode;};
+		void GenerateProjection(int viewportWidth, int viewportHeight);
 		
-		mat4 GetView();
-		
+		mat4 GetView() const { return _lookAt; };
+		mat4 GetProjection() const { return _projection; };
+		CameraProjectionMode GetProjectionMode() const { return _projMode; };
 		void SetProjectionMode(const CameraProjectionMode& projMode) {_projMode = projMode;};
 
 		vec3 _position;
@@ -42,15 +39,16 @@ namespace Sb {
 		bool _canMove = false;
 		float _near;
 		float _far;
+		float _fov;
 		mat4 _lookAt;
 
-		private:
-			const float _defaultDirection = 90.0f;
-			void Move(glm::vec3 direction, bool positive);
-
+	private:
+		void Move(glm::vec3 direction, bool positive);
+		
+		mat4 _projection;
+		CameraProjectionMode _projMode;
 		float _lastCameraMouseX = 0.0f;
 		float _lastCameraMouseY = 0.0f;
-		CameraProjectionMode _projMode;
 	};
 }
 

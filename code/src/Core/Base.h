@@ -25,11 +25,12 @@ namespace Sb {
 	constexpr u8 TRUE 	{1};
 	constexpr float PI 	{3.14159265358979323846f};
 
-	// Renderer API
+	// Renderer Flags
 	constexpr u8 SB_OPENGL = 1 << 0;
 	constexpr u8 SB_VULKAN = 1 << 1;
 	constexpr u8 SB_DX11   = 1 << 2;
 	constexpr u8 SB_DX12   = 1 << 3;
+	constexpr u8 SB_DIRTY_PROJECTION = 1 << 0;
 
 	// Input
 	constexpr u16 SB_MOUSE_1 	{0};

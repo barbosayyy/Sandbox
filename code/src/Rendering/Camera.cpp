@@ -1,5 +1,4 @@
 #include "Rendering/Camera.h"
-#include "Core/Types.h"
 #include "Input/Input.h"
 
 using namespace Sb;
@@ -10,8 +9,9 @@ Camera::Camera(float x, float y, float z)
 	_front = glm::vec3(0.0f, 0.0f, 1.0f);
 	_up = glm::vec3(0.0f, 1.0f, 0.0f);
 	_pitch = 0.0f;
-	_yaw = _defaultDirection;
+	_yaw = CAMERA_DEFAULT_DIRECTION;
 	_roll = 0.0f;
+	_fov = CAMERA_DEFAULT_FOV;
 	_lookAt = glm::lookAt(_position, _position + _front, _up);
 	_projMode = CameraProjectionMode::CAMERA_PROJECTION_PERSPECTIVE;
 	_near = CAMERA_DEFAULT_NEAR;
@@ -19,6 +19,7 @@ Camera::Camera(float x, float y, float z)
 
 	InputManager::GetInstance().AddInputFunction([this]() {OnInput(); });
 	InputManager::GetInstance().AddMouseAxisMoveFunction([this](float xOffset, float yOffset) {OnMouseAxisMove(InputManager::GetInstance().xOffset, InputManager::GetInstance().yOffset); });
+	GenerateProjection(Renderer::GetInstance().GetViewportWidth(), Renderer::GetInstance().GetViewportHeight());
 }
 
 Camera::~Camera()
@@ -30,16 +31,7 @@ void Camera:: UpdatePosition()
 	_lookAt = glm::lookAt(_position, _position + _front, _up);
 }
 
-void Camera::Move(glm::vec3 direction, bool invert)
-{
-	if(invert)
-		_position += direction * _moveSpeed;
-	else
-		_position -= direction * _moveSpeed;
-}
-
-void Camera::OnInput()
-{
+void Camera::OnInput() {
 	if (InputManager::PressedMouse(SB_MOUSE_RIGHT) == SB_PRESS)
 	{
 		if (!_canMove)
@@ -80,6 +72,14 @@ void Camera::OnInput()
 	}
 }
 
+void Camera::Move(glm::vec3 direction, bool invert)
+{
+	if(invert)
+		_position += direction * _moveSpeed;
+	else
+		_position -= direction * _moveSpeed;
+}
+
 void Camera::OnMouseAxisMove(float xOffset, float yOffset)
 {
 	if (_canMove)
@@ -110,7 +110,6 @@ void Camera::OnMouseAxisMove(float xOffset, float yOffset)
 	}
 }
 
-glm::mat4 Camera::GetView()
-{
-	return _lookAt;
+void Camera::GenerateProjection(int viewportWidth, int viewportHeight) {
+	_projection = glm::perspective(glm::radians(_fov), (float)viewportWidth / (float)viewportHeight, _near, _far);
 }

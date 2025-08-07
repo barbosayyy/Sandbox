@@ -3,14 +3,14 @@
 #include "Game/IGame.h"
 #include "Engine/IEngine.h"
 
-class Game : public Sb::IGame {
+class Game final : public Sb::IGame {
 public:
     Game(Sb::IEngine& sbEngine);
-    void Init() override;
-    void Start() override;
-    void Stop() override;
-    void Update() override;
-    void Render() override;
+    void Init() override final;
+    void Start() override final;
+    void Stop() override final;
+    void Update() override final;
+    void Render() override final;
 private:
     const Sb::IEngine& _sbEngine;
 };

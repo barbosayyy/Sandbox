@@ -4,8 +4,8 @@ import yaml
 import argparse
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument("--target", type=int, default=0)
 parser.add_argument("--cmake", type=int, default=0)
+parser.add_argument("--res_path", type=str, default="")
 
 args = parser.parse_args()
 
@@ -13,13 +13,9 @@ if(args.cmake == 0):
     print("Resource Serializer Script Error: Not running as resource config")
     exit(-1)
 
-if args.target < 0 or args.target > 1:
-    print("Resource Serializer Script Error: No target mode")
+if args.res_path == "":
+    print("Resource Serializer Script Error: No resource output path provided")
     exit(-1)
-
-# 0 - Debug
-# 1 - Release
-target_mode = args.target
 
 resource_starting_id = 1
 
@@ -50,7 +46,7 @@ def sandbox_yaml_dump_resource_data(output_path, data):
         yaml.dump(data, file)
 
 def sandbox_yaml_dump_header_info(output_path):
-    header = "#\n# Sandbox Engine Resource Manifest - generated at: " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S") + "\n# Mode: " + str(target_mode) + "\n#\n\n"
+    header = "#\n# Sandbox Engine Resource Manifest - generated at: " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S") + "\n# Mode: " + "\n#\n\n"
     with open(output_path, "w") as file:
         file.write(header)
 
@@ -64,11 +60,7 @@ extension_dict = {
     ".txt": "text"
 }
 
-# Separate folder for resource-data.yaml?
-if target_mode == 0:
-    resource_path = os.getcwd().replace("\\build", "") + "\\resources"
-elif target_mode == 1:
-    resource_path = os.getcwd() + "\\resources"
+resource_path = args.res_path + "\\resources"
 
 resource_data_path = resource_path + "\\resource_manifest.yaml"
 data = {}
@@ -76,8 +68,6 @@ data = {}
 for item in os.listdir(resource_path):
     folder_path = os.path.join(resource_path, item)
     if os.path.isdir(folder_path):
-        if __debug__:
-            print(item)
         create_yaml_data_from_folder(folder_path, extension_dict, data)
 
 sandbox_yaml_dump_header_info(resource_data_path)

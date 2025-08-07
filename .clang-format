@@ -7,7 +7,7 @@ AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortLambdasOnASingleLine: Inline
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: 'Yes'
-ColumnLimit: '140'
+ColumnLimit: '200'
 FixNamespaceComments: 'false'
 IndentCaseLabels: 'true'
 IndentPPDirectives: 'BeforeHash'

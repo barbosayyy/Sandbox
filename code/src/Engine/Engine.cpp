@@ -46,9 +46,9 @@ void Engine::Start() {
 	this->GetRenderer().Setup();
 
 #ifdef SB_DEBUG
-	Log::SetLogLevel(LogLevel::DEBUG);
+	Log::SetLogLevel(Log::Level::DEBUG);
 #elif SB_RELEASE
-	Log::SetLogLevel(LogLevel::WARN);
+	Log::SetLogLevel(Log::Level::WARN);
 #endif
 
 	InputManager::GetInstance().AddInputFunction([this]() { OnInput(); });
@@ -58,6 +58,11 @@ void Engine::Start() {
 
 void Engine::Update() {
 	_internalInput->ProcessInput();
+	// TEMP
+	if(_renderer->GetStateDirtyFlags() & SB_DIRTY_PROJECTION) {
+		_renderer->GetRenderCamera()->GenerateProjection(_renderer->GetViewportWidth(), _renderer->GetViewportHeight());
+		_renderer->ClearStateDirtyFlags(SB_DIRTY_PROJECTION);
+	}
 }
 
 void Engine::BeginNewFrame() {
@@ -67,7 +72,7 @@ void Engine::BeginNewFrame() {
 void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->renderMode);
+	_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
 	_renderer->GetImGuiSbContext().RenderEnd();
 
 	glfwPollEvents();
@@ -75,6 +80,7 @@ void Engine::Render() {
 }
 
 void Engine::Stop() {
+	Log::Info("Engine: Stopping...");
 	_renderer	   = nullptr;
 	_internalInput = nullptr;
 	// delete _sceneManager;
@@ -82,10 +88,10 @@ void Engine::Stop() {
 
 void Engine::OnInput() {
 	if(InputManager::PressedKey(SB_KEYBOARD_1)) {
-		_renderer->renderMode = 1;
+		_renderer->_stateShowBufferMask = 1;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_2)) {
-		_renderer->renderMode = 2;
+		_renderer->_stateShowBufferMask = 2;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_3)) {
-		_renderer->renderMode = 3;
+		_renderer->_stateShowBufferMask = 3;
 	}
 }

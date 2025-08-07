@@ -156,7 +156,7 @@ void Renderable::Draw(Renderer* renderer)
             if(shader != nullptr){
                 shader->Use();
                 shader->SetMat4("view", renderer->GetRenderCamera()->GetView());
-                shader->SetMat4("projection", renderer->GetProjection());
+                shader->SetMat4("projection", renderer->GetRenderCamera()->GetProjection());
                     
                 shader->SetFloat("material.shininess", _mat.roughnessStrength);
 

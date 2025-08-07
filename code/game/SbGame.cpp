@@ -40,12 +40,12 @@ namespace SbGameGlobals{
 	u32 cubemap;
 	
 	std::vector<String>faces = {
-		"resources/assets/cubemap/right.jpg",
-		"resources/assets/cubemap/left.jpg",
-		"resources/assets/cubemap/top.jpg",
-		"resources/assets/cubemap/bot.jpg",
-		"resources/assets/cubemap/front.jpg",
-		"resources/assets/cubemap/back.jpg"
+	"resources/assets/cubemap/right.jpg",
+	"resources/assets/cubemap/left.jpg",
+	"resources/assets/cubemap/top.jpg",
+	"resources/assets/cubemap/bot.jpg",
+	"resources/assets/cubemap/front.jpg",
+	"resources/assets/cubemap/back.jpg"
 	};
 
 	u32 loadCubeMap(std::vector<String> faces) {
@@ -174,7 +174,7 @@ void Game::Render() {
 	}
 	lightingPassShader->SetVec3("viewPos", _sbEngine.GetRenderer().GetRenderCamera()->_position);
 
-	_sbEngine.GetRenderer().DrawFramebufferQuad();
+	_sbEngine.GetRenderer().DrawFramebufferQuad(false);
 
 	// Copy geometry depth to default framebuffer
 
@@ -191,7 +191,7 @@ void Game::Render() {
 	skyboxShader->Use();
 	glm::mat4 view = glm::mat4(glm::mat3(_sbEngine.GetRenderer().GetRenderCamera()->GetView()));
 	skyboxShader->SetMat4("view", view);
-	skyboxShader->SetMat4("projection", _sbEngine.GetRenderer().GetProjection());
+	skyboxShader->SetMat4("projection", _sbEngine.GetRenderer().GetRenderCamera()->GetProjection());
 	glBindVertexArray(skyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);

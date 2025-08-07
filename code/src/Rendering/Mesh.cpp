@@ -94,7 +94,7 @@ void Mesh::Draw(Shader* shader, Renderer* renderer, vec3 pos)
 	if(shader != nullptr){
 		shader->Use();
 		shader->SetMat4("view", renderer->GetRenderCamera()->GetView());
-		shader->SetMat4("projection", renderer->GetProjection());
+		shader->SetMat4("projection", renderer->GetRenderCamera()->GetProjection());
 		// TODO: Apply inverse transponse only when detecting changes in position rotation and scale
 		mat4 modelM {1.0f};
 		modelM = glm::translate(modelM, pos);
