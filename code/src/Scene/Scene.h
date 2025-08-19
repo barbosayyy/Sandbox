@@ -2,6 +2,7 @@
 
 #include "Core/Base.h"
 #include "ECS/ComponentManager.h"
+#include "ECS/Components.h"
 
 #include <unordered_map>
 #include <bitset>
@@ -12,14 +13,21 @@ namespace Sb {
         Scene();
         ~Scene();
 
-        void AddEntity();
+        u32 AddEntity();
         void RemoveEntity(u32 entityID);
 
-        void AddEntityComponent(u32 entityID, size_t componentMask);
-        void RemoveEntityComponent(u32 entityID, size_t componentMask);
+        template <typename T>
+        void AddEntityComponent(u32 entityID) { _componentManager.AddComponent<T>(entityID); };
+
+        template <typename T>
+        void RemoveEntityComponent(u32 entityID) { _componentManager.AddComponent<T>(entityID); };
+
     private:
-        std::unordered_map<u32, std::bitset<128>> _entities;
-        ComponentManager _componentManager;
         u32 _nextEntityId;
+        ComponentManager<
+        DummyComponent,
+        TransformComponent,
+        RendererComponent
+        > _componentManager;
     };
 }

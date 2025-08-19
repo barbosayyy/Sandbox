@@ -17,6 +17,8 @@ namespace Sb {
 		Renderer& GetRenderer() const final override { return *_renderer; };
 		InputManager& GetInputManager() const final override { return *_internalInput; };
 
+		void SetUIRenderingEnabled(bool enable) final override { _uiRenderEnabled = enable; };
+
 		// Returns internal struct containing engine stats
 		Stats GetStats() const final override { return _gameStats; };
 
@@ -45,6 +47,7 @@ namespace Sb {
 	private:
 		Renderer* _renderer;
 		InputManager* _internalInput;
+		bool _uiRenderEnabled;
 		// SceneManager* _sceneManager;
 
 		// Exposed sgame stats

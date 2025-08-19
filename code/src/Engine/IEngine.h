@@ -20,6 +20,7 @@ namespace Sb {
         virtual Renderer& GetRenderer() const = 0;
         virtual InputManager& GetInputManager() const = 0;
         // Returns internal structure containing engine stats
+        virtual void SetUIRenderingEnabled(bool enable) = 0;
         virtual Stats GetStats() const = 0;
         virtual Config GetConfig() const = 0;
     };

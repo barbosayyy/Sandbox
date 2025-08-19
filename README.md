@@ -46,7 +46,7 @@ cd <repository path>
 ```
 Generate build files (Release/Debug)
 ```
-cmake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -S<repository path> -B<repository path>/build -G Ninja
+cmake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_EDITOR=ON -S<repository path> -B<repository path>/build -G Ninja
 ```
 Generate executable (Release/Debug)
 ```
@@ -55,4 +55,5 @@ cmake --build <repository path>/build --config Release --target all
 
 ### Developing in VS Code (Windows)
 
-1. Set cmake.generator extension setting to "Ninja"
+It's recommended that you at least install the clangd and CMake extensions. Also set the Clang x86-64-pc-windows-msvc as the CMake build kit and cmake.generator extension setting to "Ninja".
+The BUILD_EDITOR and BUILD_GAME flags may be toggled using the `Set Build` task.

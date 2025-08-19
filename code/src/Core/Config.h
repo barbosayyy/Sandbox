@@ -1,8 +1,6 @@
 #pragma once 
 
 #include "Core/Base.h"
-#include "Core/Config.h"
-
 
 namespace Sb {
     constexpr u16 DEFAULT_WINDOW_WIDTH = 640/*1920*/;

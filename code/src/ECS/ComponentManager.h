@@ -1,27 +1,26 @@
 #include "Core/Base.h"
 #include "ECS/Components.h"
 
-#include "unordered_map"
-#include "set"
+#include "Core/Collections.h"
 
 namespace Sb {
+    template<typename... Components>
     class ComponentManager {
     public:
-        void AddComponent(u32 entityID, size_t componentID);
-        void RemoveComponent(u32 entityID, size_t componentID);
-        void RemoveAllComponents(u32 entity);
-    private:
-        
-        // vector of Unordered map<size_t, Component(base)>
-        // Keeps track of access to component data via the Component ID
-        // as the first field
+        template<typename T>
+        constexpr bool HasComponent() {
+            return(std::is_same_v<T, Components> || ...);
+        }
 
-        std::unordered_map<size_t ,std::unordered_map<u32, Component>> _activeComponents;
-        
-        // <std::unordered_map<u32, Transform>> _transformComponents;
-        
-        //
-        // std::vector<Transform> _transformComponents;
-        // std::unordered_map<u16, size_t> _transformEntityIndex;
+        template<typename T>
+        void AddComponent(u32 entityID) { std::get<SparseSet<T>>(_componentStore).Insert(entityID, T{}); };
+        template<typename T>
+        void RemoveComponent(u32 entityID) { std::get<SparseSet<T>(_componentStore).Remove(entityID)>; };
+
+        void RemoveAllComponents(u32 entity) { std::apply([entity](auto&... componentSparseSet) { (componentSparseSet.Remove(entity), ...); }, _componentStore); }
+
+    private:
+
+        std::tuple<SparseSet<Components>...> _componentStore;
     };
 }

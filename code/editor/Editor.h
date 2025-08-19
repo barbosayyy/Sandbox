@@ -1,26 +1,45 @@
 #pragma once
 
+#include "EditorBase.h"
 #include "Engine/IEngine.h"
+#include "ImGui/ImGuiSbContext.h"
 
 namespace SbEditor {
     class Editor {
     public:
+		// Runtime
 		void Run();
+
+		void Setup(Sb::IEngine* sbEngine);
 
 		void Update();
 
 		void Render();
 
-		// Query application to stop on next processing cycle
+		void Stop();
+
 		void QueryStop() { _flag = true; };
 
-		// Returns Application-side flag for stopping the application
 		bool ShouldStop() { return _flag; };
+		
+		// UI
+		void UIRender();
 
-		void SetSbEnginePtr(Sb::IEngine* sbEngine) { _sbEngine = sbEngine; };
+		void UISetElementsVisible(Sb::u16 visibilityMask) { _uiVisibilityFlags |= visibilityMask; };
+		void UISetElementsNonVisible(Sb::u16 visibilityMask) { _uiVisibilityFlags &= ~visibilityMask; };
 
+		void UIShowMenu();
+		void UIShowSceneTree();
+		void UIShowAssetTree();
+		void UIShowAssetExplorer();
+		void UIShowInspector();
+		
 	private:
 		bool _flag = false;
-		Sb::IEngine* _sbEngine;
+		int _editorWindowWidth;
+		int _editorWindowHeight;
+		Sb::IEngine* _sbEnginePtr;
+		Sb::ImGuiSbContext* _sbImGuiContext;
+		Sb::u16 _uiVisibilityFlags;
     };
 }

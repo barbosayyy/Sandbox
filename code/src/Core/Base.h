@@ -32,6 +32,8 @@ namespace Sb {
 	constexpr u8 SB_DX12   = 1 << 3;
 	constexpr u8 SB_DIRTY_PROJECTION = 1 << 0;
 
+	using Entity = u32;
+
 	// Input
 	constexpr u16 SB_MOUSE_1 	{0};
 	constexpr u16 SB_MOUSE_2 	{1};

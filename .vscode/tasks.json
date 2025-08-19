@@ -3,28 +3,28 @@
         {
             "type": "shell",
             "label": "Sandbox: Clean build",
-            "command": "cd ${workspaceFolder}; rm -r build",
+            "command": "rm -r ${workspaceFolder}/build",
             "problemMatcher": [],
             "detail": "Clean the Sandbox build folder"
         },
         {
             "type": "shell",
             "label": "Sandbox: Clean CMake cache",
-            "command": "cd ${workspaceFolder}; rm -r .cache",
+            "command": "rm -r ${workspaceFolder}/.cache",
             "problemMatcher": [],
             "detail": "Clean CMake .cache folder"
         },
         {
             "type": "shell",
             "label": "Sandbox: Set Build Editor ON",
-            "command": "cd ${workspaceFolder}; cmake -B build -DBUILD_EDITOR=ON",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja",
             "problemMatcher": [],
             "detail": "Set Build Editor ON in cache"
         },
         {
             "type": "shell",
             "label": "Sandbox: Set Build Editor OFF",
-            "command": "cd ${workspaceFolder}; cmake -B build -DBUILD_EDITOR=OFF",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=OFF -G Ninja",
             "problemMatcher": [],
             "detail": "Sets Build Editor OFF in cache"
         },

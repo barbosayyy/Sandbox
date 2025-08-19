@@ -71,7 +71,8 @@ message("")
 
 # Engine build configuration
 
-add_subdirectory(code)
+add_subdirectory(code/src)
+
 add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
 # Game build configuration
@@ -80,13 +81,17 @@ if(BUILD_GAME)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/game-debug)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/game-debug)
-        set(CMAKE_TARGET)
     endif()
 
-    add_executable(SandboxGame code/application/main.cpp)
+    # Temp - Set on project creation
+    set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
+    add_executable(${CM_SANDBOX_GAME_PROJECT} code/application/main.cpp)
     message("\nExecutable: Game")
 
-    target_link_libraries(SandboxGame 
+    add_subdirectory(code/game)
+    add_subdirectory(code/application)
+
+    target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
         # Engine & game source
         PRIVATE Sandbox_App
 
@@ -111,7 +116,7 @@ if(BUILD_GAME)
         message("Running Scripts:")
         if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
                 message("generate_resource_manifest.py")
-                execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CM_SANDBOX_DIR})    
+                execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CMAKE_BINARY_DIR})    
                 file(COPY ${CM_SANDBOX_RESOURCES_DIR}/resource_manifest.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
             endif()
     else()
@@ -127,7 +132,9 @@ if(BUILD_EDITOR)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/editor-debug)
     endif()
 
+    add_subdirectory(code/editor)
     add_executable(SandboxEditor code/editor/main.cpp)
+    target_include_directories(SandboxEditor PRIVATE vendor/includes)
     message("\nExecutable: Editor")
 
     target_link_libraries(SandboxEditor

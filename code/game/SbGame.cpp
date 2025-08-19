@@ -1,5 +1,6 @@
 
 #include "Core/Debug.h"
+#include "ECS/Components.h"
 #include "Rendering/Primitives.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
@@ -203,5 +204,5 @@ void Game::Render() {
 }
 
 void Game::Stop() {
-
+	Log::Info("SbGame: Stopping...");
 }

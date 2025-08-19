@@ -9,7 +9,7 @@ using namespace Sb;
 
 bool Engine::_error = false;
 
-Engine::Engine() {
+Engine::Engine() : _uiRenderEnabled(true){
 	SetRenderer(Renderer::GetInstance());
 	SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
 }
@@ -72,7 +72,8 @@ void Engine::BeginNewFrame() {
 void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
+	if(_uiRenderEnabled)
+		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
 	_renderer->GetImGuiSbContext().RenderEnd();
 
 	glfwPollEvents();

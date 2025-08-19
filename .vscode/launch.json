@@ -5,7 +5,7 @@
         "name": "LLDB",
         "type": "lldb",
         "request": "launch",
-        "cwd": "${workspaceFolder}\\build",
-        "program": "${workspaceFolder}\\build\\Sandbox.exe",
+        "cwd": "${workspaceFolder}\\build\\game-debug",
+        "program": "${workspaceFolder}\\build\\game-debug\\SandboxGame.exe",
     }]
 }

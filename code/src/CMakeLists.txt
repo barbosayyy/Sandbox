@@ -6,6 +6,8 @@ add_library(Sandbox_Engine STATIC
     Core/Base.h
     Core/Types.h
     Core/Types.cpp
+    Core/Collections.h
+    Core/Collections.cpp
     Core/Singleton.h
     Math/Vectors.h
     Memory/Allocator.h
