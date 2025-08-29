@@ -12,10 +12,14 @@ namespace Sb {
 
 namespace Sb {
 
-    struct DummyComponent{
+    struct ComponentBase {
+        u32 sparseIndex;
     };
 
-    struct TransformComponent{
+    struct DummyComponent : ComponentBase {
+    };
+
+    struct TransformComponent : ComponentBase {
         float posX;
         float posY;
         float posZ;
@@ -29,7 +33,7 @@ namespace Sb {
         float scaleZ;
     };
 
-    struct RendererComponent{
+    struct RendererComponent : ComponentBase {
     };
 
     // static Component GetComponentFromID(size_t componentID){

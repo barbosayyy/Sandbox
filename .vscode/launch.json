@@ -7,5 +7,6 @@
         "request": "launch",
         "cwd": "${workspaceFolder}\\build\\game-debug",
         "program": "${workspaceFolder}\\build\\game-debug\\SandboxGame.exe",
+        "preLaunchTask": "Sandbox: Build Editor & Game"
     }]
 }

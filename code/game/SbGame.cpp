@@ -8,6 +8,7 @@
 #include "stb_image/stb_image.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Model.h"
+#include "Scene/Scene.h"
 
 #include <cmath>
 #include <string>
@@ -24,12 +25,10 @@ namespace SbGameGlobals{
 	Shader* skyboxShader;
 	Shader* geometryPassShader;
 	Shader* lightingPassShader;
-	
-	Model* backpack;
-
-	u32 textureColorBuffer;
 
 	unsigned int skyboxVAO, skyboxVBO;
+
+	Scene level1;
 
 	std::vector<vec3> lightPos;
 	std::vector<vec3> lightCol;
@@ -103,10 +102,17 @@ void Game::Start() {
 		skyboxShader = _sbEngine.GetRenderer()._shaderManager.GetShader(1, 2);
 		skyboxShader->SetInt("skybox", 0);
 
-		backpack = new Model("resources/model/backpack.obj");
-		// backpack1 = new Model("resources/model/backpack.obj");
-		// backpack2 = new Model("resources/model/backpack.obj");
-		_sbEngine.GetRenderer()._faceAmount += backpack->_fCount*3;
+	// Objects
+
+		// ECS Mock
+
+		Entity cube = level1.AddEntity();
+		level1.AddEntityComponent<TransformComponent>(cube);
+
+		// cube.AddComponent();
+
+	// Render
+		_sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
 
 	// Light pass prep
 
@@ -145,9 +151,7 @@ void Game::Render() {
 
 	// Geometry pass
 
-	backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -3.0f));
-	// backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -13.0f));
-	// backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -23.0f));
+	// backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -3.0f));
 	
 	// Set lighting data and Light pass 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -4,9 +4,6 @@
 #include "ECS/ComponentManager.h"
 #include "ECS/Components.h"
 
-#include <unordered_map>
-#include <bitset>
-
 namespace Sb {
     class Scene{
     public:
@@ -21,6 +18,15 @@ namespace Sb {
 
         template <typename T>
         void RemoveEntityComponent(u32 entityID) { _componentManager.AddComponent<T>(entityID); };
+
+#ifdef SB_DEBUG
+        template<typename T>
+        std::vector<T> GetComponentDense() const { return _componentManager.GetComponentStoreDense<T>(); }
+        template<typename T>
+        std::vector<u32> GetComponentSparse() const { return _componentManager.GetComponentStoreSparse<T>(); }
+        template<typename T>
+        SparseSet<T> GetComponentSparseSet() const { return _componentManager.GetSparseSet<T>(); }
+#endif
 
     private:
         u32 _nextEntityId;
