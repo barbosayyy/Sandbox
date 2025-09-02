@@ -4,6 +4,7 @@
 #include "ImGui/ImGuiSbContext.h"
 #include "Rendering/Renderer.h"
 #include "Scene/SceneManager.h"
+#include "ECS/Registry.h"
 
 #include <memory>
 namespace Sb {
@@ -13,6 +14,7 @@ namespace Sb {
 		~Engine();
 		void SetRenderer(Renderer& renderer);
 		void SetInputManager(InputManager& inputManager);
+		void SetECSRegistry(ECS::Registry& registry);
 
 		Renderer& GetRenderer() const final override { return *_renderer; };
 		InputManager& GetInputManager() const final override { return *_internalInput; };
@@ -47,6 +49,7 @@ namespace Sb {
 	private:
 		Renderer* _renderer;
 		InputManager* _internalInput;
+		ECS::Registry* _ecsRegistry;
 		bool _uiRenderEnabled;
 		// SceneManager* _sceneManager;
 

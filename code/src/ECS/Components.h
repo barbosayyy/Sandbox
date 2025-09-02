@@ -11,7 +11,6 @@ namespace Sb {
 }
 
 namespace Sb {
-
     struct ComponentBase {
         u32 sparseIndex;
     };
@@ -33,7 +32,7 @@ namespace Sb {
         float scaleZ;
     };
 
-    struct RendererComponent : ComponentBase {
+    struct MeshComponent : ComponentBase {
     };
 
     // static Component GetComponentFromID(size_t componentID){

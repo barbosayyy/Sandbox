@@ -9,6 +9,7 @@
 #include "Rendering/Camera.h"
 #include "Rendering/Model.h"
 #include "Scene/Scene.h"
+#include "ECS/EntityManagement.h"
 
 #include <cmath>
 #include <string>
@@ -37,43 +38,47 @@ namespace SbGameGlobals{
 	std::vector<Sphere> lightVolumeSpheres;
 	
 	// TODO: Wrap Cubemap declaration 
-	u32 cubemap;
-	
-	std::vector<String>faces = {
-	"resources/assets/cubemap/right.jpg",
-	"resources/assets/cubemap/left.jpg",
-	"resources/assets/cubemap/top.jpg",
-	"resources/assets/cubemap/bot.jpg",
-	"resources/assets/cubemap/front.jpg",
-	"resources/assets/cubemap/back.jpg"
-	};
+		u32 cubemap;
+		
+		std::vector<String>faces = {
+		"resources/assets/cubemap/right.jpg",
+		"resources/assets/cubemap/left.jpg",
+		"resources/assets/cubemap/top.jpg",
+		"resources/assets/cubemap/bot.jpg",
+		"resources/assets/cubemap/front.jpg",
+		"resources/assets/cubemap/back.jpg"
+		};
 
-	u32 loadCubeMap(std::vector<String> faces) {
-		u32 cbMap;
-		glGenTextures(1, &cbMap);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cbMap);
-		stbi_set_flip_vertically_on_load(false);
-		int width, height, nChannels;
-		for(u32 i = 0; i < faces.size(); i++){
-			unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nChannels, 0);
-			if(data){
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-				stbi_image_free(data);
-			}	
-			else{
-				std::cout << "err texture" << std::endl;
-				stbi_image_free(data);
+		u32 loadCubeMap(std::vector<String> faces) {
+			u32 cbMap;
+			glGenTextures(1, &cbMap);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cbMap);
+			stbi_set_flip_vertically_on_load(false);
+			int width, height, nChannels;
+			for(u32 i = 0; i < faces.size(); i++){
+				unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nChannels, 0);
+				if(data){
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+					stbi_image_free(data);
+				}	
+				else{
+					std::cout << "err texture" << std::endl;
+					stbi_image_free(data);
+				}
 			}
+			stbi_set_flip_vertically_on_load(true);
+
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+			return cbMap;
 		}
-		stbi_set_flip_vertically_on_load(true);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		return cbMap;
-	}
 }
 
 using namespace SbGameGlobals;
@@ -104,12 +109,18 @@ void Game::Start() {
 
 	// Objects
 
-		// ECS Mock
+		Entity cube = AddEntity();
+		Entity cube3 = AddEntity();
+		Entity cube4 = AddEntity();
+		Entity cube5 = AddEntity();
 
-		Entity cube = level1.AddEntity();
-		level1.AddEntityComponent<TransformComponent>(cube);
+		AddEntityComponent<TransformComponent>(cube5);
+		AddEntityComponent<TransformComponent>(cube4);
+		AddEntityComponent<TransformComponent>(cube3);
+		AddEntityComponent<TransformComponent>(cube);
 
-		// cube.AddComponent();
+		PrintComponentStore<DummyComponent>();
+		PrintComponentStore<TransformComponent>();
 
 	// Render
 		_sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
@@ -150,7 +161,6 @@ void Game::Update(){
 void Game::Render() {
 
 	// Geometry pass
-
 	// backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -3.0f));
 	
 	// Set lighting data and Light pass 

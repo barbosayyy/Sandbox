@@ -9,7 +9,7 @@
 
 namespace Sb {
 
-	class InputManager : public Singleton<InputManager, GLFWwindow*> {
+	class InputManager final : public Singleton<InputManager, GLFWwindow*> {
 	public:
 		InputManager(GLFWwindow* window);
 		InputManager();

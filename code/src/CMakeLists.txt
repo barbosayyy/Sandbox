@@ -67,9 +67,13 @@ add_library(Sandbox_Engine STATIC
     ImGui/ImGuiSbContext.cpp
     # ECS
     ECS/Components.h
-    ECS/ComponentManager.h
-    ECS/ComponentManager.cpp
-    ECS/System.h
+    ECS/Systems/InputSystem.h
+    ECS/Systems/PhysicsSystem.h
+    ECS/Systems/RenderSystem.h
+    ECS/Registry.h
+    ECS/Registry.cpp
+    ECS/EntityManagement.h
+    ECS/EntityManagement.cpp
 
     # Game
     Game/Game.h

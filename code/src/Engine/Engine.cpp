@@ -1,9 +1,14 @@
 #include "Engine/Engine.h"
 #include "Core/Base.h"
 #include "Core/Debug.h"
+#include "ECS/Registry.h"
 #include "Input/Input.h"
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
+
+#include "ECS/Systems/InputSystem.h"
+#include "ECS/Systems/PhysicsSystem.h"
+#include "ECS/Systems/RenderSystem.h"
 
 using namespace Sb;
 
@@ -12,6 +17,7 @@ bool Engine::_error = false;
 Engine::Engine() : _uiRenderEnabled(true){
 	SetRenderer(Renderer::GetInstance());
 	SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
+	SetECSRegistry(ECS::Registry::GetInstance());
 }
 
 Engine::~Engine() {
@@ -23,6 +29,10 @@ void Engine::SetRenderer(Renderer& renderer) {
 
 void Engine::SetInputManager(InputManager& inputManager) {
 	_internalInput = &inputManager;
+}
+
+void Engine::SetECSRegistry(ECS::Registry& registry) {
+	_ecsRegistry = &registry;
 }
 
 bool Engine::Validate() {
@@ -57,6 +67,9 @@ void Engine::Start() {
 }
 
 void Engine::Update() {
+	ECS::InputSystem::Update(*this->_ecsRegistry);
+	ECS::PhysicsSystem::Update(*this->_ecsRegistry);
+
 	_internalInput->ProcessInput();
 	// TEMP
 	if(_renderer->GetStateDirtyFlags() & SB_DIRTY_PROJECTION) {
@@ -71,6 +84,8 @@ void Engine::BeginNewFrame() {
 
 void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	ECS::RenderSystem::Update(*this->_ecsRegistry);
 
 	if(_uiRenderEnabled)
 		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);

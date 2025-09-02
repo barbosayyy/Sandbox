@@ -12,7 +12,7 @@
 #include "Resources/ShaderManager.h"
 
 namespace Sb {
-	class Renderer : public Singleton<Renderer, int> {
+	class Renderer final : public Singleton<Renderer, int> {
 	public:
 		Renderer();
 		~Renderer();

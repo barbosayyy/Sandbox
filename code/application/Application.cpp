@@ -31,8 +31,9 @@ void Application::Run() {
 		sbEngine.Update();
 		sbEngine.BeginNewFrame();
 
-		game->Update();
-		game->Render();
+		// Temp -> Handled by engine systems
+			game->Update();
+			game->Render();
 
 		sbEngine.Render();
 	}
