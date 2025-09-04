@@ -1,33 +1,36 @@
 #pragma once
 
-#include "Texture.h"
-#include "Shader.h"
 #include "Core/Types.h"
-#include "Renderer.h"
+#include "NewMaterial.h"
+#include "Rendering/Texture.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Renderer.h"
 
 #include <vector>
 
 namespace Sb {
 
 	class Mesh {
-		
 	public:
-		std::vector<Vertex> _vertices;
-		std::vector<unsigned int> _indices;
-		std::vector<Texture> _textures;
-
-		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
-		~Mesh();
-		
-		void Draw(Shader* shader, Renderer* renderer, vec3 pos);
-		void BindTextures(Shader* shader);
 	
+		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, NewMaterial _material);
+		Mesh(float* _vertices, const u32* _indices, NewMaterial material);
+		~Mesh();
+
+		void Draw(Renderer* renderer, vec3 pos);
+		
+		void BindTextures(Shader* shader);
+		
 	private:
+
+		void CreateMesh();
+		
+		std::vector<Vertex> _vertices;
+		std::vector<u32> _indices;
+		NewMaterial _material;
 		unsigned int _vbo;
 		unsigned int _vao;
 		unsigned int _ebo;
-	
-		void CreateMesh();
 	};
 }
 

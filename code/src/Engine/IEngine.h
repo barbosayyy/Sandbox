@@ -4,6 +4,7 @@
 #include "Core/Config.h"
 #include "Rendering/Renderer.h"
 #include "Input/Input.h"
+#include "ECS/Registry.h"
 
 namespace Sb {
     class IEngine {
@@ -19,6 +20,7 @@ namespace Sb {
         virtual ~IEngine() = default;
         virtual Renderer& GetRenderer() const = 0;
         virtual InputManager& GetInputManager() const = 0;
+        virtual ECS::Registry& GetECSRegistry() const = 0;
         // Returns internal structure containing engine stats
         virtual void SetUIRenderingEnabled(bool enable) = 0;
         virtual Stats GetStats() const = 0;

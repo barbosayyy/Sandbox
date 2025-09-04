@@ -15,9 +15,9 @@ namespace Sb {
 	};
 
 	enum class TextureType {
-		NONE 		= 0,
-		DIFFUSE 	= 1,
-		SPECULAR 	= 2,
+		DIFFUSE 	= 0,
+		SPECULAR 	= 1,
+		NORMAL 		= 2,
 		EMISSIVE 	= 3
 	};
 

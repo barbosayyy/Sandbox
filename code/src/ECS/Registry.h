@@ -23,6 +23,9 @@ namespace Sb {
             template<typename T>
             void RemoveComponent(u32 entityID) { std::get<SparseSet<T>>(_componentStore).Remove(entityID); };
             
+            template<typename T>
+            T& GetComponent(u32 entityID) { return std::get<SparseSet<T>>(_componentStore).Get(entityID); }
+
             void RemoveAllComponents(u32 entity) { std::apply([entity](auto&... componentSparseSet) { (componentSparseSet.Remove(entity), ...); }, _componentStore); }
 
             u32 GetNextEntityID() const { return _nextEntityId; }

@@ -18,6 +18,9 @@
 #include "SbGameBase.h"
 #include "SbGameUI.h"
 
+// ### TEMP - !!TEST!!
+#include "ECS/Systems/RenderSystem.h"
+
 using namespace Sb;
 
 // Game scope variables
@@ -109,21 +112,17 @@ void Game::Start() {
 
 	// Objects
 
-		Entity cube = AddEntity();
-		Entity cube3 = AddEntity();
-		Entity cube4 = AddEntity();
-		Entity cube5 = AddEntity();
+		Entity backpack = AddEntity();
 
-		AddEntityComponent<TransformComponent>(cube5);
-		AddEntityComponent<TransformComponent>(cube4);
-		AddEntityComponent<TransformComponent>(cube3);
-		AddEntityComponent<TransformComponent>(cube);
+		Log::Print("Entity ", backpack);
 
-		PrintComponentStore<DummyComponent>();
-		PrintComponentStore<TransformComponent>();
+		AddEntityComponent<TransformComponent>(backpack);
+		AddEntityComponent<MeshComponent>(backpack);
+
+		GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
 
 	// Render
-		_sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
+		// _sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
 
 	// Light pass prep
 
@@ -161,7 +160,12 @@ void Game::Update(){
 void Game::Render() {
 
 	// Geometry pass
+
+	ECS::RenderSystem::Update(_sbEngine.GetECSRegistry());
+
 	// backpack->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -3.0f));
+	// backpack1->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -13.0f));
+	// backpack2->Draw(geometryPassShader, &_sbEngine.GetRenderer(), vec3(0.0f, 0.0f, -23.0f));
 	
 	// Set lighting data and Light pass 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

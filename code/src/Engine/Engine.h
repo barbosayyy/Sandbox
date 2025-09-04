@@ -18,6 +18,7 @@ namespace Sb {
 
 		Renderer& GetRenderer() const final override { return *_renderer; };
 		InputManager& GetInputManager() const final override { return *_internalInput; };
+		ECS::Registry& GetECSRegistry() const final override { return *_ecsRegistry; };
 
 		void SetUIRenderingEnabled(bool enable) final override { _uiRenderEnabled = enable; };
 
@@ -46,7 +47,7 @@ namespace Sb {
 
 		void OnInput();
 
-	private:
+		private:
 		Renderer* _renderer;
 		InputManager* _internalInput;
 		ECS::Registry* _ecsRegistry;

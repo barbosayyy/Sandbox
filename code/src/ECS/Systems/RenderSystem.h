@@ -8,11 +8,7 @@ namespace Sb {
     namespace ECS {
         class RenderSystem {
         public:
-            static void Update(Registry& registry) {
-                // for() {
-
-                // }
-            }
+            static void Update(Registry& registry);
         };
     }
 }

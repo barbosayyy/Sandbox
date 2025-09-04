@@ -29,9 +29,9 @@ namespace Sb {
 
         void RequestShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
         void ReleaseShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager);
-        size_t GetShadersAmount() const {return _mat.shaders.size();};
+        // size_t GetShadersAmount() const {return _mat.shaders.size();};
 
-        Material& GetMaterial() {return this->_mat;};
+        // Material& GetMaterial() {return this->_mat;};
 
         virtual void Draw(Renderer* renderer) = 0;
 
@@ -48,7 +48,7 @@ namespace Sb {
         VertexBuffer* _vb;
         IndexBuffer* _eb;
 
-        Material _mat;
+        // Material _mat;
 
         virtual void Create() = 0;
     };

@@ -2,62 +2,69 @@
 #include "Assimp.h"
 #include "Model.h"
 
+#include "Core/Base.h"
+#include "NewMaterial.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "stb_image/stb_image.h"
 
 using namespace Sb;
 
-Model::Model(const char* path) : _vCount(0), _fCount(0)
-{
-    int texCount {0};
-    LoadModel(path);
-    for(Mesh mesh : _meshes){
-        _vCount += mesh._vertices.size();
-    };
-    Log::Info("Assimp Importer: Loaded model with ", _meshes.size(), " meshes ", _loadedTextures.size(), " textures ", _fCount," faces ", _vCount, " vertices");
+Model::Model() : _vCount(0), _fCount(0) {
+    // LoadModel(path);
+    // for(Mesh mesh : _meshes){
+    //     _vCount += mesh._vertices.size();
+    // };
+    // Log::Info("Assimp Importer: Loaded model with ", _meshes.size(), " meshes ", _loadedTextures.size(), " textures ", _fCount," faces ", _vCount, " vertices");
 }
 
-void Model::Draw(Shader* shader, Renderer* renderer, vec3 pos)
+void Model::Draw(Renderer* renderer, vec3 pos)
 {
-    if(_meshes.size() > 0){
-        for(Mesh mesh : _meshes){
-            mesh.Draw(shader, renderer, pos);
+    if(_meshes.size() > 0) {
+        for(Mesh mesh : _meshes) {
+            mesh.Draw(renderer, pos);
         }
     }
 }
 
-void Model::LoadModel(String path)
-{
+void Model::LoadModel(float* mesh) {
+    _meshes.push_back(Mesh(mesh, SB_CUBE_INDICES, NewMaterial()));
+}
+
+void Model::LoadModel(String path) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    // std::vector<Texture> totalLoadedTextures;
 
     if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
         Log::Warn("Assimp Importer: ", importer.GetErrorString());
         return;
     }
-    Log::Info("Assimp Importer: Importing .obj model...");
-    _directory = std::string(path).substr(0, std::string(path).find_last_of("/"));
-    ProcessNode(scene->mRootNode, scene);
+    Log::Info("Assimp Importer: Importing model ", path);
+    String trimmedPath = std::string(path).substr(0, std::string(path).find_last_of("/"));
+
+    Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
+
+    ProcessNode(scene->mRootNode, scene, trimmedPath);
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene *scene)
-{
+void Model::ProcessNode(aiNode* node, const aiScene *scene, String path) {
+    Log::Print("Assim Importer: Processing node, Number of textures: ", _loadedTextures.size());
     for(u32 i = 0; i < node->mNumMeshes; i++){
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         _fCount += mesh->mNumFaces;
-        _meshes.push_back(AssimpProcessMesh(mesh, scene));
+        _meshes.push_back(AssimpProcessMesh(mesh, scene, path));
     }
 
     for(u32 i = 0; i < node->mNumChildren; i++){
-        ProcessNode(node->mChildren[i], scene);
+        ProcessNode(node->mChildren[i], scene, path);
     }
 }
 
-Mesh Model::AssimpProcessMesh(aiMesh* mesh, const aiScene* scene){
+Mesh Model::AssimpProcessMesh(aiMesh* mesh, const aiScene* scene, String path){
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    NewMaterial material;
     u16 counter;
     for(u32 i = 0; i < mesh->mNumVertices; i++){
         Vertex vertex;
@@ -79,16 +86,18 @@ Mesh Model::AssimpProcessMesh(aiMesh* mesh, const aiScene* scene){
         }
     }
     aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-    std::vector<Texture> diffuseMaps = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE);
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    std::vector<Texture> specularMaps = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR);
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    return Mesh(vertices, indices, textures);
+    material._diffuseMap = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE, path);
+    // std::vector<Texture> diffuseMaps = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE);
+    // material._diffuseMap.insert(material._diffuseMap.end(), diffuseMaps.begin(), diffuseMaps.end());
+    // std::vector<Texture> specularMaps = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR);
+    material._specularMap = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR, path);
+    // textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    return Mesh(vertices, indices, material);
 }
 
-std::vector<Texture> Model::AssimpLoadMaterialTextures(aiMaterial* mat, aiTextureType type){
+std::vector<Texture> Model::AssimpLoadMaterialTextures(aiMaterial* mat, aiTextureType type, String path){
     std::vector<Texture> textures;
-    for(u32 i {0}; i < mat->GetTextureCount(type); i++){
+    for(u32 i = 0; i < mat->GetTextureCount(type); i++){
         aiString str;
         mat->GetTexture(type, i, &str);
 
@@ -101,9 +110,10 @@ std::vector<Texture> Model::AssimpLoadMaterialTextures(aiMaterial* mat, aiTextur
                 break;
             }
         }
+
         if(!skip){
-            String tPath = this->_directory + "/" + String(str.C_Str());
-            Texture texture(tPath.c_str(), TextureType(type), GL_REPEAT, true, 0);
+            String texPath = path + "/" + String(str.C_Str());
+            Texture texture(texPath.c_str(), TextureType(type), GL_REPEAT, true, 0);
             textures.push_back(texture);
             _loadedTextures.push_back(texture);
         }

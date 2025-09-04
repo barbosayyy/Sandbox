@@ -14,30 +14,6 @@
 	// Just load texture directly ? 
 
 namespace Sb {
-	static std::map<uint8_t, GLenum> textureUnitMap{
-		{0, GL_TEXTURE0},
-		{1, GL_TEXTURE1},
-		{2, GL_TEXTURE2},
-		{3, GL_TEXTURE3},
-		{4, GL_TEXTURE4},
-		{5, GL_TEXTURE5},
-		{6, GL_TEXTURE6},
-		{7, GL_TEXTURE7},
-		{8, GL_TEXTURE8},
-		{9, GL_TEXTURE9},
-		{10, GL_TEXTURE10},
-		{11, GL_TEXTURE11},
-		{12, GL_TEXTURE12},
-		{13, GL_TEXTURE13},
-		{14, GL_TEXTURE14},
-		{15, GL_TEXTURE15}
-	};
-
-	static std::map<TextureType, String> textureTypeMap{
-	{TextureType::DIFFUSE, "diffuse"},
-	{TextureType::SPECULAR,"specular"},
-	{TextureType::EMISSIVE,"emissive"},
-	};
 
 	class Texture{
 	private:
@@ -50,7 +26,6 @@ namespace Sb {
 	public:
 		String _name;
 		Texture(const char* path, TextureType tType, GLint wrapMethod, bool flipVertical, bool gammaCorrection);
-		//Texture() {};
 		~Texture();
 
 		unsigned int GetID() const {return _id;};

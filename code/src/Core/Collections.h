@@ -38,10 +38,9 @@ namespace Sb {
             }
         }
         
-        T Get(u32 element) {
-            if(Contains(element)) {
-                return _dense[_sparse[element]];
-            }
+        T& Get(u32 element) {
+            assert(Contains(element) && "Collections: Element not found in SparseSet");
+            return _dense[_sparse[element]];
         }
 
         bool Contains(u32 element) const {

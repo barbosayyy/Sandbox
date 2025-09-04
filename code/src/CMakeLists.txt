@@ -35,8 +35,9 @@ add_library(Sandbox_Engine STATIC
     Rendering/IndexBuffer.cpp
     # Rendering/Assimp.h
     # Rendering/Assimp.cpp
-    Rendering/Material.h
-    Rendering/Material.cpp
+    # Rendering/Material.h
+    # Rendering/Material.cpp
+    Rendering/NewMaterial.h
     Rendering/Mesh.h
     Rendering/Mesh.cpp
     Rendering/Model.h
@@ -70,6 +71,7 @@ add_library(Sandbox_Engine STATIC
     ECS/Systems/InputSystem.h
     ECS/Systems/PhysicsSystem.h
     ECS/Systems/RenderSystem.h
+    ECS/Systems/RenderSystem.cpp
     ECS/Registry.h
     ECS/Registry.cpp
     ECS/EntityManagement.h

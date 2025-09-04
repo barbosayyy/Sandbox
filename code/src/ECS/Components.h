@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Collections.h"
+#include "Rendering/Model.h"
 
 namespace Sb {
 
@@ -19,20 +20,15 @@ namespace Sb {
     };
 
     struct TransformComponent : ComponentBase {
-        float posX;
-        float posY;
-        float posZ;
+        vec3 pos {1.0f};
 
-        float rotX;
-        float rotY;
-        float rotZ;
+        vec3 rot {0.0f};
         
-        float scaleX;
-        float scaleY;
-        float scaleZ;
+        vec3 scale {1.0f};
     };
 
     struct MeshComponent : ComponentBase {
+        Model model;
     };
 
     // static Component GetComponentFromID(size_t componentID){

@@ -15,8 +15,8 @@ Renderable::Renderable() :
     _rotation{0.0f},
     _scale{0.0f},
     _vb{nullptr},
-    _eb{nullptr},
-    _mat()
+    _eb{nullptr}
+    // _mat()
 {
     Renderable::SetPosition(0.0f,0.0f,0.0f);
 }
@@ -30,8 +30,8 @@ Renderable::Renderable(float x, float y, float z) :
     _rotation{0.0f},
     _scale{0.0f},
     _vb{nullptr},
-    _eb{nullptr},
-    _mat()
+    _eb{nullptr}
+    // _mat()
 {
     Renderable::SetPosition(x,y,z);
 }
@@ -121,17 +121,17 @@ glm::mat4 Renderable::GetModelMatrix() const
 
 void Renderable::RequestShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager)
 {
-    Shader* pSh {shaderManager.GetShader(shaderVertexRID, shaderFragmentRID)};
+    /*Shader* pSh {shaderManager.GetShader(shaderVertexRID, shaderFragmentRID)};
     if(pSh != nullptr){
         this->_mat.shaders.push_back(pSh);
     }
     else{
         Log::Warn("Failed to retrieve pointer to shader of ID: ", shaderVertexRID, " ", shaderFragmentRID);
-    }
+    }*/
 }
 
 void Renderable::ReleaseShader(int shaderVertexRID, int shaderFragmentRID, ShaderManager& shaderManager){
-    Shader* pSh = shaderManager.GetShader(shaderVertexRID, shaderFragmentRID);
+    /*Shader* pSh = shaderManager.GetShader(shaderVertexRID, shaderFragmentRID);
     if(pSh != nullptr){
         for(int i = 0; i < this->_mat.shaders.size();i++){
             if(pSh == this->_mat.shaders.at(i)){
@@ -139,11 +139,11 @@ void Renderable::ReleaseShader(int shaderVertexRID, int shaderFragmentRID, Shade
                 this->_mat.shaders.erase(iter+i);
             }
         }
-    }
+    }*/
 }
 
 void Renderable::Draw(Renderer* renderer)
-{
+{/*
     u8 i = 0;
     u8 j = 0;
     u8 diff = 1;
@@ -228,7 +228,7 @@ void Renderable::Draw(Renderer* renderer)
             }
             i++;
         }
-    }
+    }*/
 
     if(_vb != nullptr){
         _vb->Bind();

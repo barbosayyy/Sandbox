@@ -85,7 +85,7 @@ void Engine::BeginNewFrame() {
 void Engine::Render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	ECS::RenderSystem::Update(*this->_ecsRegistry);
+	// ECS::RenderSystem::Update(*this->_ecsRegistry);
 
 	if(_uiRenderEnabled)
 		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
