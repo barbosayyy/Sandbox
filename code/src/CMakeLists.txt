@@ -29,29 +29,21 @@ add_library(Sandbox_Engine STATIC
     Rendering/Renderer.cpp
     Rendering/Camera.h
     Rendering/Camera.cpp
-    Rendering/VertexBuffer.h
-    Rendering/VertexBuffer.cpp
-    Rendering/IndexBuffer.h
-    Rendering/IndexBuffer.cpp
-    # Rendering/Assimp.h
-    # Rendering/Assimp.cpp
-    # Rendering/Material.h
-    # Rendering/Material.cpp
     Rendering/NewMaterial.h
     Rendering/Mesh.h
     Rendering/Mesh.cpp
     Rendering/Model.h
     Rendering/Model.cpp
-    Rendering/Renderable.h
-    Rendering/Renderable.cpp
-    Rendering/Primitives.h
-    Rendering/Primitives.cpp
     Rendering/Shader.h
     Rendering/Shader.cpp
     Rendering/Texture.cpp
     Rendering/Texture.h
     Rendering/Window.h
     Rendering/Window.cpp
+    Rendering/OpenGL/GLBuffer.h
+    Rendering/OpenGL/GLBuffer.cpp
+    Rendering/Primitive.h
+    Rendering/Primitive.cpp
     
     # Resource Management
     Resources/ShaderManager.h
@@ -62,10 +54,11 @@ add_library(Sandbox_Engine STATIC
     Scene/SceneManager.h
     Scene/Scene.h
     Scene/Scene.cpp
-
+    
     # ImGui
     ImGui/ImGuiSbContext.h
     ImGui/ImGuiSbContext.cpp
+    
     # ECS
     ECS/Components.h
     ECS/Systems/InputSystem.h
@@ -76,10 +69,23 @@ add_library(Sandbox_Engine STATIC
     ECS/Registry.cpp
     ECS/EntityManagement.h
     ECS/EntityManagement.cpp
-
+    
     # Game
     Game/Game.h
     Game/IGame.h
+    
+    ### DEPRECATED ###
+
+    # Rendering/VertexBuffer.h
+    # Rendering/VertexBuffer.cpp
+    # Rendering/IndexBuffer.h
+    # Rendering/IndexBuffer.cpp
+    # Rendering/Assimp.h
+    # Rendering/Assimp.cpp
+    # Rendering/Material.h
+    # Rendering/Material.cpp
+    # Rendering/Renderable.h
+    # Rendering/Renderable.cpp
 )
 
 target_include_directories(Sandbox_Engine PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)

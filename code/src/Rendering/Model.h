@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Types.h"
 #include "Mesh.h"
 #include "Renderer.h"
 
@@ -12,7 +13,7 @@ namespace Sb {
         
         void Draw(Renderer* renderer, vec3 pos);
         void LoadModel(String path);
-        void LoadModel(float* mesh);
+        void LoadModel(DefaultMesh defaultMesh);
         
         u32 _fCount;
         vec3 _pos;

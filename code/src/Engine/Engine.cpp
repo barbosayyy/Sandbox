@@ -49,20 +49,23 @@ bool Engine::Validate() {
 }
 
 void Engine::Start() {
+
+	// Systems run-time setup
+
 	Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
 	_renderer->SetRenderCamera(camera);
 	_renderer->GetRenderCamera()->_moveSpeed = 0.025;
 
 	this->GetRenderer().Setup();
 
-#ifdef SB_DEBUG
-	Log::SetLogLevel(Log::Level::DEBUG);
-#elif SB_RELEASE
-	Log::SetLogLevel(Log::Level::WARN);
-#endif
-
 	InputManager::GetInstance().AddInputFunction([this]() { OnInput(); });
-
+	
+	#ifdef SB_DEBUG
+		Log::SetLogLevel(Log::Level::DEBUG);
+	#elif SB_RELEASE
+		Log::SetLogLevel(Log::Level::WARN);
+	#endif
+	
 	Log::Info("Engine: Started");
 }
 

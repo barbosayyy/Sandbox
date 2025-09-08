@@ -86,7 +86,7 @@ if(BUILD_GAME)
     # Temp - Set on project creation
     set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
     add_executable(${CM_SANDBOX_GAME_PROJECT} code/application/main.cpp)
-    message("\nExecutable: Game")
+    message("\nExecutable: Game\n")
 
     add_subdirectory(code/game)
     add_subdirectory(code/application)
@@ -135,7 +135,7 @@ if(BUILD_EDITOR)
     add_subdirectory(code/editor)
     add_executable(SandboxEditor code/editor/main.cpp)
     target_include_directories(SandboxEditor PRIVATE vendor/includes)
-    message("\nExecutable: Editor")
+    message("\nExecutable: Editor\n")
 
     target_link_libraries(SandboxEditor
         PRIVATE Sandbox_Editor

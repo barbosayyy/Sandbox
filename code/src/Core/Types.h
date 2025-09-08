@@ -4,12 +4,16 @@
 #include "Math/Vectors.h"
 #include <glew/glew.h>
 
+#include <vector>
 #include <string>
 #include <ostream>
 #include <variant>
 #include <xstring>
 
 namespace Sb {
+
+	// Enums
+
 	enum class ImageFormat {
 		JPG, PNG
 	};
@@ -21,7 +25,8 @@ namespace Sb {
 		EMISSIVE 	= 3
 	};
 
-	// std::string Wrapper
+	// Objects
+
 	class String
 	{
 	private:
@@ -94,6 +99,8 @@ namespace Sb {
 	};
 
 	struct Vertex {
+		Vertex();
+		Vertex(vec3 pos, vec3 norm, vec2 tex) : position(pos), normal(norm), texCoords(tex) {}
 		vec3 position;
 		vec3 normal;
 		vec2 texCoords;
@@ -112,4 +119,9 @@ namespace Sb {
 		u16 fragmentID;
 		ShaderData(u16 vId, u16 fId) : vertexID(vId), fragmentID(fId){};
 	};
+
+	struct DefaultMesh {
+		std::vector<Vertex> vertices;
+        std::vector<u32> indices;
+    };
 };

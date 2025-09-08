@@ -1,0 +1,39 @@
+#include "Core/Debug.h"
+#include "GLBuffer.h"
+
+namespace Sb {
+    static void GLBufferVertexData(u32 &vao, std::vector<Vertex> vertices, std::vector<u32> indices) {
+        glGenVertexArrays(1, &vao);
+		
+		u32 vbo;
+		u32 ebo;
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &ebo);
+
+		glBindVertexArray(vao);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+		if(vertices.size() > 0) {
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+		}
+		else {
+            Log::Warn("Mesh: Creating mesh with no vertices!");
+		}
+        if(indices.size() > 0) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+		}
+        if (vertices.size() > 0) {
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+            glEnableVertexAttribArray(0);
+
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+            glEnableVertexAttribArray(1);
+
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+            glEnableVertexAttribArray(2);
+		}
+		glBindVertexArray(0);
+    }
+}

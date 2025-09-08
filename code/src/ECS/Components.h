@@ -26,18 +26,8 @@ namespace Sb {
         
         vec3 scale {1.0f};
     };
-
+    
     struct MeshComponent : ComponentBase {
         Model model;
     };
-
-    // static Component GetComponentFromID(size_t componentID){
-    //     if(componentID == 1){
-    //         return TransformComponent();
-    //     if(componentID == 10){
-    //         return RendererComponent();
-    //     }
-    //     }
-    //     return Component();
-    // };
 }

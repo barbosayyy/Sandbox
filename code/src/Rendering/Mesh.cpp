@@ -1,14 +1,12 @@
 #include "Mesh.h"
-#include "Core/Types.h"
-#include "Rendering/Texture.h"
+#include "OpenGL/GLBuffer.h"
+#include "Texture.h"
 #include "Resources/ShaderManager.h"
 #include <string>
 
-namespace Sb {
+#include "Rendering/OpenGL/GLBuffer.h"
 
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<u32> indices, NewMaterial material) : _vertices(vertices), _indices(indices), _material(material) {
-		CreateMesh();
-	}
+namespace Sb {
 
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<u32> indices, NewMaterial material) : _vertices(vertices), _indices(indices), _material(material) {
 		CreateMesh();
@@ -19,31 +17,8 @@ namespace Sb {
 	}
 
 	void Mesh::CreateMesh()	{
-		glGenVertexArrays(1, &_vao);
-		glGenBuffers(1, &_vbo);
-		glGenBuffers(1, &_ebo);
-
-		glBindVertexArray(_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		if(_vertices.size() > 0) {
-			glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
-		}
-		else {
-			std::cout << "Mesh_createMesh: Vertex vector is empty!" << std::endl;
-		}
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned int), &_indices[0], GL_STATIC_DRAW);
-		if (_vertices.size() > 0) {
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-			glEnableVertexAttribArray(0);
-
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-			glEnableVertexAttribArray(1);
-
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-			glEnableVertexAttribArray(2);
-		}
-		glBindVertexArray(0);
+		
+		GLBufferVertexData(this->_vao, this->_vertices, this->_indices);
 
 		Renderer& ren = Renderer::GetInstance();
 		this->_material._shader = ren._shaderManager.GetShader(3, 4);

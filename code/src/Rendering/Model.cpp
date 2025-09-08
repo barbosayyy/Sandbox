@@ -27,8 +27,8 @@ void Model::Draw(Renderer* renderer, vec3 pos)
     }
 }
 
-void Model::LoadModel(float* mesh) {
-    _meshes.push_back(Mesh(mesh, SB_CUBE_INDICES, NewMaterial()));
+void Model::LoadModel(DefaultMesh defaultMesh) {
+    _meshes.push_back(Mesh(defaultMesh.vertices, defaultMesh.indices, NewMaterial()));
 }
 
 void Model::LoadModel(String path) {
@@ -67,7 +67,7 @@ Mesh Model::AssimpProcessMesh(aiMesh* mesh, const aiScene* scene, String path){
     NewMaterial material;
     u16 counter;
     for(u32 i = 0; i < mesh->mNumVertices; i++){
-        Vertex vertex;
+        Vertex vertex = Vertex();    
         vertex.position.x = mesh->mVertices[i].x;
         vertex.position.y = mesh->mVertices[i].y;
         vertex.position.z = mesh->mVertices[i].z; 

@@ -1,7 +1,8 @@
 
+#include "Core/Base.h"
 #include "Core/Debug.h"
 #include "ECS/Components.h"
-#include "Rendering/Primitives.h"
+#include "Rendering/Primitive.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Resources/ShaderManager.h"
@@ -113,13 +114,18 @@ void Game::Start() {
 	// Objects
 
 		Entity backpack = AddEntity();
-
-		Log::Print("Entity ", backpack);
+		Entity cube = AddEntity();
 
 		AddEntityComponent<TransformComponent>(backpack);
 		AddEntityComponent<MeshComponent>(backpack);
 
+		AddEntityComponent<TransformComponent>(cube);
+		AddEntityComponent<MeshComponent>(cube);
+
 		GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
+		GetEntityComponent<MeshComponent>(cube).model.LoadModel(Primitive::GetCube());
+
+		GetEntityComponent<TransformComponent>(cube).pos.x = 20.0f;
 
 	// Render
 		// _sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
