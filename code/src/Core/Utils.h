@@ -24,6 +24,7 @@ namespace Sb {
 		
 	public:	
 		static YAML::Node GetNode(const char* filePath, const char* nodeName);
+		static void WriteNode(std::stringstream stringStream, const char* nodeName);
 	};
 	
 	class Random{

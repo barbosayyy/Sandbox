@@ -3,7 +3,6 @@
 #include "Engine/IEngine.h"
 #include "ImGui/ImGuiSbContext.h"
 #include "Rendering/Renderer.h"
-#include "Scene/SceneManager.h"
 #include "ECS/Registry.h"
 
 #include <memory>

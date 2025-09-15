@@ -14,6 +14,7 @@ namespace Sb {
         void Draw(Renderer* renderer, vec3 pos);
         void LoadModel(String path);
         void LoadModel(DefaultMesh defaultMesh);
+        Mesh& GetMesh(u32 index);
         
         u32 _fCount;
         vec3 _pos;

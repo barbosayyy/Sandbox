@@ -2,14 +2,15 @@
 #include "Core/Base.h"
 #include "Core/Debug.h"
 #include "ECS/Components.h"
+#include "Input/Input.h"
 #include "Rendering/Primitive.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
+#include "Rendering/Texture.h"
 #include "Resources/ShaderManager.h"
 #include "stb_image/stb_image.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Model.h"
-#include "Scene/Scene.h"
 #include "ECS/EntityManagement.h"
 
 #include <cmath>
@@ -33,24 +34,22 @@ namespace SbGameGlobals{
 
 	unsigned int skyboxVAO, skyboxVBO;
 
-	Scene level1;
-
 	std::vector<vec3> lightPos;
 	std::vector<vec3> lightCol;
 	const u32 nrOfLights = 32;
 
-	std::vector<Sphere> lightVolumeSpheres;
+	std::vector<Entity> lightVolumeSpheres;
 	
 	// TODO: Wrap Cubemap declaration 
 		u32 cubemap;
 		
 		std::vector<String>faces = {
-		"resources/assets/cubemap/right.jpg",
-		"resources/assets/cubemap/left.jpg",
-		"resources/assets/cubemap/top.jpg",
-		"resources/assets/cubemap/bot.jpg",
-		"resources/assets/cubemap/front.jpg",
-		"resources/assets/cubemap/back.jpg"
+			"resources/assets/cubemap/right.jpg",
+			"resources/assets/cubemap/left.jpg",
+			"resources/assets/cubemap/top.jpg",
+			"resources/assets/cubemap/bot.jpg",
+			"resources/assets/cubemap/front.jpg",
+			"resources/assets/cubemap/back.jpg"
 		};
 
 		u32 loadCubeMap(std::vector<String> faces) {
@@ -123,12 +122,16 @@ void Game::Start() {
 		AddEntityComponent<MeshComponent>(cube);
 
 		GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
+
 		GetEntityComponent<MeshComponent>(cube).model.LoadModel(Primitive::GetCube());
 
-		GetEntityComponent<TransformComponent>(cube).pos.x = 20.0f;
+		Texture newTex = Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0);
 
-	// Render
-		// _sbEngine.GetRenderer()._textures.push_back(Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0));
+		GetEntityComponent<MeshComponent>(cube).model.GetMesh(0).SetTextureMap(newTex.GetID(), TextureType::DIFFUSE);
+
+		GetEntityComponent<TransformComponent>(cube).pos.z = -1;
+		
+		GetEntityComponent<TransformComponent>(backpack).pos.x = 5;
 
 	// Light pass prep
 
@@ -151,7 +154,13 @@ void Game::Start() {
 			float gColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5);
 			float bColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5);
 			lightCol.push_back(glm::vec3(rColor, gColor, bColor));
-			lightVolumeSpheres.emplace_back(Sphere(1.0f, 36, 18, vec3(xPos, yPos, zPos)));
+			Entity newSphere = AddEntity();
+			AddEntityComponent<TransformComponent>(newSphere);
+			GetEntityComponent<TransformComponent>(newSphere).pos = vec3(xPos, yPos, zPos);
+			// AddEntityComponent<MeshComponent>(newSphere);
+			// GetEntityComponent<MeshComponent>(newSphere).model.LoadModel(Primitive::GetSphere(1.0f, 36, 18));
+
+			lightVolumeSpheres.emplace_back(newSphere);
 		}
 
 	SbGameUI::SetUIVisibility(false);

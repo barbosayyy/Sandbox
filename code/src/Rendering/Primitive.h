@@ -13,7 +13,7 @@ namespace Sb {
 	public:
 		static DefaultMesh GetCube();
 		static DefaultMesh GetPlane();
-		static DefaultMesh GetSphere();
+		static DefaultMesh GetSphere(float radius, u32 stacks, u32 sectors);
 		static DefaultMesh GetQuad();
 
 	private:

@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "Debug.h"
 
+#include "yaml-cpp/emitter.h"
 #include "yaml-cpp/yaml.h"
 
 using namespace Sb;

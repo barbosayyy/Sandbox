@@ -9,10 +9,10 @@ namespace Sb {
     public:
         Color _color {1.0f, 1.0f, 1.0f, 1.0f};
         Shader* _shader;
-        std::vector<Texture> _diffuseMap;
-        std::vector<Texture> _specularMap;
-        std::vector<Texture> _normalMap;
-        std::vector<Texture> _emissionMap;
+        Texture _diffuseMap;
+        Texture _specularMap;
+        Texture _normalMap;
+        Texture _emissionMap;
 
         float _normal {1.0f};
         float _metallic {0.0f};

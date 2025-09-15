@@ -52,7 +52,7 @@ namespace Sb {
         }
 
 #ifdef SB_DEBUG
-        std::vector<T> GetDense() const { return _dense; };
+        std::vector<T>& GetDense() const { return _dense; };
         std::vector<u32> GetSparse() const { return _sparse; };
 
         void PrintSparse() { for(int i = 0; i < _sparse.size(); i++) { Log::Print(typeid(T).name(), " Sparse at ", i, " = ", _sparse.at(i)); }};

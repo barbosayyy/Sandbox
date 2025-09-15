@@ -99,7 +99,7 @@ namespace Sb {
 	};
 
 	struct Vertex {
-		Vertex();
+		Vertex() {}
 		Vertex(vec3 pos, vec3 norm, vec2 tex) : position(pos), normal(norm), texCoords(tex) {}
 		vec3 position;
 		vec3 normal;

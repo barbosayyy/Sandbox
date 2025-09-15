@@ -4,10 +4,25 @@
 #include "Core/Singleton.h"
 #include "Core/Collections.h"
 #include "ECS/Components.h"
+#include <tuple>
 
 namespace Sb {
     namespace ECS {
         class Registry final : public Singleton<Registry, int> {
+            using CoreComponents = std::tuple<
+                DummyComponent,
+                TransformComponent,
+                MeshComponent
+            >;
+
+            template <typename Tuple>
+            struct SparseSetCoreComponentTuple;
+            template <typename... Components>
+            struct SparseSetCoreComponentTuple<std::tuple<Components...>>{
+                using type = std::tuple<SparseSet<Components>...>;
+            };
+            using CoreComponentStore = SparseSetCoreComponentTuple<CoreComponents>::type;
+
         public:
 
             Registry();
@@ -32,28 +47,19 @@ namespace Sb {
 
             void IncrementNextEntityID() { _nextEntityId++;}
 
-#ifdef SB_DEBUG
             template<typename T>
-            std::vector<T> GetComponentStoreDense() const { return std::get<SparseSet<T>>(_componentStore).GetDense(); }
+            std::vector<T>& GetComponentStoreDense() const { return std::get<SparseSet<T>>(_componentStore).GetDense(); }
+
+#ifdef SB_DEBUG
             template<typename T>
             std::vector<u32> GetComponentStoreSparse() const { return std::get<SparseSet<T>>(_componentStore).GetSparse(); }
             template<typename T>
             SparseSet<T> GetComponentSparseSet() const { return std::get<SparseSet<T>>(_componentStore); }
 #endif
-        private:
-            using CoreComponents = std::tuple<
-                DummyComponent,
-                TransformComponent,
-                MeshComponent
-            >;
 
-            template <typename Tuple>
-            struct SparseSetCoreComponentTuple;
-            template <typename... Components>
-            struct SparseSetCoreComponentTuple<std::tuple<Components...>>{
-                using type = std::tuple<SparseSet<Components>...>;
-            };
-            using CoreComponentStore = SparseSetCoreComponentTuple<CoreComponents>::type;
+            const CoreComponentStore& GetComponentStore() const { return _componentStore; }
+
+        private:
 
             CoreComponentStore _componentStore;
             u32 _nextEntityId;

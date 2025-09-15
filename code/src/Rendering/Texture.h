@@ -26,9 +26,11 @@ namespace Sb {
 	public:
 		String _name;
 		Texture(const char* path, TextureType tType, GLint wrapMethod, bool flipVertical, bool gammaCorrection);
+		Texture() {};
 		~Texture();
 
 		unsigned int GetID() const {return _id;};
+		void SetID(u32 id){this->_id = id;}
 		TextureType GetType() const {return _type;};
 		int GetNrOfChannels() const {return _nrOfChannels;};
 
