@@ -2,7 +2,9 @@
 #include "Core/Base.h"
 #include "Core/Debug.h"
 #include "ECS/Components.h"
+#include "ECS/Registry.h"
 #include "Input/Input.h"
+#include "Rendering/Mesh.h"
 #include "Rendering/Primitive.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
@@ -12,6 +14,7 @@
 #include "Rendering/Camera.h"
 #include "Rendering/Model.h"
 #include "ECS/EntityManagement.h"
+#include "Scene/SceneManagement.h"
 
 #include <cmath>
 #include <string>
@@ -37,6 +40,8 @@ namespace SbGameGlobals{
 	std::vector<vec3> lightPos;
 	std::vector<vec3> lightCol;
 	const u32 nrOfLights = 32;
+
+	vec3 ambi(0.2f);
 
 	std::vector<Entity> lightVolumeSpheres;
 	
@@ -140,6 +145,8 @@ void Game::Start() {
 		lightingPassShader->SetInt("gNormal", 1);
 		lightingPassShader->SetInt("gAlbedoSpec", 2);
 
+		lightingPassShader->SetVec3("ambient", ambi);
+
 		lightVolumeSpheres.reserve(nrOfLights);
 		srand(13);
 		for (unsigned int i = 0; i < nrOfLights; i++)
@@ -154,13 +161,6 @@ void Game::Start() {
 			float gColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5);
 			float bColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5);
 			lightCol.push_back(glm::vec3(rColor, gColor, bColor));
-			Entity newSphere = AddEntity();
-			AddEntityComponent<TransformComponent>(newSphere);
-			GetEntityComponent<TransformComponent>(newSphere).pos = vec3(xPos, yPos, zPos);
-			// AddEntityComponent<MeshComponent>(newSphere);
-			// GetEntityComponent<MeshComponent>(newSphere).model.LoadModel(Primitive::GetSphere(1.0f, 36, 18));
-
-			lightVolumeSpheres.emplace_back(newSphere);
 		}
 
 	SbGameUI::SetUIVisibility(false);

@@ -4,6 +4,11 @@
 #include "Core/Singleton.h"
 
 namespace Sb {
+    namespace ResourceManagement {
+        void WriteResourceManifest();
+        void LoadResourceManifest();
+    }
+
     enum class ResourceID{
 		// Shaders -> 0-15
         SHADER_FRAGMENT = 0,

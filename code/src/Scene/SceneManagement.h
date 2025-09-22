@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Core/Types.h"
+
 namespace Sb {
     namespace SceneManagement {
-        static void SaveScene();
+        void SaveScene(const String& levelName);
     }
 }

@@ -52,6 +52,7 @@ add_library(Sandbox_Engine STATIC
     Resources/ResourceManager.cpp
 
     Scene/SceneManagement.h
+    Scene/SceneManagement.cpp
     
     # ImGui
     ImGui/ImGuiSbContext.h

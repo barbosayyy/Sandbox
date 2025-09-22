@@ -29,5 +29,6 @@ namespace Sb {
     
     struct MeshComponent : ComponentBase {
         Model model;
+        // resource manifest uuid
     };
 }

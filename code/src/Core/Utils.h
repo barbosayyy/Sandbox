@@ -16,7 +16,8 @@ namespace Sb {
 		static std::filesystem::path _currentDirectory;
 	public:
 		static std::string Read(const char* filePath);
-		static String GetCurrentPath();
+		static bool Write(const char* content, const String& filePath, const String& fileName);
+		static String GetCurrentDirectory();
 	};
 
 	class YamlUtil{
@@ -24,7 +25,6 @@ namespace Sb {
 		
 	public:	
 		static YAML::Node GetNode(const char* filePath, const char* nodeName);
-		static void WriteNode(std::stringstream stringStream, const char* nodeName);
 	};
 	
 	class Random{

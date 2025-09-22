@@ -47,17 +47,19 @@ namespace Sb {
 
             void IncrementNextEntityID() { _nextEntityId++;}
 
+            void Clear() { std::apply([](auto&... componentSparseSet) { (componentSparseSet.Clear(), ...); }, _componentStore); Log::Info("ECS Registry: Cleared all data"); }
+
             template<typename T>
-            std::vector<T>& GetComponentStoreDense() const { return std::get<SparseSet<T>>(_componentStore).GetDense(); }
+            std::vector<T>& GetComponentStoreDense() { return std::get<SparseSet<T>>(_componentStore).GetDense(); }
 
 #ifdef SB_DEBUG
             template<typename T>
-            std::vector<u32> GetComponentStoreSparse() const { return std::get<SparseSet<T>>(_componentStore).GetSparse(); }
+            std::vector<u32>& GetComponentStoreSparse() { return std::get<SparseSet<T>>(_componentStore).GetSparse(); }
             template<typename T>
-            SparseSet<T> GetComponentSparseSet() const { return std::get<SparseSet<T>>(_componentStore); }
+            SparseSet<T>& GetComponentSparseSet() { return std::get<SparseSet<T>>(_componentStore); }
 #endif
 
-            const CoreComponentStore& GetComponentStore() const { return _componentStore; }
+            CoreComponentStore& GetComponentStore() { return _componentStore; }
 
         private:
 
