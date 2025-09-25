@@ -126,7 +126,7 @@ void Game::Start() {
 		AddEntityComponent<TransformComponent>(cube);
 		AddEntityComponent<MeshComponent>(cube);
 
-		GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
+		// GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
 
 		GetEntityComponent<MeshComponent>(cube).model.LoadModel(Primitive::GetCube());
 

@@ -30,7 +30,7 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_compile_definitions(SB_PLATFORM_WIN)
-elseif()
+else()
     message(FATAL_ERROR "Other platforms not supported yet.")
 endif()
 
@@ -110,17 +110,18 @@ if(BUILD_GAME)
 
     # Post-config scripts
 
-    set(CM_SANDBOX_RUN_SCRIPTS     1)
+    set(CM_SANDBOX_RUN_SCRIPTS     0)
 
     if(${CM_SANDBOX_RUN_SCRIPTS} EQUAL 1)
-        message("Running Scripts:")
+        message("Running Configure Scripts:")
         if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-                message("generate_resource_manifest.py")
-                execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CMAKE_BINARY_DIR})    
-                file(COPY ${CM_SANDBOX_RESOURCES_DIR}/resource_manifest.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
+                # - Deprecated
+                    message("generate_resource_manifest.py")
+                    execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CMAKE_BINARY_DIR})    
+                    file(COPY ${CM_SANDBOX_RESOURCES_DIR}/resource_manifest.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
             endif()
     else()
-        message("Scripts are disabled")
+        message("Configure Scripts are disabled")
     endif()
 endif()
 
