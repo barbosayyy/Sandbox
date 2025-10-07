@@ -8,24 +8,21 @@
 
 namespace Sb {
     class Model{
+    protected:
+        std::vector<Mesh> _meshes;
+        std::vector<Texture> _loadedTextures;  
+        u32 _vCount;
+    
     public:
+        u32 _fCount;
+        vec3 _pos;
+        u32 _assetID;
         Model();
         
         void Draw(Renderer* renderer, vec3 pos);
-        void LoadModel(String path);
-        void LoadModel(DefaultMesh defaultMesh);
+        void LoadModel(u32 assetID);
         Mesh& GetMesh(u32 index);
-        
-        u32 _fCount;
-        vec3 _pos;
-    protected:
-        void ProcessNode(aiNode* node, const aiScene *scene, String path);
-        std::vector<Texture> AssimpLoadMaterialTextures(aiMaterial* mat, aiTextureType type, String path);
-        Mesh AssimpProcessMesh(aiMesh* mesh, const aiScene* scene, String path);
-
-        std::vector<Mesh> _meshes;
-        u32 _vCount;
-        std::vector<Texture> _loadedTextures;
+        std::vector<Mesh>& GetMeshes() {return _meshes;};
         
     };
 }

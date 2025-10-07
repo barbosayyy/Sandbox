@@ -1,8 +1,7 @@
 #include "Mesh.h"
 #include "Core/Types.h"
 #include "OpenGL/GLBuffer.h"
-#include "Texture.h"
-#include "Resources/ShaderManager.h"
+#include "Resources/ResourceManager.h"
 #include <string>
 
 #include "Rendering/OpenGL/GLBuffer.h"
@@ -11,7 +10,7 @@ namespace Sb {
 
 	Mesh::Mesh() {}
 
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<u32> indices, NewMaterial material) : _vertices(vertices), _indices(indices), _material(material) {
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<u32> indices, Material material) : _vertices(vertices), _indices(indices), _material(material) {
 		CreateMesh();
 	}
 
@@ -24,7 +23,8 @@ namespace Sb {
 		GLBufferVertexData(this->_vao, this->_vertices, this->_indices);
 
 		Renderer& ren = Renderer::GetInstance();
-		this->_material._shader = ren._shaderManager.GetShader(3, 4);
+		ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
+		this->_material._shader = res.LoadShader(38, 39);
 	}
 
 	void Mesh::Draw(Renderer* renderer, vec3 pos) {
@@ -46,39 +46,39 @@ namespace Sb {
 		modelM = glm::scale(modelM, vec3(1.0f,1.0f,1.0f));
 		_material._shader->SetMat4("model", modelM);
 
-		if(_material._diffuseMap.GetID() > 0) {
+		if(_material._diffuseMap.id > 0) {
 			glActiveTexture(GL_TEXTURE0+txActive);
 			txActive++;
 			txCurrent++;
-			_material._shader->SetInt(String("diffuse" + std::to_string(txCurrent)), _material._diffuseMap.GetID());
-			glBindTexture(GL_TEXTURE_2D, _material._diffuseMap.GetID());
+			_material._shader->SetInt(String("diffuse" + std::to_string(txCurrent)), _material._diffuseMap.id);
+			glBindTexture(GL_TEXTURE_2D, _material._diffuseMap.id);
 			txCurrent = 0;
 		}
 		
-		if(_material._specularMap.GetID() > 0) {
+		if(_material._specularMap.id > 0) {
 			glActiveTexture(GL_TEXTURE0+txActive);
 			txActive++;
 			txCurrent++;
-			_material._shader->SetInt(String("specular" + std::to_string(txCurrent)), _material._diffuseMap.GetID());
-			glBindTexture(GL_TEXTURE_2D, _material._diffuseMap.GetID());
+			_material._shader->SetInt(String("specular" + std::to_string(txCurrent)), _material._diffuseMap.id);
+			glBindTexture(GL_TEXTURE_2D, _material._diffuseMap.id);
 			txCurrent = 0;
 		}
 
-		if(_material._normalMap.GetID() > 0) {
+		if(_material._normalMap.id > 0) {
 			glActiveTexture(GL_TEXTURE0+txActive);
 			txActive++;
 			txCurrent++;
-			_material._shader->SetInt(String("normal" + std::to_string(txCurrent)), _material._normalMap.GetID());
-			glBindTexture(GL_TEXTURE_2D, _material._normalMap.GetID());
+			_material._shader->SetInt(String("normal" + std::to_string(txCurrent)), _material._normalMap.id);
+			glBindTexture(GL_TEXTURE_2D, _material._normalMap.id);
 			txCurrent = 0;
 		}
 
-		if(_material._emissionMap.GetID() > 0) {
+		if(_material._emissionMap.id > 0) {
 			glActiveTexture(GL_TEXTURE0+txActive);
 			txActive++;
 			txCurrent++;
-			_material._shader->SetInt(String("emissive" + std::to_string(txCurrent)), _material._emissionMap.GetID());
-			glBindTexture(GL_TEXTURE_2D, _material._emissionMap.GetID());
+			_material._shader->SetInt(String("emissive" + std::to_string(txCurrent)), _material._emissionMap.id);
+			glBindTexture(GL_TEXTURE_2D, _material._emissionMap.id);
 			txCurrent = 0;
 		}
 
@@ -90,16 +90,16 @@ namespace Sb {
 
 	void Mesh::SetTextureMap(u32 textureID, TextureType textureType) {
 		if(textureType == TextureType::DIFFUSE){
-			this->_material._diffuseMap.SetID(textureID);
+			this->_material._diffuseMap.id = textureID;
 		}
 		else if(textureType == TextureType::SPECULAR) {
-			this->_material._specularMap.SetID(textureID);
+			this->_material._specularMap.id = textureID;
 		}
 		else if(textureType == TextureType::NORMAL) {
-			this->_material._normalMap.SetID(textureID);
+			this->_material._normalMap.id = textureID;
 		}
 		else if(textureType == TextureType::EMISSIVE) {
-			this->_material._emissionMap.SetID(textureID);
+			this->_material._emissionMap.id = textureID;
 		}
 	}
 }

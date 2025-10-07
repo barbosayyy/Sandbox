@@ -4,6 +4,7 @@
 #include "Core/Config.h"
 #include "Core/Types.h"
 #include "ImGui/ImGuiSbContext.h"
+#include "Resources/ResourceManager.h"
 
 using namespace Sb;
 
@@ -38,8 +39,6 @@ Renderer::Renderer() : _currentAPI(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH),
 	} else if(_currentAPI & SB_DX12) {
 		SB_NOT_IMPL;
 	}
-
-	_shaderManager.Init();
 
 	_imGuiSbContext = new ImGuiSbContext();
 }
@@ -161,5 +160,6 @@ void Renderer::SetupFramebufferQuad() {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-	framebufferQuadShader = this->_shaderManager.GetShader(7, 9);
+	ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
+	framebufferQuadShader = res.LoadShader(48, 47);
 }

@@ -1,12 +1,6 @@
-#include "Core/Base.h"
-
+#include "ECS/Registry.h"
 #include "SceneManagement.h"
 
-#include "Core/Collections.h"
-#include "ECS/Components.h"
-#include "ECS/Registry.h"
-
-#include "Resources/ResourceManager.h"
 #include "yaml-cpp/emitter.h"
 #include "yaml-cpp/emittermanip.h"
 

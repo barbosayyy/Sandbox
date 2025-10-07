@@ -23,4 +23,3 @@ bld/
 CMakeUserPresets.json
 
 imgui.ini
-*.yaml

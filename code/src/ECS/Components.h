@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Collections.h"
 #include "Rendering/Model.h"
 
 namespace Sb {
@@ -16,6 +15,10 @@ namespace Sb {
         u32 sparseIndex;
     };
 
+    struct AssetComponentBase : ComponentBase{
+        u32 assetID;
+    };
+
     struct DummyComponent : ComponentBase {
     };
 
@@ -27,8 +30,8 @@ namespace Sb {
         vec3 scale {1.0f};
     };
     
-    struct MeshComponent : ComponentBase {
-        Model model;
+    struct MeshComponent : AssetComponentBase {
+        Model* model;
         // resource manifest uuid
     };
 }

@@ -3,6 +3,7 @@
 #include "Core/Debug.h"
 #include "ECS/Registry.h"
 #include "Input/Input.h"
+#include "Resources/ResourceManager.h"
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
 
@@ -18,6 +19,7 @@ Engine::Engine() : _uiRenderEnabled(true){
 	SetRenderer(Renderer::GetInstance());
 	SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
 	SetECSRegistry(ECS::Registry::GetInstance());
+	SetResourceManager(ResourceManagement::ResourceManager::GetInstance());
 }
 
 Engine::~Engine() {
@@ -33,6 +35,10 @@ void Engine::SetInputManager(InputManager& inputManager) {
 
 void Engine::SetECSRegistry(ECS::Registry& registry) {
 	_ecsRegistry = &registry;
+}
+
+void Engine::SetResourceManager(ResourceManagement::ResourceManager& resourceManager) {
+	_resourceManager = &resourceManager;
 }
 
 bool Engine::Validate() {

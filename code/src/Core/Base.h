@@ -21,6 +21,8 @@ namespace Sb {
 	using s64 = int64_t;
 	using uintPointer = uintptr_t;
 
+	static constexpr u32 _MAX_U32 = 4294967295;
+
 	constexpr u8 FALSE 	{0};
 	constexpr u8 TRUE 	{1};
 	constexpr float PI 	{3.14159265358979323846f};

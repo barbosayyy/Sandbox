@@ -29,7 +29,7 @@ add_library(Sandbox_Engine STATIC
     Rendering/Renderer.cpp
     Rendering/Camera.h
     Rendering/Camera.cpp
-    Rendering/NewMaterial.h
+    Rendering/Material.h
     Rendering/Mesh.h
     Rendering/Mesh.cpp
     Rendering/Model.h
@@ -46,8 +46,8 @@ add_library(Sandbox_Engine STATIC
     Rendering/Primitive.cpp
     
     # Resource Management
-    Resources/ShaderManager.h
-    Resources/ShaderManager.cpp
+    Resources/ResourceManifest.h
+    Resources/ResourceManifest.cpp
     Resources/ResourceManager.h
     Resources/ResourceManager.cpp
 
@@ -72,19 +72,6 @@ add_library(Sandbox_Engine STATIC
     # Game
     Game/Game.h
     Game/IGame.h
-    
-    ### DEPRECATED ###
-
-    # Rendering/VertexBuffer.h
-    # Rendering/VertexBuffer.cpp
-    # Rendering/IndexBuffer.h
-    # Rendering/IndexBuffer.cpp
-    # Rendering/Assimp.h
-    # Rendering/Assimp.cpp
-    # Rendering/Material.h
-    # Rendering/Material.cpp
-    # Rendering/Renderable.h
-    # Rendering/Renderable.cpp
 )
 
 target_include_directories(Sandbox_Engine PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)

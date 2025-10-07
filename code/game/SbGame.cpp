@@ -1,5 +1,6 @@
 
 #include "Core/Base.h"
+#include "Core/Config.h"
 #include "Core/Debug.h"
 #include "ECS/Components.h"
 #include "ECS/Registry.h"
@@ -9,17 +10,19 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
-#include "Resources/ShaderManager.h"
+#include "Resources/ResourceManager.h"
 #include "stb_image/stb_image.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Model.h"
 #include "ECS/EntityManagement.h"
 #include "Scene/SceneManagement.h"
+#include "Resources/ResourceManifest.h"
 
 #include <cmath>
 #include <string>
 
 #include "Game/Game.h"
+
 #include "SbGameBase.h"
 #include "SbGameUI.h"
 
@@ -99,8 +102,8 @@ void Game::Init() {
 
 void Game::Start() {
 	
-	geometryPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(3, 4);
-	lightingPassShader = _sbEngine.GetRenderer()._shaderManager.GetShader(4, 6);
+	geometryPassShader = _sbEngine.GetResourceManager().LoadShader(39, 38);
+	lightingPassShader = _sbEngine.GetResourceManager().LoadShader(42, 41);
 
 	// Cubemap
 		glGenVertexArrays(1, &skyboxVAO);
@@ -112,7 +115,7 @@ void Game::Start() {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 		cubemap = loadCubeMap(faces);
-		skyboxShader = _sbEngine.GetRenderer()._shaderManager.GetShader(1, 2);
+		skyboxShader = _sbEngine.GetResourceManager().LoadShader(35, 34);
 		skyboxShader->SetInt("skybox", 0);
 
 	// Objects
@@ -126,13 +129,12 @@ void Game::Start() {
 		AddEntityComponent<TransformComponent>(cube);
 		AddEntityComponent<MeshComponent>(cube);
 
-		// GetEntityComponent<MeshComponent>(backpack).model.LoadModel("resources/model/backpack.obj");
+		GetEntityComponent<MeshComponent>(backpack).model->LoadModel(24);
 
-		GetEntityComponent<MeshComponent>(cube).model.LoadModel(Primitive::GetCube());
+		GetEntityComponent<MeshComponent>(cube).model->LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
 
-		Texture newTex = Texture("resources/assets/d_container.png", TextureType::DIFFUSE, GL_REPEAT, true, 0);
-
-		GetEntityComponent<MeshComponent>(cube).model.GetMesh(0).SetTextureMap(newTex.GetID(), TextureType::DIFFUSE);
+		Texture* txtr = _sbEngine.GetResourceManager().LoadTexture(56, TextureType::DIFFUSE);
+		GetEntityComponent<MeshComponent>(cube).model->GetMesh(0).SetTextureMap(txtr->id, txtr->type);
 
 		GetEntityComponent<TransformComponent>(cube).pos.z = -1;
 		

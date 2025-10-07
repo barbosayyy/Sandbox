@@ -4,14 +4,22 @@
 #include "Core/Singleton.h"
 #include "Core/Utils.h"
 #include "Core/Types.h"
+
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
-
 namespace Sb {
 	class Shader {
+	private:
+			struct ShaderManifestID {
+				u32 vertexManifestID;
+				u32 fragmentManifestID;
+			};
+			GLuint CompileShader(GLenum shaderType, const char* shaderSource);
+			GLuint Load(const char* vertexPath, const char* fragmentPath);
 	public:
+		Shader();
 		Shader(const char* vertexPath, const char* fragmentPath);
 
 		void Use();
@@ -23,16 +31,7 @@ namespace Sb {
 		void SetVec4(const char* uniformName, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) const;
 		void SetMat3(const char* uniformName, glm::mat3 value) const;
 		void SetMat4(const char* uniformName, glm::mat4 value) const;
-		//const u16 ShaderInstanceId() const {return _shaderInstanceId;};
-		//u16& ShaderInstanceId() {return _shaderInstanceId;};
-		//const u16 ShaderResourceId() const {return _shaderResourceId;};
-		//u16& ShaderResourceId() {return _shaderResourceId;};
 		GLuint _shader;
-
-	private:
-		GLuint CompileShader(GLenum shaderType, const char* shaderSource);
-		GLuint Load(const char* vertexPath, const char* fragmentPath);
-		//u16 _shaderInstanceId;
-		//u16 _shaderResourceId;
+		ShaderManifestID _assetID;
 	};
 }

@@ -62,7 +62,6 @@ namespace Sb {
         private:
         std::vector<T> _dense;
         std::vector<u32> _sparse;
-        static constexpr u32 _MAX_U32 = 4294967295;
         static constexpr u8 _RESIZE_FACTOR = 2;
     };
 }

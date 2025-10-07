@@ -4,12 +4,11 @@
 #include "Core/Singleton.h"
 #include <glew/glew.h>
 #include <glfw/glfw3.h>
-#include "Math/Vectors.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Window.h"
 #include "Rendering/Texture.h"
 #include "ImGui/ImGuiSbContext.h"
-#include "Resources/ShaderManager.h"
+#include "Shader.h"
 
 namespace Sb {
 	class Renderer : public Singleton<Renderer, int> {
@@ -48,7 +47,6 @@ namespace Sb {
 		u32 gPosition, gNormal, gAlbedoSpec;
 		u32 _renderBufferObject;
 		u32 _fbo;
-		ShaderManager _shaderManager;
 		std::vector<Texture> _textures;
 
 	private:

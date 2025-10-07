@@ -1,35 +1,26 @@
-#pragma once
+#pragma once 
 
-#include "Shader.h"
 #include "Core/Types.h"
-#include "Texture.h"
-
-#include <vector>
+#include "Rendering/Texture.h"
+#include "Rendering/Shader.h"
 
 namespace Sb {
-    constexpr u16 SB_MAT_TEX            = 1 << 0;
-    constexpr u16 SB_MAT_LIT            = 1 << 1;
-    constexpr u16 SB_MAT_COLOVERLAY     = 1 << 2;
-    constexpr u16 SB_MAT_EMISS          = 1 << 3;
+    class Material {
+    public:
+        Color _color {1.0f, 1.0f, 1.0f, 1.0f};
+        Shader* _shader;
+        Texture _diffuseMap;
+        Texture _specularMap;
+        Texture _normalMap;
+        Texture _emissionMap;
 
-    struct Material{
+        float _normal {1.0f};
+        float _metallic {0.0f};
+        float _roughness {0.0f};
+        float _emission {0.0f};
 
-        Material();
-        std::vector<Texture> textures;
-        std::vector<Shader*> shaders;
-        float roughnessStrength;
-        float emissiveStrength;
-        vec4 colorOverlay;
-        u16 flags;
+        // GPU flags
 
-        void SetEm(float param) {emissiveStrength = param;};
-        void SetRough(float param) {roughnessStrength = param;};
-
-        void AddTexture(const Texture& tex);
-
-        void SetColorOverlay(const vec4& color);
-
-        void AddFlag(u16 flag);
-        void RemoveFlag(u16 flag);
+        // u8 sbMaterialGpuFlags;
     };
 }

@@ -3,6 +3,10 @@
 
 using namespace Sb;
 
+Shader::Shader() {
+
+}
+
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	Debug::_buffer = "vertex: " + std::string(vertexPath) + " frag: " + std::string(fragmentPath);

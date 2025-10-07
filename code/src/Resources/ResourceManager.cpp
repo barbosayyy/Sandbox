@@ -1,227 +1,323 @@
-#include "ResourceManager.h"
+#include "Core/Config.h"
+#include "Core/Types.h"
 #include "Core/Utils.h"
+#include "ResourceManager.h"
 #include "Core/Debug.h"
-#include "Resources.h"
-#include <filesystem>
 
-#include <string>
-#include <unordered_set>
+#include "Resources/ResourceManager.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
 
-#include "yaml-cpp/emitter.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image/stb_image.h"
+
+#include "yaml-cpp/node/node.h"
+#include "yaml-cpp/node/parse.h"
 #include "yaml-cpp/yaml.h"
 
 namespace Sb {
-
     namespace ResourceManagement {
+
+        Texture LoadTextureResource(String& path, TextureType type, GLint wrapMethod, bool flipVertical, bool gammaCorrection);
+        void AssimpProcessNode(aiNode* node, const aiScene *scene, String& path, Model& model, std::vector<Texture>& loadedTextures);
+        std::vector<Texture> AssimpLoadMaterialTextures(aiMaterial* mat, aiTextureType type, String& path, std::vector<Texture>& loadedTextures);
+        Mesh AssimpProcessMesh(aiMesh* mesh, const aiScene* scene, String& path, std::vector<Texture>& loadedTextures);
         
-        static u32 assetUuid {0};
-        
-        void WriteAssetMetaData(String& buffer, std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter);
-        void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Node& node);
-        bool FindNewAssetReference(std::filesystem::directory_entry dirEntry, std::unordered_set<std::string>& manifestPaths, std::unordered_set<std::string>& foundPaths, YAML::Node& node);
+        // Texture load Utils
+            Texture LoadTextureResource(String& path, TextureType type, GLint wrapMethod, bool flipVertical, bool gammaCorrection) {
+                Texture texture;
 
-        void WriteAssetMetaData(String& buffer, std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter) {
-            emitter << YAML::BeginMap;
-            emitter << YAML::Key << "id" << YAML::Value << assetUuid;
-            buffer = dirEntry.path().string().substr(dirEntry.path().string().find_last_of("\\")+1);
-            emitter << YAML::Key << "name" << YAML::Value << std::string(buffer);
-            emitter << YAML::Key << "path" << YAML::Value << dirEntry.path().string();
-            emitter << YAML::EndMap;
-            assetUuid++;
-        }
+                texture.name = std::string(path).substr(std::string(path).find_last_of("/")+1, std::string(path).size());
 
-        void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Node& node) {
-            YAML::Node entry;
+                glGenTextures(1, &texture.id);
 
-            if(!node["assets"]) return;
-            if(!node["assets"].IsSequence()) return;
+                stbi_set_flip_vertically_on_load(flipVertical);
+		        u8* data = stbi_load(path, &texture.width, &texture.height, &texture.numChannels, 0);
 
-            entry["id"] = assetUuid++;
-            entry["name"] = dirEntry.path().filename().string();
-            entry["path"] = dirEntry.path().string();
-
-            node["assets"].push_back(entry);
-        }
-
-        // Reference new asset path by looking for another path with same file name and verify if that entry is not in the manifest already
-        bool FindNewAssetReference(std::filesystem::directory_entry dirEntry, std::unordered_set<std::string>& manifestPaths, std::unordered_set<std::string>& foundPaths, YAML::Node& node) {
-            for(auto entry : foundPaths) {
-                std::filesystem::directory_entry entryDir(entry);
-                
-                if(dirEntry.path() != entryDir.path() && dirEntry.path().filename() == entryDir.path().filename()) {
-                    if(!(manifestPaths.count(entryDir.path().string()) > 0)) {
-                        node["path"] = entryDir.path().string();
-                        
-                        Log::Info("ResourceManifest: Fixed missing asset reference path ", dirEntry.path().string() , " to ", entryDir.path().string());
-                        
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        /* 
-            Generate Assets metadata manifest
-        */
-        static void WriteResourceManifest() {
-            if(!std::filesystem::exists(SB_RESOURCE_FOLDER_PATH))
-                std::filesystem::create_directories(SB_RESOURCE_FOLDER_PATH);
-
-            String buffer;
-
-            YAML::Emitter emitter;
-
-            // No resource manifest exists
-            if(!std::filesystem::exists(SB_RESOURCE_MANIFEST_PATH)) {
-                
-                assetUuid = 0;
-                
-                emitter << YAML::BeginMap;
-                emitter << YAML::Key << "assets";
-                emitter << YAML::BeginSeq;
-                
-                for(const auto& dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_FOLDER_PATH)) {
+                	if (data) {
+                		GLenum format;
+                		if(texture.numChannels == 1)
+                			format = GL_RED;
+                		else if(texture.numChannels == 3)
+                			format = GL_RGB;
+                		else if(texture.numChannels == 4)
+                			format = GL_RGBA;
+                		glBindTexture(GL_TEXTURE_2D, texture.id);
+                		glTexImage2D(GL_TEXTURE_2D, 0, format, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, data);
+                		glGenerateMipmap(GL_TEXTURE_2D);
+                		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMethod);
+                		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMethod);
+                		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                	}
+                	else {
+                        texture.id = 0;
+                		Log::Error("Texture: Failed to load texture from: ", path);
+                	}
                     
-                    if(!dirEntry.exists())
-                    continue;
-                    
-                if(!std::filesystem::is_directory(dirEntry)) {
-                        WriteAssetMetaData(buffer, dirEntry, emitter);
-                    }
-                }
+                	stbi_image_free(data);
 
-                if(!File::Write(emitter.c_str(), SB_RESOURCE_FOLDER_PATH, "resource_manifest.yaml")) {
-                    Log::Info("ResourceManifest: Failed to write resource manifest ", SB_RESOURCE_MANIFEST_PATH);
-                    return;
-                }
-                Log::Info("ResourceManifest: Resource manifest written to ", SB_RESOURCE_MANIFEST_PATH);
+                return texture;
             }
 
-            // Load resource manifest and update its contents
-            else {
-                YAML::Node manifestRootNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH);
-                std::unordered_set<std::string> resourceAssetPaths;
-                std::unordered_set<std::string> manifest;
-                u32 manifestID = 0;
-                bool manifestIsDirty = false;
-                
-                if(manifestRootNode && manifestRootNode["assets"]) {
-                    
-                    // Register every asset directory entry in resources folder
-                    for(const auto& dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_FOLDER_PATH)) {
-                        if(!dirEntry.exists())
-                            continue;
-                        if(!std::filesystem::is_directory(dirEntry) && dirEntry.path().string() != SB_RESOURCE_MANIFEST_PATH) {
-                            resourceAssetPaths.insert(dirEntry.path().string());
-                        }
-                    }
-
-                    // Get paths in manifest as set
-                    for(auto node : manifestRootNode["assets"]) {
-                        manifest.emplace(node["path"].as<std::string>(), node["id"].as<u32>());
-                        if(node["id"].as<int>() > manifestID)
-                            manifestID = node["id"].as<int>();
-                    }
-                
-                    // Remove non-existing entries in manifest and add new ones; Fix mismatching references
-                    for(size_t i = 0; i < manifestRootNode["assets"].size();) {
-                        YAML::Node entry = manifestRootNode["assets"][i];
-                        if(entry["id"] && entry["path"]) {
-                            if(!(resourceAssetPaths.count(entry["path"].as<std::string>()) > 0)){
-                                if(!FindNewAssetReference(std::filesystem::directory_entry(entry["path"].as<std::string>()), manifest, resourceAssetPaths, entry)) {
-                                    manifestRootNode["assets"].remove(i);
-                                    manifest.erase(entry["path"].as<std::string>());
-                                    Log::Print(manifestRootNode["assets"]);
-                                    Log::Info("ResourceManifest: Removed asset ", entry["path"].as<std::string>());
-                                    continue;
-                                }
-                                manifestIsDirty = true;
-                            }
-                            ++i;
-                        }
-                    }
-
-                    assetUuid = manifestID+1;
-
-                    // Now update set with new entries
-                    for(auto entry : resourceAssetPaths) {
-                        if(!(manifest.count(entry) > 0)) {
-                            Log::Info("ResourceManifest: Found new asset ", entry);
-                            WriteAssetMetaData(std::filesystem::directory_entry(entry), manifestRootNode);
-                            manifestIsDirty = true;
-                        }
-                    }
-
-                    if(manifestIsDirty) {
-                        
-                        // Write modified node to a new manifest
-                        emitter << manifestRootNode;
-
-                        if(!File::Write(emitter.c_str(), SB_RESOURCE_FOLDER_PATH, "resource_manifest.yaml")) {
-                            Log::Info("ResourceManifest: Failed to overwrite Resource manifest to ", SB_RESOURCE_MANIFEST_PATH);
-                        }
-                        Log::Info("ResourceManifest: Overwritten Resource manifest to ", SB_RESOURCE_MANIFEST_PATH);
-                    }
+        // Model load Utils
+            void AssimpProcessNode(aiNode* node, const aiScene *scene, String& path, Model& model, std::vector<Texture>& loadedTextures) {
+                Log::Print("Assim Importer: Processing node, Number of textures: ", loadedTextures.size());
+                for(u32 i = 0; i < node->mNumMeshes; i++){
+                    aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+                    model.GetMeshes().push_back(AssimpProcessMesh(mesh, scene, path, loadedTextures));
                 }
-                else {
-                    Log::Info("ResourceManifest: Invalid manifest");
-                }
-            }
-        }
-
-        static void LoadResourceManifest() {
-            SB_NOT_IMPL;
-        }
-    }
-
-    ResourceManager::ResourceManager() : _init(false){
-    
-    }
-    
-    String ResourceManager::GetYamlResourceNameFromResourceID(ResourceID rId)
-    {
-        switch(rId){
-            case ResourceID::SHADER_FRAGMENT:
-                return "fragment";
-            break;
-            case ResourceID::SHADER_VERTEX:
-                return "vertex";
-            break;
             
-            case ResourceID::TEXTURE_JPG:
-                return "jpg";
-            break;
-            case ResourceID::TEXTURE_PNG:
-                return "png";
-            break;
-            Log::Warn("Resource Manager: Failed to find resource of matching ID.");
-            return "";
-        }
-    }
-    
-    Resource ResourceManager::GetDataFromID(ResourceID rId, int id) {
-        String rName = GetYamlResourceNameFromResourceID(rId);
-        Resource rData {0, "", ""};
-        YAML::Node resourceNode = YamlUtil::GetNode(SB_RESOURCE_MANIFEST_PATH.c_str(), rName.c_str());
+                for(u32 i = 0; i < node->mNumChildren; i++){
+                    AssimpProcessNode(node->mChildren[i], scene, path, model, loadedTextures);
+                }
+            }
         
-        // Wrap this in YAML util function
-        int entryId {0};
-        auto entries = resourceNode;
-        if(entries){
-            for(auto entry : entries){
-                entryId = entry["id"].as<int>();
-                if(entryId == id){
-                    rData.id = entryId;
-                    rData.name = entry["name"].as<std::string>();
-                    rData.path = entry["path"].as<std::string>();
+            Mesh AssimpProcessMesh(aiMesh* mesh, const aiScene* scene, String& path, std::vector<Texture>& loadedTextures){
+                std::vector<Vertex> vertices;
+                std::vector<unsigned int> indices;
+                Material material;
+                u16 counter;
+                for(u32 i = 0; i < mesh->mNumVertices; i++){
+                    Vertex vertex = Vertex();    
+                    vertex.position.x = mesh->mVertices[i].x;
+                    vertex.position.y = mesh->mVertices[i].y;
+                    vertex.position.z = mesh->mVertices[i].z; 
+                    vertex.normal.x = mesh->mNormals[i].x;
+                    vertex.normal.y = mesh->mNormals[i].y;
+                    vertex.normal.z = mesh->mNormals[i].z;
+                    vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
+                    vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
+            
+                    vertices.push_back(vertex);
+                }
+                for(u32 i = 0; i < mesh->mNumFaces; i++){
+                    aiFace face = mesh->mFaces[i];
+                    for(u32 j = 0; j < face.mNumIndices; j++){
+                        indices.push_back(face.mIndices[j]);
+                    }
+                }
+                aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+                material._diffuseMap = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE, path, loadedTextures).at(0);
+                // std::vector<Texture> diffuseMaps = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE);
+                // material._diffuseMap.insert(material._diffuseMap.end(), diffuseMaps.begin(), diffuseMaps.end());
+                // std::vector<Texture> specularMaps = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR);
+                material._specularMap = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR, path, loadedTextures).at(0);
+                // textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+                return Mesh(vertices, indices, material);
+            }
+        
+            std::vector<Texture> AssimpLoadMaterialTextures(aiMaterial* mat, aiTextureType type, String& path, std::vector<Texture>& loadedTextures){
+                std::vector<Texture> textures;
+                for(u32 i = 0; i < mat->GetTextureCount(type); i++){
+                    aiString str;
+                    mat->GetTexture(type, i, &str);
+            
+                    //TODO Here a request must be made to texture manager for a new txture or already existing one
+                    
+                    bool skip = false;
+                    for(Texture tex : loadedTextures){
+
+                        // TODO Check if comparison by texture ID works
+                        if(std::strcmp(tex.name, str.C_Str()) == 0){
+                            textures.push_back(tex);
+                            skip = true;
+                            break;
+                        }
+                    }
+            
+                    if(!skip){
+                        String texPath = path + "/" + String(str.C_Str());
+                        Texture texture = LoadTextureResource(texPath, TextureType(type), GL_REPEAT, true, 0);
+                        textures.push_back(texture);
+                        loadedTextures.push_back(texture);
+                    }
+                }
+                return textures;
+            }
+
+        ResourceManager::ResourceManager() : _faceCount(0) {
+            _manifestAssetsNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH)["assets"];
+        }
+
+        // TODO: Any reason for Manifest ID and Runtime reference ID to be different?
+        Model* ResourceManager::LoadModel(u32 manifestID) {
+
+            // This must be done for default meshes, these could have predetermined indexes in the manifest
+            //      _meshes.push_back(Mesh(defaultMesh.vertices, defaultMesh.indices, Material()))
+
+            // Find model in cache and return reference
+            if(_modelCache.count(manifestID) > 0) {
+                _modelCache[manifestID].refCount++;
+
+                return &_modelCache[manifestID].model;
+            }
+
+            // Load model from manifest path
+            else {
+
+                Model model;
+                std::vector<Texture> loadedTextures;
+
+                if(_manifestAssetsNode[manifestID]) {
+
+                    Assimp::Importer importer;
+                    const String path = _manifestAssetsNode[manifestID]["path"].as<std::string>();
+                    const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+                
+                    if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
+                        Log::Warn("Assimp Importer: ", importer.GetErrorString());
+                        return nullptr;
+                    }
+                    Log::Info("Assimp Importer: Importing model ", path);
+                    String trimmedPath = std::string(path).substr(0, std::string(path).find_last_of("/"));
+                
+                    Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
+                    
+                    AssimpProcessNode(scene->mRootNode, scene, trimmedPath, model, loadedTextures);
+
+                    model._assetID = manifestID;
+
+                    _modelCache.emplace(manifestID, ModelCacheData{1, model});
+
+                    return &_modelCache[manifestID].model;
+                }
+                return nullptr;
+            }
+        }
+
+        Texture* ResourceManager::LoadTexture(u32 manifestID, TextureType type) {
+            if(_textureCache.count(manifestID) > 0) {
+                _textureCache[manifestID].refCount++;
+
+                return &_textureCache[manifestID].texture;
+            }
+
+            // Load texture from manifest path
+            else {
+                if(_manifestAssetsNode[manifestID]) {
+
+                    // TODO provide wrap method
+                    String path = _manifestAssetsNode[manifestID]["path"].as<std::string>();
+                    Texture texture = LoadTextureResource(path, type, GL_REPEAT, true, 0);
+
+                    if(texture.id > 0) {
+                        texture.assetID = manifestID;
+
+                        _textureCache.emplace(manifestID, TextureCacheData{1, texture});
+
+                        return &_textureCache[manifestID].texture;
+                    }
+                }
+                return nullptr;
+            }
+        }
+
+        Shader* ResourceManager::LoadShader(u32 vertexManifestID, u32 fragmentManifestID) {
+            ShaderManifestID sID {vertexManifestID, fragmentManifestID};
+            
+            if(_shaderCache.count(sID) > 0) {
+                _shaderCache[sID].refCount++;
+
+                return &_shaderCache[sID].shader;
+            }
+            else {
+                Shader shader(_manifestAssetsNode[vertexManifestID]["path"].as<std::string>().c_str(), _manifestAssetsNode[fragmentManifestID]["path"].as<std::string>().c_str());
+                shader._assetID.vertexManifestID = sID.vertexManifestID;
+                shader._assetID.fragmentManifestID = sID.fragmentManifestID;
+
+                _shaderCache.emplace(sID, ShaderCacheData{1, shader});
+
+                return &_shaderCache[sID].shader;
+            }
+            return nullptr;
+        }
+
+        void ResourceManager::UnloadModel(u32 manifestID) {
+            if(_modelCache.count(manifestID) > 0) {
+                if(_modelCache[manifestID].refCount > 0) {
+                    _modelCache[manifestID].refCount--;
+                }
+                if(_modelCache[manifestID].refCount == 0) {
+                    _modelCache.erase(manifestID);
                 }
             }
         }
+
+        void ResourceManager::UnloadTexture(u32 manifestID) {
+            if(_textureCache.count(manifestID) > 0) {
+                if(_textureCache[manifestID].refCount > 0) {
+                    _textureCache[manifestID].refCount--;
+                }
+                if(_textureCache[manifestID].refCount == 0) {
+                    _textureCache.erase(manifestID);
+                }
+            }
+        }
+
+        void ResourceManager::UnloadShader(ShaderManifestID shaderManifestID) {
+            if(_shaderCache.count(shaderManifestID) > 0) {
+                if(_shaderCache[shaderManifestID].refCount > 0) {
+                    _shaderCache[shaderManifestID].refCount--;
+                }
+                if(_shaderCache[shaderManifestID].refCount == 0) {
+                    _shaderCache.erase(shaderManifestID);
+                }
+            }
+        }
+
+        void ResourceManager::UnloadShader(u32 vertexManifestID, u32 fragmentManifestID) {
+            ShaderManifestID sID{vertexManifestID, fragmentManifestID};
+            if(_shaderCache.count(sID) > 0) {
+                if(_shaderCache[sID].refCount > 0) {
+                    _shaderCache[sID].refCount--;
+                }
+                if(_shaderCache[sID].refCount == 0) {
+                    _shaderCache.erase(sID);
+                }
+            }
+        }
+
+        String ResourceManager::GetYamlResourceNameFromResourceID(ResourceID rId) {
+            switch(rId) {
+                case ResourceID::SHADER_FRAGMENT:
+                    return "fragment";
+                break;
+                case ResourceID::SHADER_VERTEX:
+                    return "vertex";
+                break;
+                
+                case ResourceID::TEXTURE_JPG:
+                    return "jpg";
+                break;
+                case ResourceID::TEXTURE_PNG:
+                    return "png";
+                break;
+                Log::Warn("Resource Manager: Failed to find resource of matching ID.");
+                return "";
+            }
+        }
     
-        return rData;
+        Resource ResourceManager::GetDataFromID(ResourceID rId, int id) {
+            String rName = GetYamlResourceNameFromResourceID(rId);
+            Resource rData {0, "", ""};
+            YAML::Node resourceNode = YamlUtil::GetNode(SB_RESOURCE_MANIFEST_PATH.c_str(), rName.c_str());
+            
+            // Wrap this in YAML util function
+            int entryId {0};
+            auto entries = resourceNode;
+            if(entries){
+                for(auto entry : entries){
+                    entryId = entry["id"].as<int>();
+                    if(entryId == id){
+                        rData.id = entryId;
+                        rData.name = entry["name"].as<std::string>();
+                        rData.path = entry["path"].as<std::string>();
+                    }
+                }
+            }
+        
+            return rData;
+        }
     }
-
 }
-
-

@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Core/Types.h"
 #include "Engine/IEngine.h"
 #include "ImGui/ImGuiSbContext.h"
 #include "Rendering/Renderer.h"
 #include "ECS/Registry.h"
+#include "Resources/ResourceManager.h"
 
 #include <memory>
 namespace Sb {
@@ -14,10 +16,12 @@ namespace Sb {
 		void SetRenderer(Renderer& renderer);
 		void SetInputManager(InputManager& inputManager);
 		void SetECSRegistry(ECS::Registry& registry);
+		void SetResourceManager(ResourceManagement::ResourceManager& resourceManager);
 
 		Renderer& GetRenderer() const final override { return *_renderer; };
 		InputManager& GetInputManager() const final override { return *_internalInput; };
 		ECS::Registry& GetECSRegistry() const final override { return *_ecsRegistry; };
+		ResourceManagement::ResourceManager& GetResourceManager() const final override { return *_resourceManager; };
 
 		void SetUIRenderingEnabled(bool enable) final override { _uiRenderEnabled = enable; };
 
@@ -50,6 +54,7 @@ namespace Sb {
 		Renderer* _renderer;
 		InputManager* _internalInput;
 		ECS::Registry* _ecsRegistry;
+		ResourceManagement::ResourceManager* _resourceManager;
 		bool _uiRenderEnabled;
 		// SceneManager* _sceneManager;
 
