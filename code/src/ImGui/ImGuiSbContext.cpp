@@ -1,5 +1,6 @@
 #include "Core/Base.h"
 #include "Core/Debug.h"
+#include "Core/Profiler.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "ImGuiSbContext.h"
@@ -80,8 +81,10 @@ void ImGuiSbContext::RenderMain(int x, int y, const char* name, int faces, int r
         static int counter = 0;
         ImGui::Begin(name);
         ImGui::SetWindowPos(ImVec2(x,y), 0);
+        ImGui::SetWindowSize(ImVec2(360, 200));
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / _io->Framerate, _io->Framerate);
         ImGui::Text("Faces: %d", faces);
+        
         switch(renderMode){
             case(1):
                 ImGui::Text("Mode: Position");
@@ -93,9 +96,17 @@ void ImGuiSbContext::RenderMain(int x, int y, const char* name, int faces, int r
                 ImGui::Text("Mode: Albedo");
             break;
             default:
-                ImGui::Text("Default");
+                ImGui::Text("Mode: Default");
             break;
         }
+
+        ImGui::Text("Controls");
+        ImGui::Text("RMB + WASD - Translate camera");
+        ImGui::Text("RMB + Mouse Axis - Look around");
+        ImGui::Text("Left Shift - Boost");
+        ImGui::Text("F5 - Frame capture");
+        ImGui::Text("F6 - Clear capture");
+        ImGui::Text("F7 - Dump capture log");
         ImGui::End();
     }
 }

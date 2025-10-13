@@ -2,11 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-        "name": "LLDB",
+        "name": "LLDB SandboxGame",
         "type": "lldb",
         "request": "launch",
-        "cwd": "${workspaceFolder}\\build\\game-debug",
-        "program": "${workspaceFolder}\\build\\game-debug\\SandboxGame.exe",
+        "cwd": "${workspaceFolder}\\SampleProject\\build\\debug",
+        "program": "${workspaceFolder}\\SampleProject\\build\\debug\\SandboxGame.exe",
         "preLaunchTask": "Sandbox: Build Editor & Game"
-    }]
+        },
+        {
+        "name": "LLDB SandboxEditor",
+        "type": "lldb",
+        "request": "launch",
+        "cwd": "${workspaceFolder}\\SandboxEditor\\build\\debug",
+        "program": "${workspaceFolder}\\SandboxEditor\\build\\debug\\SandboxEditor.exe",
+        "preLaunchTask": "Sandbox: Build Editor & Game"
+        }
+    ]
 }

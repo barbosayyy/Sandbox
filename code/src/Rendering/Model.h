@@ -19,10 +19,8 @@ namespace Sb {
         u32 _assetID;
         Model();
         
-        void Draw(Renderer* renderer, vec3 pos);
-        void LoadModel(u32 assetID);
+        void Draw(Renderer* renderer, vec3 pos, vec3 rot, vec3 scale);
         Mesh& GetMesh(u32 index);
         std::vector<Mesh>& GetMeshes() {return _meshes;};
-        
     };
 }

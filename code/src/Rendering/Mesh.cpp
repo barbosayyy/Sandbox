@@ -1,10 +1,12 @@
 #include "Mesh.h"
+#include "Core/Debug.h"
 #include "Core/Types.h"
 #include "OpenGL/GLBuffer.h"
 #include "Resources/ResourceManager.h"
 #include <string>
 
 #include "Rendering/OpenGL/GLBuffer.h"
+#include "Texture.h"
 
 namespace Sb {
 
@@ -24,10 +26,10 @@ namespace Sb {
 
 		Renderer& ren = Renderer::GetInstance();
 		ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
-		this->_material._shader = res.LoadShader(38, 39);
+		this->_material._shader = res.LoadShader(38, 37);
 	}
 
-	void Mesh::Draw(Renderer* renderer, vec3 pos) {
+	void Mesh::Draw(Renderer* renderer, vec3 pos, vec3 rot, vec3 scale) {
 
 		int txActive = 0;
 		int txCurrent = 0;
@@ -43,7 +45,8 @@ namespace Sb {
 		// TODO: Apply inverse transponse only when detecting changes in position rotation and scale
 		mat4 modelM {1.0f};
 		modelM = glm::translate(modelM, pos);
-		modelM = glm::scale(modelM, vec3(1.0f,1.0f,1.0f));
+		modelM = glm::scale(modelM, scale);
+
 		_material._shader->SetMat4("model", modelM);
 
 		if(_material._diffuseMap.id > 0) {
@@ -59,8 +62,8 @@ namespace Sb {
 			glActiveTexture(GL_TEXTURE0+txActive);
 			txActive++;
 			txCurrent++;
-			_material._shader->SetInt(String("specular" + std::to_string(txCurrent)), _material._diffuseMap.id);
-			glBindTexture(GL_TEXTURE_2D, _material._diffuseMap.id);
+			_material._shader->SetInt(String("specular" + std::to_string(txCurrent)), _material._specularMap.id);
+			glBindTexture(GL_TEXTURE_2D, _material._specularMap.id);
 			txCurrent = 0;
 		}
 
@@ -88,18 +91,20 @@ namespace Sb {
 		glActiveTexture(GL_TEXTURE0);
 	}
 
-	void Mesh::SetTextureMap(u32 textureID, TextureType textureType) {
-		if(textureType == TextureType::DIFFUSE){
-			this->_material._diffuseMap.id = textureID;
-		}
-		else if(textureType == TextureType::SPECULAR) {
-			this->_material._specularMap.id = textureID;
-		}
-		else if(textureType == TextureType::NORMAL) {
-			this->_material._normalMap.id = textureID;
-		}
-		else if(textureType == TextureType::EMISSIVE) {
-			this->_material._emissionMap.id = textureID;
+	void Mesh::SetTextureMap(u32 assetID, TextureType type) {
+		switch(type) {
+			case(TextureType::DIFFUSE):
+				_material._diffuseMap.id = assetID;
+			break;
+			case(TextureType::SPECULAR):
+				_material._specularMap.id = assetID;
+			break;
+			case(TextureType::NORMAL):
+				_material._normalMap.id = assetID;
+			break;
+			case(TextureType::EMISSIVE):
+				_material._emissionMap.id = assetID;
+			break;
 		}
 	}
 }

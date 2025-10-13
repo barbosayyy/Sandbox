@@ -43,7 +43,7 @@ void Camera::OnInput() {
 			_canMove = false;
 	}
 
-	if(InputManager::PressedKey(SB_KEYBOARD_LEFT_SHIFT)){
+	if(InputManager::PressingKey(SB_KEYBOARD_LEFT_SHIFT)){
 		_moveSpeed = 0.6f;
 	}
 	else{
@@ -52,19 +52,19 @@ void Camera::OnInput() {
 
 	if (_canMove)
 	{
-		if (InputManager::PressedKey(SB_KEYBOARD_W))
+		if (InputManager::PressingKey(SB_KEYBOARD_W))
 		{
 			Move(_front, true);
 		}
-		else if (InputManager::PressedKey(SB_KEYBOARD_A))
+		else if (InputManager::PressingKey(SB_KEYBOARD_A))
 		{
 			Move(glm::normalize(glm::cross(_front, _up)), false);
 		}
-		else if (InputManager::PressedKey(SB_KEYBOARD_S))
+		else if (InputManager::PressingKey(SB_KEYBOARD_S))
 		{
 			Move(_front, false);
 		}
-		else if (InputManager::PressedKey(SB_KEYBOARD_D))
+		else if (InputManager::PressingKey(SB_KEYBOARD_D))
 		{
 			Move(glm::normalize(glm::cross(_front, _up)), true);
 		}

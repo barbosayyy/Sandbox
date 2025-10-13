@@ -94,12 +94,18 @@ namespace Sb {
                     Log::Info("ResourceManifest: Failed to write resource manifest ", SB_RESOURCE_MANIFEST_PATH);
                     return;
                 }
-                Log::Info("ResourceManifest: Resource manifest written to ", SB_RESOURCE_MANIFEST_PATH);
+                Log::Info("ResourceManifest: New Resource Manifest written to ", SB_RESOURCE_MANIFEST_PATH);
             }
 
             // Load existing resource manifest and update its contents
             else {
                 YAML::Node manifestRootNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH);
+
+                if(manifestRootNode["assets"].size() <= 0) {
+                    std::filesystem::remove(SB_RESOURCE_MANIFEST_PATH);
+                    return WriteResourceManifest();
+                }
+
                 std::unordered_set<std::string> resourceAssetPaths;
                 std::unordered_set<std::string> manifest;
                 u32 manifestID = 0;
@@ -118,7 +124,7 @@ namespace Sb {
 
                     // Get paths in manifest as set
                     for(auto node : manifestRootNode["assets"]) {
-                        manifest.emplace(node["path"].as<std::string>(), node["id"].as<u32>());
+                        manifest.emplace(node["path"].as<std::string>());
                         if(node["id"].as<int>() > manifestID)
                             manifestID = node["id"].as<int>();
                     }

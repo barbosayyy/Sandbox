@@ -71,7 +71,7 @@ GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
 				shaderTypeStr = "VERTEX";
 			break;
 		}
-		Debug::FlushError("Failed to compile shader ", " Shader Type: ", shaderTypeStr, " Path: ", Debug::_buffer, "\n", infoLog);
+		Debug::FlushError("Shader: Compilation failed - ", " Shader Type: ", shaderTypeStr, " Path: ", Debug::_buffer, "\n", infoLog);
 
 		glDeleteShader(shader);
 		return 0;

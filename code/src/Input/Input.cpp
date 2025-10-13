@@ -1,4 +1,5 @@
 #include "Input/Input.h"
+#include "Core/Debug.h"
 #include "glfw/glfw3.h"
 
 using namespace Sb;
@@ -10,6 +11,7 @@ InputManager::InputManager()
 InputManager::InputManager(GLFWwindow* window) : _window(window)
 {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	pressedQueue.reserve(SB_KEYBOARD_MENU);
 }
 
 InputManager::~InputManager()
@@ -50,6 +52,22 @@ void InputManager::AddMouseAxisMoveFunction(std::function<void(float xOffset, fl
 
 void InputManager::ProcessInput()
 {
+	if(pressedQueue.size() > 0) {
+		for(u16 i = 0; i < pressedQueue.size();) {
+			if(glfwGetKey(_window, pressedQueue[i]) == GLFW_RELEASE) {
+				keyState[pressedQueue[i]] = 2;
+				if(pressedQueue.size() > 1) {
+					pressedQueue[i] = pressedQueue.back();
+					pressedQueue.pop_back();
+					continue;
+				}
+				else {
+					pressedQueue.pop_back();
+				}
+			}
+			i++;
+		}
+	}
 	for (const auto& func : onInputFunctions)
 	{
 		func();
@@ -64,21 +82,37 @@ void InputManager::ProcessInput()
 	}
 }
 
-bool InputManager::PressedKey(int key)
-{
-	if(glfwGetKey(InputManager::GetInstance()._window, key) == GLFW_PRESS){
+bool InputManager::PressedKey(int key) {
+	InputManager& inp = InputManager::GetInstance();
+	if(glfwGetKey(inp._window, key) == GLFW_PRESS){
+		if(inp.keyState[key] == 0 || inp.keyState[key] == 2) {
+			inp.keyState[key] = 1;
+			inp.pressedQueue.push_back(key);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool InputManager::PressingKey(int key) {
+	InputManager& inp = InputManager::GetInstance();
+	if(glfwGetKey(inp._window, key) == GLFW_PRESS){
+		if(inp.keyState[key] == 0 || inp.keyState[key] == 2) {
+			inp.keyState[key] = 1;
+			inp.pressedQueue.push_back(key);
+		}
 		return true;
 	}
 	return false;
 }
 
-bool InputManager::ReleasedKey(int key){
-	if(glfwGetKey(InputManager::GetInstance()._window, key) == GLFW_RELEASE){
-		return true;
-	}
-	return false;
-}
+// TODO This input system needs a rework
 
+// bool InputManager::ReleasedKey(int key) {
+// 	InputManager& inp = InputManager::GetInstance();
+
+// 	return false;
+// }
 
 int InputManager::PressedMouse(int key)
 {

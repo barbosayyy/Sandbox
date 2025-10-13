@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rendering/Model.h"
+#include "Rendering/Cubemap.h"
 
 namespace Sb {
 
@@ -33,5 +34,9 @@ namespace Sb {
     struct MeshComponent : AssetComponentBase {
         Model* model;
         // resource manifest uuid
+    };
+
+    struct SkyboxComponent : AssetComponentBase{
+        Cubemap* cubemap;
     };
 }

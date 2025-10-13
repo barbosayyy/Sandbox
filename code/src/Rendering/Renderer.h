@@ -8,6 +8,7 @@
 #include "Rendering/Window.h"
 #include "Rendering/Texture.h"
 #include "ImGui/ImGuiSbContext.h"
+#include "RenderPasses/RenderPass.h"
 #include "Shader.h"
 
 namespace Sb {
@@ -21,20 +22,22 @@ namespace Sb {
 		void OnBeginFrame();
 		void GenerateFramebufferTextures();
 
-		u8 GetRendererMode() const { return _currentAPI; };
-		Camera* GetRenderCamera() { return _renderCamera; };
-		void SetRenderCamera(Camera* camera) { _renderCamera = camera; };
-		Window* GetWindow() { return _windowHandle; };
-		ImGuiSbContext& GetImGuiSbContext() const { return *_imGuiSbContext; };
-		int GetViewportWidth() const { return _viewportWidth; };
-		int GetViewportHeight() const { return _viewportHeight; };
-		int GetViewportX() const { return _viewportX; };
-		int GetViewportY() const { return _viewportY; };
-		void SetViewportWidth(int width) { _viewportWidth = width; };
-		void SetViewportHeight(int height) { _viewportHeight = height; };
-		void SetViewportX(int x) { _viewportX = x; };
-		void SetViewportY(int y) { _viewportY = y; };
-		u8 GetStateDirtyFlags() const { return _stateDirtyFlags; };
+		// Renderer Get/Set	
+			u8 GetRendererMode() const { return _currentAPI; };
+			Camera* GetRenderCamera() { return _renderCamera; };
+			void SetRenderCamera(Camera* camera) { _renderCamera = camera; };
+			Window* GetWindow() { return _windowHandle; };
+			ImGuiSbContext& GetImGuiSbContext() const { return *_imGuiSbContext; };
+			int GetViewportWidth() const { return _viewportWidth; };
+			int GetViewportHeight() const { return _viewportHeight; };
+			int GetViewportX() const { return _viewportX; };
+			int GetViewportY() const { return _viewportY; };
+			void SetViewportWidth(int width) { _viewportWidth = width; };
+			void SetViewportHeight(int height) { _viewportHeight = height; };
+			void SetViewportX(int x) { _viewportX = x; };
+			void SetViewportY(int y) { _viewportY = y; };
+			u8 GetStateDirtyFlags() const { return _stateDirtyFlags; };
+			std::vector<std::unique_ptr<RenderPass>>& GetRenderpasses() { return renderingPasses; };
 
 		// Depends on screen texture shaders. Use Default screen quad shader only when debugging framebuffers
 		void DrawFramebufferQuad(bool useDefaultQuadShader);
@@ -43,14 +46,16 @@ namespace Sb {
 
 		u8 _stateShowBufferMask {0};
 		u32 _faceAmount {0};
-		u32 _gBuffer;
-		u32 gPosition, gNormal, gAlbedoSpec;
-		u32 _renderBufferObject;
-		u32 _fbo;
-		std::vector<Texture> _textures;
+
+		// Framebuffer data
+			u32 _gBuffer;
+			u32 gPosition, gNormal, gAlbedoSpec;
+			u32 _renderBufferObject;
+			u32 _fbo;
 
 	private:
 		void SetupFramebufferQuad();
+		void AddRenderPass(std::unique_ptr<RenderPass> pass) { renderingPasses.push_back(std::move(pass)); };
 
 		u8 _currentAPI;
 		u16 _viewportWidth;
@@ -63,5 +68,6 @@ namespace Sb {
 		u32 framebufferVao, framebufferVbo;
 		Shader* framebufferQuadShader;
 		u8 _stateDirtyFlags;
+		std::vector<std::unique_ptr<RenderPass>> renderingPasses;
 	};
 }

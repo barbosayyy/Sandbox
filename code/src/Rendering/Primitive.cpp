@@ -1,5 +1,6 @@
 #include "Primitive.h"
 #include "Core/Base.h"
+#include "Core/Config.h"
 #include "Core/Types.h"
 
 #include <iterator>
@@ -10,6 +11,20 @@ namespace Sb {
     DefaultMesh Primitive::sphere {};
     DefaultMesh Primitive::quad {};
 
+    DefaultMesh GetPrimitiveMeshByID(u32 ID) {
+        switch(ID) {
+            case(SB_RESOURCE_MANIFEST_MESH_CUBE_ID):
+                return Primitive::GetCube();
+            case(SB_RESOURCE_MANIFEST_MESH_PLANE_ID):
+                return Primitive::GetPlane();
+            case(SB_RESOURCE_MANIFEST_MESH_SPHERE_ID):
+                return Primitive::GetSphere(1, 32, 32);
+            case(SB_RESOURCE_MANIFEST_MESH_QUAD_ID):
+                return Primitive::GetQuad();
+            break;
+        }
+        return Primitive::GetCube();
+    }
 
     DefaultMesh Primitive::GetCube() {
         if(Primitive::cube.vertices.empty() == true) {

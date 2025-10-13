@@ -1,5 +1,5 @@
 
-# CMake Sandbox Engine build configuration root
+# CMake Sandbox Engine build configuration file
 
 cmake_minimum_required(VERSION 3.19)
 
@@ -26,7 +26,7 @@ else()
     message(FATAL_ERROR "C++ compiler not found.")
 endif()
 
-# Project defines
+# Project definitions
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_compile_definitions(SB_PLATFORM_WIN)
@@ -34,13 +34,12 @@ else()
     message(FATAL_ERROR "Other platforms not supported yet.")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(SB_BUILD_DEBUG)
-endif()
-    
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_definitions(SB_BUILD_RELEASE)
+else()
+    add_compile_definitions(SB_BUILD_DEBUG)
 endif()
+
 if(CMAKE_CXX_COMPILER STREQUAL clang++)
     add_compile_definitions(SB_COMPILER_CLANGPP)
 endif()
@@ -71,16 +70,23 @@ message("")
 
 # Engine build configuration
 
-add_subdirectory(code/src)
+# Main Source
+    add_subdirectory(code/src)
+    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
-add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
+set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject/build)
+set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor/build/)
 
 # Game build configuration
 
 if(BUILD_GAME)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/game-debug)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/game-debug)
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CMAKE_BINARY_DIR ${CM_SANDBOX_GAME_DIR}/release)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR}/release)
+    else()
+        set(CMAKE_BINARY_DIR ${CM_SANDBOX_GAME_DIR}/debug)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR}/debug)
     endif()
 
     # Temp - Set on project creation
@@ -106,7 +112,7 @@ if(BUILD_GAME)
 
     file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CMAKE_BINARY_DIR})
     file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_BINARY_DIR})
-    file(COPY ${CM_SANDBOX_RESOURCES_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+    # file(COPY ${CM_SANDBOX_RESOURCES_DIR} DESTINATION ${CMAKE_BINARY_DIR})
 
     # Post-config scripts
 
@@ -128,9 +134,12 @@ endif()
 # Engine build configuration
 
 if(BUILD_EDITOR)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/editor-debug)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/editor-debug)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CMAKE_BINARY_DIR ${CM_SANDBOX_EDITOR_DIR}/release)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR}/release)
+    else()
+        set(CMAKE_BINARY_DIR ${CM_SANDBOX_EDITOR_DIR}/debug)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR}/debug)
     endif()
 
     add_subdirectory(code/editor)

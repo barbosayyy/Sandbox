@@ -10,7 +10,6 @@ public:
     void Start() override final;
     void Stop() override final;
     void Update() override final;
-    void Render() override final;
 private:
     const Sb::IEngine& _sbEngine;
 };

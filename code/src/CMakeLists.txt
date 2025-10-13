@@ -18,6 +18,8 @@ add_library(Sandbox_Engine STATIC
     Core/Utils.h
     Core/Config.h
     Core/Config.cpp
+    Core/Profiler.h
+    Core/Profiler.cpp
     Engine/IEngine.h
     Engine/Engine.h
     Engine/Engine.cpp
@@ -34,6 +36,8 @@ add_library(Sandbox_Engine STATIC
     Rendering/Mesh.cpp
     Rendering/Model.h
     Rendering/Model.cpp
+    Rendering/Cubemap.h
+    Rendering/Cubemap.cpp
     Rendering/Shader.h
     Rendering/Shader.cpp
     Rendering/Texture.cpp
@@ -44,10 +48,19 @@ add_library(Sandbox_Engine STATIC
     Rendering/OpenGL/GLBuffer.cpp
     Rendering/Primitive.h
     Rendering/Primitive.cpp
+    Rendering/RenderPasses/RenderPass.h
+    Rendering/RenderPasses/GeometryPass.h
+    Rendering/RenderPasses/GeometryPass.cpp
+    Rendering/RenderPasses/LightingPass.h
+    Rendering/RenderPasses/LightingPass.cpp
+    Rendering/RenderPasses/SkyboxPass.h
+    Rendering/RenderPasses/SkyboxPass.cpp
     
     # Resource Management
     Resources/ResourceManifest.h
     Resources/ResourceManifest.cpp
+    Resources/ResourceManagement.h
+    Resources/ResourceManagement.cpp
     Resources/ResourceManager.h
     Resources/ResourceManager.cpp
 
@@ -64,6 +77,9 @@ add_library(Sandbox_Engine STATIC
     ECS/Systems/PhysicsSystem.h
     ECS/Systems/RenderSystem.h
     ECS/Systems/RenderSystem.cpp
+    ECS/Systems/SkyboxSystem.h
+    ECS/Systems/SkyboxSystem.cpp
+
     ECS/Registry.h
     ECS/Registry.cpp
     ECS/EntityManagement.h

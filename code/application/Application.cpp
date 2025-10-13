@@ -29,13 +29,11 @@ void Application::Run() {
 
 	while(sbEngine.Validate() && !this->ShouldStop()) {
 		sbEngine.Update();
-		sbEngine.BeginNewFrame();
-
-		// Temp -> Handled by engine systems
-			game->Update();
-			game->Render();
-
+		
+		game->Update();
+			
 		sbEngine.Render();
+		sbEngine.LateRender();
 	}
 
 	game->Stop();

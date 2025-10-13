@@ -8,8 +8,10 @@ namespace Sb {
             
             for(MeshComponent meshComponent : registry.GetComponentStoreDense<MeshComponent>()) {
                 if(registry.GetComponentSparseSet<TransformComponent>().Contains(meshComponent.sparseIndex)) {
-                    vec3 pos = registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).pos;
-                    meshComponent.model->Draw(&ren, pos);
+                    meshComponent.model->Draw(&ren,
+                         registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).pos,
+                          registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).rot,
+                           registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).scale);
                 }
             }
         }

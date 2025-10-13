@@ -6,16 +6,23 @@
 #include "Resources/ResourceManager.h"
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
+#include "Core/Profiler.h"
 
 #include "ECS/Systems/InputSystem.h"
 #include "ECS/Systems/PhysicsSystem.h"
 #include "ECS/Systems/RenderSystem.h"
+#include <memory>
 
 using namespace Sb;
 
 bool Engine::_error = false;
 
 Engine::Engine() : _uiRenderEnabled(true){
+#ifdef SB_DEBUG
+	Log::SetLogLevel(Log::Level::DEBUG);
+#elif SB_RELEASE
+	Log::SetLogLevel(Log::Level::WARN);
+#endif
 	SetRenderer(Renderer::GetInstance());
 	SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
 	SetECSRegistry(ECS::Registry::GetInstance());
@@ -66,20 +73,19 @@ void Engine::Start() {
 
 	InputManager::GetInstance().AddInputFunction([this]() { OnInput(); });
 	
-	#ifdef SB_DEBUG
-		Log::SetLogLevel(Log::Level::DEBUG);
-	#elif SB_RELEASE
-		Log::SetLogLevel(Log::Level::WARN);
-	#endif
-	
 	Log::Info("Engine: Started");
 }
 
 void Engine::Update() {
+
+	Profiler::StopRecord("Frame swap");
+	Profiler::DisableFrameCapture();
+
 	ECS::InputSystem::Update(*this->_ecsRegistry);
 	ECS::PhysicsSystem::Update(*this->_ecsRegistry);
 
 	_internalInput->ProcessInput();
+	
 	// TEMP
 	if(_renderer->GetStateDirtyFlags() & SB_DIRTY_PROJECTION) {
 		_renderer->GetRenderCamera()->GenerateProjection(_renderer->GetViewportWidth(), _renderer->GetViewportHeight());
@@ -87,19 +93,28 @@ void Engine::Update() {
 	}
 }
 
-void Engine::BeginNewFrame() {
-	this->GetRenderer().OnBeginFrame();
+void Engine::Render() {
+	Profiler::StartRecord("Render");
+	_renderer->OnBeginFrame();
+
+	for(std::unique_ptr<RenderPass>& pass : _renderer->GetRenderpasses()) {
+		pass->Execute();
+	}
 }
 
-void Engine::Render() {
+void Engine::LateRender() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// ECS::RenderSystem::Update(*this->_ecsRegistry);
-
+	
+	Profiler::StopRecord("Render");
+	
+	// Engine UI
 	if(_uiRenderEnabled)
 		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
+	
+	Profiler::SetTotalFrametime(_renderer->GetImGuiSbContext()._io->Framerate);
 	_renderer->GetImGuiSbContext().RenderEnd();
 
+	Profiler::StartRecord("Frame swap");
 	glfwPollEvents();
 	glfwSwapBuffers(_renderer->GetWindow()->GLWindow());
 }
@@ -118,5 +133,11 @@ void Engine::OnInput() {
 		_renderer->_stateShowBufferMask = 2;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_3)) {
 		_renderer->_stateShowBufferMask = 3;
+	} else if(InputManager::PressedKey(SB_KEYBOARD_F5)) {
+		Profiler::EnableFrameCapture();
+	} else if(InputManager::PressedKey(SB_KEYBOARD_F6)) {
+		Profiler::ClearRecordings();
+	} else if(InputManager::PressedKey(SB_KEYBOARD_F7)) {
+		Profiler::DumpRecordings();
 	}
 }

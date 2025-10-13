@@ -12,7 +12,8 @@ namespace Sb {
             using CoreComponents = std::tuple<
                 DummyComponent,
                 TransformComponent,
-                MeshComponent
+                MeshComponent,
+                SkyboxComponent
             >;
 
             template <typename Tuple>

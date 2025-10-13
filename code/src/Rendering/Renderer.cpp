@@ -4,7 +4,11 @@
 #include "Core/Config.h"
 #include "Core/Types.h"
 #include "ImGui/ImGuiSbContext.h"
+#include "RenderPasses/GeometryPass.h"
+#include "RenderPasses/LightingPass.h"
+#include "RenderPasses/SkyboxPass.h"
 #include "Resources/ResourceManager.h"
+#include "glfw/glfw3.h"
 
 using namespace Sb;
 
@@ -17,13 +21,27 @@ Renderer::Renderer() : _currentAPI(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH),
 		if(!glfwInit()) {
 			SB_ASSERT("Renderer: Failed to initialize GLFW.");
 		}
+		
+		// GLFW config
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_RED_BITS, 8);				// Frame bit length
+		glfwWindowHint(GLFW_GREEN_BITS, 8);			
+		glfwWindowHint(GLFW_BLUE_BITS, 8);				
+		glfwWindowHint(GLFW_ALPHA_BITS, 8);			
+		glfwWindowHint(GLFW_DEPTH_BITS, 16);			
+		glfwWindowHint(GLFW_DOUBLEBUFFER, SB_RENDERER_TRIPLE_BUFFERING);	// Triple buffering		
+		glfwWindowHint(GLFW_SAMPLES, 0);				// MSAA
+		
 		_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		glfwSwapInterval(SB_RENDERER_VSYNC);
+		
 		if(!_windowHandle->GLWindow()) {
 			glfwTerminate();
 			SB_ASSERT("Renderer: Failed to create window.");
 		}
 
 		glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GlFramebufferSizeCallback);
+
 
 		// GLEW initialization
 		if(glewInit() != GLEW_OK) {
@@ -66,6 +84,10 @@ void Renderer::Setup() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glPolygonMode(GL_FRONT, GL_FILL);
+
+	AddRenderPass(std::make_unique<GeometryPass>());
+	AddRenderPass(std::make_unique<LightingPass>());
+	AddRenderPass(std::make_unique<SkyboxPass>());
 }
 
 void Renderer::OnBeginFrame() {
@@ -161,5 +183,5 @@ void Renderer::SetupFramebufferQuad() {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
-	framebufferQuadShader = res.LoadShader(48, 47);
+	framebufferQuadShader = res.LoadShader(47, 46);
 }

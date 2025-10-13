@@ -19,7 +19,6 @@ namespace SbEditor {
 
         while(sbEngine.Validate() && !this->ShouldStop()) {
             sbEngine.Update();
-            sbEngine.BeginNewFrame();
             
             this->Update();
             this->Render();

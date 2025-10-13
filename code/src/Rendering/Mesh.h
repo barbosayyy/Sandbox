@@ -14,18 +14,18 @@ namespace Sb {
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material);
 		~Mesh();
 
-		void Draw(Renderer* renderer, vec3 pos);
+		void Draw(Renderer* renderer, vec3 pos, vec3 rot, vec3 scale);
 		
-		void SetTextureMap(u32 textureID, TextureType textureType);
+		void SetTextureMap(u32 assetID, TextureType type);
 		
-	private:
-
+		private:
+		
 		void CreateMesh();
 		
 		std::vector<Vertex> _vertices;
 		std::vector<u32> _indices;
-		Material _material;
 		unsigned int _vao;
+		Material _material;
 		// unsigned int _vbo;
 		// unsigned int _ebo;
 

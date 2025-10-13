@@ -4,8 +4,10 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
 #include "Rendering/Renderer.h"
+#include "glfw/glfw3.h"
 #include <imgui/imgui.h>
 #include <functional>
+#include <vector>
 
 namespace Sb {
 
@@ -21,6 +23,7 @@ namespace Sb {
 		void AddMouseAxisMoveFunction(std::function<void(float xOffset, float yOffset)> function);
 		void SetCallbacks();
 		static bool PressedKey(int key);
+		static bool PressingKey(int key);
 		static bool ReleasedKey(int key);
 		static int PressedMouse(int key);
 
@@ -30,7 +33,9 @@ namespace Sb {
 	private:
 		std::vector<std::function<void()>> onInputFunctions;
 		std::vector<std::function<void(float xOffset, float yOffset)>> onMouseAxisMoveFunctions;
- 
+		
+		std::vector<u16> pressedQueue;
+		u8 keyState[SB_KEYBOARD_MENU] {0};
 		bool _firstMouse = true;
 		double _mouseX = 0.0;
 		double _mouseY = 0.0;

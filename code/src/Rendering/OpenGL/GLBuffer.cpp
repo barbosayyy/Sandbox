@@ -36,4 +36,16 @@ namespace Sb {
 		}
 		glBindVertexArray(0);
     }
+
+    static void GLBufferPrimitiveData(u32 &vao, const float* primitive, size_t vertexSize, size_t numAttributes) {
+        u32 vbo;
+        
+        glGenVertexArrays(1, &vao);
+        glGenBuffers(1, &vbo);
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float)*(vertexSize*numAttributes), primitive, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    }
 }

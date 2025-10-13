@@ -1,9 +1,7 @@
-#include "../Core/Debug.h"
+#include "Core/Debug.h"
 #include "Model.h"
 
 #include "Core/Base.h"
-#include "Material.h"
-#include "Resources/ResourceManager.h"
 
 namespace Sb {
 
@@ -12,19 +10,13 @@ namespace Sb {
     Model::Model() : _vCount(0), _fCount(0) {
     }
     
-    void Model::Draw(Renderer* renderer, vec3 pos)
+    void Model::Draw(Renderer* renderer, vec3 pos, vec3 rot, vec3 scale)
     {
         if(_meshes.size() > 0) {
             for(Mesh mesh : _meshes) {
-                mesh.Draw(renderer, pos);
+                mesh.Draw(renderer, pos, rot, scale);
             }
         }
-    }
-    
-    void Model::LoadModel(u32 assetID) {
-        ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
-
-        resManager.LoadModel(assetID);
     }
 
     Mesh& Model::GetMesh(u32 index) {
