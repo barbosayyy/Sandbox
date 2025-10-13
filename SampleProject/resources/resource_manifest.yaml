@@ -1,0 +1,157 @@
+assets:
+  - id: 0
+    name: confusion.png
+    path: ..\..\resources\assets\confusion.png
+  - id: 1
+    name: container.jpg
+    path: ..\..\resources\assets\container.jpg
+  - id: 2
+    name: container2.png
+    path: ..\..\resources\assets\container2.png
+  - id: 3
+    name: back.jpg
+    path: ..\..\resources\assets\cubemap\back.jpg
+  - id: 4
+    name: bot.jpg
+    path: ..\..\resources\assets\cubemap\bot.jpg
+  - id: 5
+    name: front.jpg
+    path: ..\..\resources\assets\cubemap\front.jpg
+  - id: 6
+    name: left.jpg
+    path: ..\..\resources\assets\cubemap\left.jpg
+  - id: 7
+    name: back.jpg
+    path: ..\..\resources\assets\cubemap\old\back.jpg
+  - id: 8
+    name: bot.jpg
+    path: ..\..\resources\assets\cubemap\old\bot.jpg
+  - id: 9
+    name: front.jpg
+    path: ..\..\resources\assets\cubemap\old\front.jpg
+  - id: 10
+    name: left.jpg
+    path: ..\..\resources\assets\cubemap\old\left.jpg
+  - id: 11
+    name: right.jpg
+    path: ..\..\resources\assets\cubemap\old\right.jpg
+  - id: 12
+    name: top.jpg
+    path: ..\..\resources\assets\cubemap\old\top.jpg
+  - id: 13
+    name: right.jpg
+    path: ..\..\resources\assets\cubemap\right.jpg
+  - id: 14
+    name: top.jpg
+    path: ..\..\resources\assets\cubemap\top.jpg
+  - id: 15
+    name: d_container.png
+    path: ..\..\resources\assets\d_container.png
+  - id: 16
+    name: fire.png
+    path: ..\..\resources\assets\fire.png
+  - id: 17
+    name: license.txt
+    path: ..\..\resources\assets\license.txt
+  - id: 18
+    name: matrix.jpg
+    path: ..\..\resources\assets\matrix.jpg
+  - id: 19
+    name: s_container.png
+    path: ..\..\resources\assets\s_container.png
+  - id: 20
+    name: test.png
+    path: ..\..\resources\assets\test.png
+  - id: 21
+    name: Level.yaml
+    path: ..\..\resources\levels\Level.yaml
+  - id: 22
+    name: ao.jpg
+    path: ..\..\resources\model\ao.jpg
+  - id: 23
+    name: backpack.mtl
+    path: ..\..\resources\model\backpack.mtl
+  - id: 24
+    name: backpack.obj
+    path: ..\..\resources\model\backpack.obj
+  - id: 25
+    name: cube.mtl
+    path: ..\..\resources\model\cube.mtl
+  - id: 26
+    name: cube.obj
+    path: ..\..\resources\model\cube.obj
+  - id: 27
+    name: diffuse.jpg
+    path: ..\..\resources\model\diffuse.jpg
+  - id: 28
+    name: normal.png
+    path: ..\..\resources\model\normal.png
+  - id: 29
+    name: roughness.jpg
+    path: ..\..\resources\model\roughness.jpg
+  - id: 30
+    name: source.txt
+    path: ..\..\resources\model\source.txt
+  - id: 31
+    name: specular.jpg
+    path: ..\..\resources\model\specular.jpg
+  - id: 32
+    name: color.frag
+    path: ..\..\resources\shaders\color.frag
+  - id: 33
+    name: cubemap.frag
+    path: ..\..\resources\shaders\cubemap.frag
+  - id: 34
+    name: cubemap.vert
+    path: ..\..\resources\shaders\cubemap.vert
+  - id: 35
+    name: default.frag
+    path: ..\..\resources\shaders\default.frag
+  - id: 36
+    name: default.vert
+    path: ..\..\resources\shaders\default.vert
+  - id: 37
+    name: GeometryPass.frag
+    path: ..\..\resources\shaders\GeometryPass.frag
+  - id: 38
+    name: GeometryPass.vert
+    path: ..\..\resources\shaders\GeometryPass.vert
+  - id: 39
+    name: light.frag
+    path: ..\..\resources\shaders\light.frag
+  - id: 40
+    name: LightingPass.frag
+    path: ..\..\resources\shaders\LightingPass.frag
+  - id: 41
+    name: LightingPass.vert
+    path: ..\..\resources\shaders\LightingPass.vert
+  - id: 42
+    name: lit.frag
+    path: ..\..\resources\shaders\lit.frag
+  - id: 43
+    name: material.vert
+    path: ..\..\resources\shaders\material.vert
+  - id: 44
+    name: model.frag
+    path: ..\..\resources\shaders\model.frag
+  - id: 45
+    name: model.vert
+    path: ..\..\resources\shaders\model.vert
+  - id: 46
+    name: ScreenQuad.frag
+    path: ..\..\resources\shaders\ScreenQuad.frag
+  - id: 47
+    name: ScreenQuad.vert
+    path: ..\..\resources\shaders\ScreenQuad.vert
+  - id: 48
+    name: tex.frag
+    path: ..\..\resources\shaders\tex.frag
+  - id: 49
+    name: tex.vert
+    path: ..\..\resources\shaders\tex.vert
+  - id: 50
+    name: vertex.vert
+    path: ..\..\resources\shaders\vertex.vert
+  - id: 51
+    name: ztest.frag
+    path: ..\..\resources\shaders\ztest.frag

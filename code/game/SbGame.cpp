@@ -37,6 +37,10 @@ namespace SbGameGlobals{
 	Entity backpack;
 	Entity cube;
 	Entity skybox;
+	Entity plane;
+	Entity light0;
+	Entity light1;
+	Entity light2;
 
 	bool ping = true;
 
@@ -56,12 +60,17 @@ void Game::Start() {
 	backpack = AddEntity();
 	cube = AddEntity();
 	skybox = AddEntity();
+	light0 = AddEntity();
+	light1 = AddEntity();
+	light2 = AddEntity();
 
 	AddEntityComponent<TransformComponent>(cube);
 	AddEntityComponent<MeshComponent>(cube);
 	AddEntityComponent<TransformComponent>(backpack);
 	AddEntityComponent<MeshComponent>(backpack);
 	AddEntityComponent<SkyboxComponent>(skybox);
+
+	AddEntityComponent<LightComponent>(light0);
 
 	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(13, 6, 14, 4, 5, 3);
 	
@@ -76,6 +85,8 @@ void Game::Start() {
 	GetEntityComponent<TransformComponent>(cube).scale = vec3(0.5f);
 	
 	GetEntityComponent<TransformComponent>(backpack).pos.x = 5;
+
+	GetEntityComponent<LightComponent>(light0).light->SetType(LightType::Point);
 
 	SbGameUI::SetUIVisibility(false);
 

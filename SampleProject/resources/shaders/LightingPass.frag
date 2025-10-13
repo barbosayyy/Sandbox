@@ -3,6 +3,7 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
+// Geometry pass samples
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
@@ -10,14 +11,17 @@ uniform sampler2D gAlbedoSpec;
 struct Light{
     vec3 position;
     vec3 color;
+    int type;
 
     float linear;
     float quadratic;
     float radius;
 };
+
 const int n_lights = 32;
 uniform Light lights[n_lights];
-uniform vec3 viewPos;
+uniform vec3 ambientLight;
+uniform vec3 viewPosition;
 
 void main() {
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
@@ -25,8 +29,8 @@ void main() {
     vec3 Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
     float Specular = texture(gAlbedoSpec, TexCoords).a;
 
-    vec3 lighting =( Diffuse * 0.1 );
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 lighting = (Diffuse * ambientLight);
+    vec3 viewDir = normalize(viewPosition - FragPos);
 
     for(int i = 0; i < n_lights; ++i)
     {
