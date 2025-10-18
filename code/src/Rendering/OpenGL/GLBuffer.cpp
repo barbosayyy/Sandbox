@@ -1,4 +1,8 @@
 #include "Core/Debug.h"
+#include "Core/Types.h"
+#include "Core/Config.h"
+#include "Rendering/Light.h"
+#include "Rendering/Renderer.h"
 #include "GLBuffer.h"
 
 namespace Sb {
@@ -47,5 +51,20 @@ namespace Sb {
         glBufferData(GL_ARRAY_BUFFER, sizeof(float)*(vertexSize*numAttributes), primitive, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    }
+
+    static void GLAllocateLightUBO(u32 &ubo) {
+        glGenBuffers(1, &ubo);
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(LightUBOData), NULL, GL_DYNAMIC_DRAW);
+        // Bound to index 0
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    }
+
+    static void GLBufferLightUBO(u32& ubo, LightUBOData& lightData) {
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightUBOData), &lightData);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }

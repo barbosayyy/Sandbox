@@ -42,6 +42,7 @@ add_library(Sandbox_Engine STATIC
     Rendering/Shader.cpp
     Rendering/Texture.cpp
     Rendering/Texture.h
+    Rendering/Light.h
     Rendering/Window.h
     Rendering/Window.cpp
     Rendering/OpenGL/GLBuffer.h
@@ -77,6 +78,8 @@ add_library(Sandbox_Engine STATIC
     ECS/Systems/PhysicsSystem.h
     ECS/Systems/RenderSystem.h
     ECS/Systems/RenderSystem.cpp
+    ECS/Systems/LightSystem.h
+    ECS/Systems/LightSystem.cpp
     ECS/Systems/SkyboxSystem.h
     ECS/Systems/SkyboxSystem.cpp
 

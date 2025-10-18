@@ -10,9 +10,6 @@ namespace Sb {
         void Execute() final override;
     private:
         Shader* lightingPassShader;
-        std::vector<vec3> lightPos;
-	    std::vector<vec3> lightCol;
-        int numLights;
         bool init = false;
     };
 }

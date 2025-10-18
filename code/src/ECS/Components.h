@@ -2,6 +2,7 @@
 
 #include "Rendering/Model.h"
 #include "Rendering/Cubemap.h"
+#include "Rendering/Light.h"
 
 namespace Sb {
 
@@ -36,7 +37,11 @@ namespace Sb {
         // resource manifest uuid
     };
 
-    struct SkyboxComponent : AssetComponentBase{
+    struct SkyboxComponent : AssetComponentBase {
         Cubemap* cubemap;
+    };
+
+    struct LightComponent : ComponentBase {
+        Light light;
     };
 }

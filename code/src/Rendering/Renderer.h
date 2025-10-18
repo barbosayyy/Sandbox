@@ -4,6 +4,7 @@
 #include "Core/Singleton.h"
 #include <glew/glew.h>
 #include <glfw/glfw3.h>
+#include "Light.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Window.h"
 #include "Rendering/Texture.h"
@@ -52,6 +53,8 @@ namespace Sb {
 			u32 gPosition, gNormal, gAlbedoSpec;
 			u32 _renderBufferObject;
 			u32 _fbo;
+			u32 _lightUBO;
+			LightUBOData _lightUBOData;
 
 	private:
 		void SetupFramebufferQuad();

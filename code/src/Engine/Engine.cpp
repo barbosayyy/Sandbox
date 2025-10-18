@@ -106,13 +106,12 @@ void Engine::LateRender() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	Profiler::StopRecord("Render");
-	
 	// Engine UI
 	if(_uiRenderEnabled)
 		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
-	
-	Profiler::SetTotalFrametime(_renderer->GetImGuiSbContext()._io->Framerate);
 	_renderer->GetImGuiSbContext().RenderEnd();
+
+	Profiler::SetTotalFrametime(_renderer->GetImGuiSbContext()._io->Framerate);
 
 	Profiler::StartRecord("Frame swap");
 	glfwPollEvents();

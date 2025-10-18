@@ -4,6 +4,7 @@
 #include "Core/Config.h"
 #include "Core/Types.h"
 #include "ImGui/ImGuiSbContext.h"
+#include "OpenGL/GLBuffer.h"
 #include "RenderPasses/GeometryPass.h"
 #include "RenderPasses/LightingPass.h"
 #include "RenderPasses/SkyboxPass.h"
@@ -84,6 +85,8 @@ void Renderer::Setup() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glPolygonMode(GL_FRONT, GL_FILL);
+	
+	GLAllocateLightUBO(_lightUBO);
 
 	AddRenderPass(std::make_unique<GeometryPass>());
 	AddRenderPass(std::make_unique<LightingPass>());

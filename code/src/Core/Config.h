@@ -15,6 +15,8 @@ namespace Sb {
     constexpr bool SB_RENDERER_VSYNC = FALSE;
     constexpr bool SB_RENDERER_TRIPLE_BUFFERING = TRUE;
     
+    constexpr u8 SB_RENDERER_MAX_NUM_LIGHTS = 255;
+    
     #ifdef SB_DEBUG
     const std::string SB_RESOURCE_FOLDER_PATH = "..\\..\\resources";
     const std::string SB_RESOURCE_MANIFEST_PATH = "..\\..\\resources\\resource_manifest.yaml";
