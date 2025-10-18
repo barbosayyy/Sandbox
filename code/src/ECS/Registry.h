@@ -13,7 +13,8 @@ namespace Sb {
                 DummyComponent,
                 TransformComponent,
                 MeshComponent,
-                SkyboxComponent
+                SkyboxComponent,
+                LightComponent
             >;
 
             template <typename Tuple>

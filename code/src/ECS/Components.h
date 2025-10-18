@@ -41,7 +41,7 @@ namespace Sb {
         Cubemap* cubemap;
     };
 
-    struct LightComponent {
-        Light* light;
+    struct LightComponent : ComponentBase {
+        Light light;
     };
 }
