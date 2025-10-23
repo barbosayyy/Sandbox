@@ -11,6 +11,7 @@
 
 namespace Sb {
 	// Internal types
+
 	using u8 = uint8_t;
 	using s8 = int8_t;
 	using u16 = uint16_t;
@@ -175,6 +176,8 @@ namespace Sb {
 	constexpr u16 SB_KEYBOARD_RIGHT_ALT {346};
 	constexpr u16 SB_KEYBOARD_RIGHT_SUPER {347};
 	constexpr u16 SB_KEYBOARD_MENU {348};
+
+	constexpr float SB_PLANE[] {};
 
 	constexpr float SB_QUAD[] {
 		-1.0f, 1.0f, 0.0f, 1.0f,

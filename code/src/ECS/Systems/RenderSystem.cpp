@@ -8,10 +8,12 @@ namespace Sb {
             
             for(MeshComponent meshComponent : registry.GetComponentStoreDense<MeshComponent>()) {
                 if(registry.GetComponentSparseSet<TransformComponent>().Contains(meshComponent.sparseIndex)) {
+                    
+                    // Updated transform used on draw
                     meshComponent.model->Draw(&ren,
-                         registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).pos,
-                          registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).rot,
-                           registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).scale);
+                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).position,
+                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).rotation,
+                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).scale);
                 }
             }
         }

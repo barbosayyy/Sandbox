@@ -40,6 +40,11 @@ namespace SbGameGlobals{
 	Entity skybox;
 	Entity plane;
 
+	Entity parent0;
+	Entity parent1;
+	Entity child0;
+	Entity child1;
+
 	bool ping = true;
 
 	Texture* txtr;
@@ -55,28 +60,52 @@ void Game::Init() {
 
 void Game::Start() {
 
+	plane = AddEntity();
 	backpack = AddEntity();
 	cube = AddEntity();
 	skybox = AddEntity();
-	light0 = AddEntity();
-	light1 = AddEntity();
-	light2 = AddEntity();
 
 	AddEntityComponent<TransformComponent>(cube);
 	AddEntityComponent<MeshComponent>(cube);
 	GetEntityComponent<MeshComponent>(cube).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
 	txtr = ResourceManagement::LoadTexture(15, TextureType::DIFFUSE);
 	GetEntityComponent<MeshComponent>(cube).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
-	GetEntityComponent<TransformComponent>(cube).pos = vec3(0, -2, -1);
+	GetEntityComponent<TransformComponent>(cube).position = vec3(0, -2, -1);
 	GetEntityComponent<TransformComponent>(cube).scale = vec3(0.5f);
 
 	AddEntityComponent<TransformComponent>(backpack);
 	AddEntityComponent<MeshComponent>(backpack);
 	GetEntityComponent<MeshComponent>(backpack).model = ResourceManagement::LoadModel(24);
-	GetEntityComponent<TransformComponent>(backpack).pos.x = 5;
+	GetEntityComponent<TransformComponent>(backpack).position.x = 5;
 	
 	AddEntityComponent<SkyboxComponent>(skybox);
 	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(13, 6, 14, 4, 5, 3);
+	
+
+	// Scene graph test
+
+		AddEntityComponent<TransformComponent>(parent0);
+		AddEntityComponent<TransformComponent>(parent1);
+		AddEntityComponent<TransformComponent>(child0);
+		AddEntityComponent<TransformComponent>(child1);
+		AddEntityComponent<MeshComponent>(parent0);
+		AddEntityComponent<MeshComponent>(parent1);
+		AddEntityComponent<MeshComponent>(child0);
+		AddEntityComponent<MeshComponent>(child1);
+		GetEntityComponent<MeshComponent>(parent0).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
+		GetEntityComponent<MeshComponent>(parent1).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
+		GetEntityComponent<MeshComponent>(child0).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
+		GetEntityComponent<MeshComponent>(child1).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
+
+		GetEntityComponent<TransformComponent>(parent0).position = vec3(5);
+		GetEntityComponent<TransformComponent>(child0).localPosition = vec3(0, -2, 0);
+		GetEntityComponent<TransformComponent>(child0).localPosition = vec3(0, -3, 1);
+		GetEntityComponent<TransformComponent>(parent1).position = vec3(-5);
+
+		AddEntityComponent<HierarchyComponent>(parent0);
+		GetEntityComponent<HierarchyComponent>(parent0).AddChild(child0);
+		GetEntityComponent<HierarchyComponent>(parent0).AddChild(child1);
+		// GetEntityComponent<HierarchyComponent>(parent0).SetParent(parent1);
 	
 	/*
 		Number of LightComponent entities defines numLights
@@ -96,7 +125,7 @@ void Game::Start() {
 		float xPos = static_cast<float>(((rand() % 100) / 100.0) * 6.0 - 3.0);
 		float yPos = static_cast<float>(((rand() % 100) / 100.0) * 6.0 - 4.0);
 		float zPos = static_cast<float>(((rand() % 100) / 100.0) * 6.0 - 3.0);
-		GetEntityComponent<TransformComponent>(light).pos = vec3(xPos, yPos, zPos);
+		GetEntityComponent<TransformComponent>(light).position = vec3(xPos, yPos, zPos);
 
 		// also calculate random color
 		float rColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5);
@@ -107,8 +136,6 @@ void Game::Start() {
 		GetEntityComponent<LightComponent>(light).light.range = 1;
 	}
 
-	GetEntityComponent<LightComponent>(light0).light->SetType(LightType::Point);
-
 	SbGameUI::SetUIVisibility(false);
 
 	Log::Info("SbGame: Started");
@@ -116,14 +143,14 @@ void Game::Start() {
 
 void Game::Update(){
 	if(ping == true) {
-		GetEntityComponent<TransformComponent>(cube).pos.x += 0.01f;
-		if(GetEntityComponent<TransformComponent>(cube).pos.x >= 5) {
+		GetEntityComponent<TransformComponent>(cube).position.x += 0.01f;
+		if(GetEntityComponent<TransformComponent>(cube).position.x >= 5) {
 			ping = false;
 		}
 	}
 	else {
-		GetEntityComponent<TransformComponent>(cube).pos.x -= 0.01f;
-		if(GetEntityComponent<TransformComponent>(cube).pos.x <= 0) {
+		GetEntityComponent<TransformComponent>(cube).position.x -= 0.01f;
+		if(GetEntityComponent<TransformComponent>(cube).position.x <= 0) {
 			ping = true;
 		}
 	}

@@ -11,6 +11,7 @@
 #include "ECS/Systems/InputSystem.h"
 #include "ECS/Systems/PhysicsSystem.h"
 #include "ECS/Systems/RenderSystem.h"
+#include "ECS/Systems/HierarchySystem.h"
 #include <memory>
 
 using namespace Sb;
@@ -83,6 +84,7 @@ void Engine::Update() {
 
 	ECS::InputSystem::Update(*this->_ecsRegistry);
 	ECS::PhysicsSystem::Update(*this->_ecsRegistry);
+	ECS::HierarchySystem::Update(*this->_ecsRegistry);
 
 	_internalInput->ProcessInput();
 	
@@ -91,6 +93,7 @@ void Engine::Update() {
 		_renderer->GetRenderCamera()->GenerateProjection(_renderer->GetViewportWidth(), _renderer->GetViewportHeight());
 		_renderer->ClearStateDirtyFlags(SB_DIRTY_PROJECTION);
 	}
+
 }
 
 void Engine::Render() {

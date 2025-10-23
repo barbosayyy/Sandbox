@@ -169,7 +169,6 @@ void Renderer::GlFramebufferSizeCallback(GLFWwindow* window, int width, int heig
 	glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);
 	ren.GenerateFramebufferTextures();
 	ren._stateDirtyFlags |= SB_DIRTY_PROJECTION;
-	Log::Info("Renderer: Framebuffer resize: ", "Width: ", width, " Height: ", height);
 }
 
 void Renderer::SetupFramebufferQuad() {

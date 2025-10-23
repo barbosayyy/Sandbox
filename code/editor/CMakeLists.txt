@@ -7,7 +7,8 @@ add_library(Sandbox_Editor STATIC
 
 target_compile_definitions(Sandbox_Editor PUBLIC SB_EDITOR)
 
-target_include_directories(Sandbox_Editor PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+# SYSTEM flag clears warnings from vendor headers
+target_include_directories(Sandbox_Editor SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
 target_include_directories(
     Sandbox_Editor
     PUBLIC

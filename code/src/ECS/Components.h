@@ -25,10 +25,11 @@ namespace Sb {
     };
 
     struct TransformComponent : ComponentBase {
-        vec3 pos {1.0f};
-
-        vec3 rot {0.0f};
-        
+        vec3 localPosition {0.0f};
+        vec3 localRotation {0.0f};
+        vec3 localScale {1.0f};
+        vec3 position {0.0f};
+        vec3 rotation {0.0f};
         vec3 scale {1.0f};
     };
     
@@ -43,5 +44,13 @@ namespace Sb {
 
     struct LightComponent : ComponentBase {
         Light light;
+    };
+
+    struct HierarchyComponent : ComponentBase {
+        Entity parent;
+        std::vector<Entity> children;
+
+        void AddChild(u32 entityID);
+        void SetParent(u32 entityID);
     };
 }

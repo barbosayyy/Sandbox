@@ -10,7 +10,7 @@ namespace Sb {
 		ren.GetWindow()->SetWindowWidth(width);
 		ren.GetWindow()->SetWindowHeight(height);
 
-		if(ren.GetViewportWidth() != width || ren.GetViewportHeight() != height) {
+		if((ren.GetViewportWidth() != width || ren.GetViewportHeight() != height) && (ren.GetViewportWidth() > 0 || ren.GetViewportHeight() > 0)) {
 			ren.SetViewportWidth(width);
 			ren.SetViewportHeight(height);
 			glViewport(ren.GetViewportX(), ren.GetViewportY(), width, height);

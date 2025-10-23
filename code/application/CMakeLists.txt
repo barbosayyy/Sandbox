@@ -5,7 +5,7 @@ add_library(Sandbox_App STATIC
     Application.cpp
 )
 
-target_include_directories(Sandbox_App PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+target_include_directories(Sandbox_App SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
 target_include_directories(
     Sandbox_App
     PUBLIC

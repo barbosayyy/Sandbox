@@ -111,5 +111,6 @@ void Camera::OnMouseAxisMove(float xOffset, float yOffset)
 }
 
 void Camera::GenerateProjection(int viewportWidth, int viewportHeight) {
-	_projection = glm::perspective(glm::radians(_fov), (float)viewportWidth / (float)viewportHeight, _near, _far);
+	if(viewportWidth > 0 && viewportHeight > 0)
+		_projection = glm::perspective(glm::radians(_fov), (float)viewportWidth / (float)viewportHeight, _near, _far);
 }

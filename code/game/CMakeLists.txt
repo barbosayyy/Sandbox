@@ -9,7 +9,7 @@ add_library(Sandbox_Game STATIC
 
 target_compile_definitions(Sandbox_Game PUBLIC SB_PROJECT_NAME="${CM_SANDBOX_GAME_PROJECT}")
 
-target_include_directories(Sandbox_Game PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+target_include_directories(Sandbox_Game SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
 target_include_directories(
     Sandbox_Game 
     PUBLIC

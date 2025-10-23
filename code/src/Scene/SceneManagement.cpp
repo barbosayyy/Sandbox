@@ -19,7 +19,7 @@ namespace Sb {
 
                     emitter << YAML::Key << "position" << YAML::Value;
                     emitter << YAML::Flow << YAML::BeginMap;
-                    temp = sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].pos;
+                    temp = sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].position;
                     emitter << YAML::Key << "x" << YAML::Value << temp.x;
                     emitter << YAML::Key << "y" << YAML::Value << temp.y;
                     emitter << YAML::Key << "z" << YAML::Value << temp.z;
@@ -27,7 +27,7 @@ namespace Sb {
                     
                     emitter << YAML::Key << "rotation" << YAML::Value;
                     emitter << YAML::Flow << YAML::BeginMap;
-                    temp = sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].rot;
+                    temp = sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].rotation;
                     emitter << YAML::Key << "x" << YAML::Value << temp.x;
                     emitter << YAML::Key << "y" << YAML::Value << temp.y;
                     emitter << YAML::Key << "z" << YAML::Value << temp.z;

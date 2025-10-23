@@ -74,6 +74,7 @@ add_library(Sandbox_Engine STATIC
     
     # ECS
     ECS/Components.h
+    ECS/Components.cpp
     ECS/Systems/InputSystem.h
     ECS/Systems/PhysicsSystem.h
     ECS/Systems/RenderSystem.h
@@ -82,6 +83,8 @@ add_library(Sandbox_Engine STATIC
     ECS/Systems/LightSystem.cpp
     ECS/Systems/SkyboxSystem.h
     ECS/Systems/SkyboxSystem.cpp
+    ECS/Systems/HierarchySystem.h
+    ECS/Systems/HierarchySystem.cpp
 
     ECS/Registry.h
     ECS/Registry.cpp
@@ -93,7 +96,8 @@ add_library(Sandbox_Engine STATIC
     Game/IGame.h
 )
 
-target_include_directories(Sandbox_Engine PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+# SYSTEM flag clears warnings from vendor headers
+target_include_directories(Sandbox_Engine SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
 target_include_directories(Sandbox_Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 message("Finished Sandbox Engine library")

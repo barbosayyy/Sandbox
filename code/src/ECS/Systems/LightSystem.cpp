@@ -16,7 +16,7 @@ namespace Sb {
                     ren._lightUBOData.lights[it].intensity = lightComponent.light.intensity;
                     ren._lightUBOData.lights[it].radius = lightComponent.light.range;
                     ren._lightUBOData.lights[it].type = (int)lightComponent.light.type;
-                    ren._lightUBOData.lights[it].position = registry.GetComponent<TransformComponent>(lightComponent.sparseIndex).pos;
+                    ren._lightUBOData.lights[it].position = registry.GetComponent<TransformComponent>(lightComponent.sparseIndex).position;
                     ren._lightUBOData.lights[it].linear = 0.7f;
                     ren._lightUBOData.lights[it].quadratic = 1.8f;
                     const float maxBrightness = std::fmaxf(std::fmaxf(lightComponent.light.color.r, lightComponent.light.color.g), lightComponent.light.color.b);
