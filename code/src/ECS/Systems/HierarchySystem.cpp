@@ -8,11 +8,11 @@ namespace Sb {
             Renderer& ren = Renderer::GetInstance();
             
             for(HierarchyComponent hierarchyComponent : registry.GetComponentStoreDense<HierarchyComponent>()) {
-                if(registry.GetComponentSparseSet<TransformComponent>().Contains(hierarchyComponent.sparseIndex)) {
+                if(registry.GetComponentSparseSet<TransformComponent>().Contains(hierarchyComponent.GetSparseIndex())) {
                     for(Entity childEntity : hierarchyComponent.children) {
                         if(registry.GetComponentSparseSet<TransformComponent>().Contains(childEntity)) {
                             auto& childTransform = registry.GetComponent<TransformComponent>(childEntity) ;
-                            auto& thisTransform = registry.GetComponent<TransformComponent>(hierarchyComponent.sparseIndex) ;
+                            auto& thisTransform = registry.GetComponent<TransformComponent>(hierarchyComponent.GetSparseIndex()) ;
                             
                             childTransform.scale = thisTransform.scale*childTransform.localScale;
                             childTransform.rotation = thisTransform.rotation*childTransform.localRotation;

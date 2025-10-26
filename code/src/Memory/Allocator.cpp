@@ -97,7 +97,7 @@ void FreelistAllocator::Free(void* pBlockPointer) {
 
 	// Find next free block with enough size
 	while(pFreeBlocks != nullptr) {
-		if((uintPointer)pFreeBlocks >= (uintPointer)pFullBlockEnd)
+		if((u64ptr)pFreeBlocks >= (u64ptr)pFullBlockEnd)
 			break;
 		pPreviousFreeBlock = pFreeBlocks;
 		pFreeBlocks		   = pFreeBlocks->pNextBlock;
@@ -108,7 +108,7 @@ void FreelistAllocator::Free(void* pBlockPointer) {
 		pPreviousFreeBlock->size	   = totalBlockSize;
 		pPreviousFreeBlock->pNextBlock = pFreeBlocks;
 		pFreeBlocks					   = pPreviousFreeBlock;
-	} else if((uintPointer)pPreviousFreeBlock + pPreviousFreeBlock->size == (uintPointer)pFullBlockStart) {
+	} else if((u64ptr)pPreviousFreeBlock + pPreviousFreeBlock->size == (u64ptr)pFullBlockStart) {
 		pPreviousFreeBlock->size = totalBlockSize;
 	} else {
 		Block* temp					   = (Block*)pFullBlockStart;
@@ -118,7 +118,7 @@ void FreelistAllocator::Free(void* pBlockPointer) {
 		pPreviousFreeBlock			   = temp;
 	}
 
-	if(pFreeBlocks != nullptr && (uintPointer)pFreeBlocks == (uintPointer)pFullBlockEnd) {
+	if(pFreeBlocks != nullptr && (u64ptr)pFreeBlocks == (u64ptr)pFullBlockEnd) {
 		pPreviousFreeBlock->size += pFreeBlocks->size;
 		pPreviousFreeBlock->pNextBlock = pFreeBlocks->pNextBlock;
 	}

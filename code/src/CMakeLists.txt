@@ -47,8 +47,8 @@ add_library(Sandbox_Engine STATIC
     Rendering/Window.cpp
     Rendering/OpenGL/GLBuffer.h
     Rendering/OpenGL/GLBuffer.cpp
-    Rendering/Primitive.h
-    Rendering/Primitive.cpp
+    Rendering/OpenGL/GLLightData.h
+    Rendering/OpenGL/GLLightData.cpp
     Rendering/RenderPasses/RenderPass.h
     Rendering/RenderPasses/GeometryPass.h
     Rendering/RenderPasses/GeometryPass.cpp
@@ -58,6 +58,9 @@ add_library(Sandbox_Engine STATIC
     Rendering/RenderPasses/SkyboxPass.cpp
     
     # Resource Management
+    Resources/Primitive.h
+    Resources/Primitive.cpp
+    Resources/DefaultPrimitives.h
     Resources/ResourceManifest.h
     Resources/ResourceManifest.cpp
     Resources/ResourceManagement.h

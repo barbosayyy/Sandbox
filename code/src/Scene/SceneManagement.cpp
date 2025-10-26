@@ -1,8 +1,11 @@
+#include "Core/Base.h"
+#include "ECS/Components.h"
 #include "ECS/Registry.h"
 #include "SceneManagement.h"
 
 #include "yaml-cpp/emitter.h"
 #include "yaml-cpp/emittermanip.h"
+#include <filesystem>
 
 namespace Sb {
     namespace SceneManagement {
@@ -13,6 +16,7 @@ namespace Sb {
 
                 vec3 temp;
 
+                // Write component data
                 if constexpr (std::is_same_v<T, TransformComponent>) {
                     emitter << YAML::Key << "Transform" << YAML::Value;
                     emitter << YAML::BeginMap;
@@ -46,16 +50,72 @@ namespace Sb {
                 else if constexpr (std::is_same_v<T, MeshComponent>) {
                     emitter << YAML::Key << "Mesh" << YAML::Value;
                     emitter << YAML::BeginMap;
+                    
+                    emitter << YAML::Key << "id" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].model->_assetID;
+                    
+                    emitter << YAML::EndMap;
+                }
 
-                    // emitter << YAML::Key << "id" << YAML::Value << manifestID;
+                else if constexpr (std::is_same_v<T, SkyboxComponent>) {
+                    emitter << YAML::Key << "Skybox" << YAML::Value;
+                    emitter << YAML::BeginMap;
+                    
+                    emitter << YAML::Key << "textureFaceRightID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceRightManifestID;
+                    emitter << YAML::Key << "textureFaceLeftID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceLeftManifestID;
+                    emitter << YAML::Key << "textureFaceTopID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceTopManifestID;
+                    emitter << YAML::Key << "textureFaceBottomID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBottomManifestID;
+                    emitter << YAML::Key << "textureFaceFrontID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceFrontManifestID;
+                    emitter << YAML::Key << "textureFaceBackID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBackManifestID;
+                    
+                    emitter << YAML::EndMap;
+                }
+                else if constexpr (std::is_same_v<T, LightComponent>) {
+                    emitter << YAML::Key << "Light" << YAML::Value;
+                    emitter << YAML::BeginMap;
+                    
+                    emitter << YAML::Key << "color" << YAML::Value;
+                    emitter << YAML::Flow << YAML::BeginMap;
+                    temp = sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].light.color;
+                    emitter << YAML::Key << "r" << YAML::Value << temp.x;
+                    emitter << YAML::Key << "g" << YAML::Value << temp.y;
+                    emitter << YAML::Key << "b" << YAML::Value << temp.z;
+                    emitter << YAML::EndMap;
+                    
+                    emitter << YAML::Key << "intensity" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].light.intensity;
+                    emitter << YAML::Key << "type" << YAML::Value << (int)sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].light.type;
+                    emitter << YAML::Key << "range" << YAML::Value << (int)sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].light.range;
+                    
+                    emitter << YAML::EndMap;
+                }
+                else if constexpr (std::is_same_v<T, HierarchyComponent>) {
+                    emitter << YAML::Key << "Hierarchy" << YAML::Value;
+                    emitter << YAML::BeginMap;
+                    emitter << YAML::Key << "parent" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].parent;
+                    
+                    emitter << YAML::Key << "children" << YAML::Value;
+                    emitter << YAML::Flow << YAML::BeginMap;
+                    for(Entity child : sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].children) {
+                        emitter << YAML::Key << "id" << YAML::Value << child;
+                    }
+                    emitter << YAML::EndMap;
 
                     emitter << YAML::EndMap;
                 }
+                // For asset components
+                // else if constexpr (std::is_base_of_v<AssetComponentBase, T>) {
             }
         }
 
         static void SaveScene(const String& levelName) {
             ECS::Registry& entityRegistry = ECS::Registry::GetInstance();
+
+            String path = String(File::GetCurrentDirectory() + "\\..\\..\\resources\\levels");
+
+            // If scene exists, delete
+            if(std::filesystem::exists(std::string(path + levelName+".yaml"))) {
+                std::filesystem::remove(std::string(path + levelName+".yaml"));
+            }
+
             std::vector<DummyComponent> dummyComponentDense = entityRegistry.GetComponentStoreDense<DummyComponent>();
             YAML::Emitter emitter;
             u32 id;
@@ -64,13 +124,15 @@ namespace Sb {
 
             emitter << YAML::BeginSeq;
             
+            // Iterate all entities in current scene registry
             for(DummyComponent dummyComp : dummyComponentDense) {
 
-                id = dummyComp.sparseIndex;
+                id = dummyComp.GetSparseIndex();
                 
                 emitter << YAML::BeginMap;
                 emitter << YAML::Key << "id" << YAML::Value << id;
                 
+                // Invoke write func for each component
                 std::apply([id, &emitter](auto&&... componentSparseSet) {
                     (WriteSparseSetComponentData(componentSparseSet, id, emitter), ...);
                 }, entityRegistry.GetComponentStore());
@@ -78,14 +140,11 @@ namespace Sb {
                 emitter << YAML::EndMap;
             }
 
-            String path = String(File::GetCurrentDirectory() + "\\resources\\levels");
-
             if(!File::Write(emitter.c_str(), path, String(levelName + ".yaml"))) {
                 Log::Info("Scene: Failed to save level to ", levelName);
                 return;
             }
             Log::Info("Scene: Saved level to ", path);
-
         }
     }
 }

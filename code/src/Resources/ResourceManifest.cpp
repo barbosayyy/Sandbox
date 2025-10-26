@@ -11,6 +11,11 @@
 
 namespace Sb {
     namespace ResourceManagement {
+
+#ifdef SB_DEBUG
+        // #define SB_DEBUG_RESOURCE_MANAGEMENT
+#endif
+
         static u32 assetUuid {0};
         
         void WriteAssetMetaData(String& buffer, std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter);
@@ -137,7 +142,9 @@ namespace Sb {
                                 if(!FindNewAssetReference(std::filesystem::directory_entry(entry["path"].as<std::string>()), manifest, resourceAssetPaths, entry)) {
                                     manifestRootNode["assets"].remove(i);
                                     manifest.erase(entry["path"].as<std::string>());
+#ifdef SB_DEBUG_RESOURCE_MANAGEMENT
                                     Log::Print(manifestRootNode["assets"]);
+#endif
                                     Log::Info("ResourceManifest: Removed asset ", entry["path"].as<std::string>());
                                     continue;
                                 }

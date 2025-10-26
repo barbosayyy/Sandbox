@@ -7,13 +7,13 @@ namespace Sb {
             Renderer& ren = Renderer::GetInstance();
             
             for(MeshComponent meshComponent : registry.GetComponentStoreDense<MeshComponent>()) {
-                if(registry.GetComponentSparseSet<TransformComponent>().Contains(meshComponent.sparseIndex)) {
+                if(registry.GetComponentSparseSet<TransformComponent>().Contains(meshComponent.GetSparseIndex())) {
                     
                     // Updated transform used on draw
                     meshComponent.model->Draw(&ren,
-                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).position,
-                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).rotation,
-                        registry.GetComponent<TransformComponent>(meshComponent.sparseIndex).scale);
+                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).position,
+                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).rotation,
+                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).scale);
                 }
             }
         }

@@ -9,23 +9,23 @@ namespace Sb {
             u8 it = 0;
             const float constant = 1.0f; 
             for(LightComponent lightComponent : registry.GetComponentStoreDense<LightComponent>()) {
-                if(registry.GetComponentSparseSet<TransformComponent>().Contains(lightComponent.sparseIndex)) {
+                if(registry.GetComponentSparseSet<TransformComponent>().Contains(lightComponent.GetSparseIndex())) {
                     if(it >= SB_RENDERER_MAX_NUM_LIGHTS) 
                         break;
-                    ren._lightUBOData.lights[it].color = lightComponent.light.color;
-                    ren._lightUBOData.lights[it].intensity = lightComponent.light.intensity;
-                    ren._lightUBOData.lights[it].radius = lightComponent.light.range;
-                    ren._lightUBOData.lights[it].type = (int)lightComponent.light.type;
-                    ren._lightUBOData.lights[it].position = registry.GetComponent<TransformComponent>(lightComponent.sparseIndex).position;
-                    ren._lightUBOData.lights[it].linear = 0.7f;
-                    ren._lightUBOData.lights[it].quadratic = 1.8f;
+                    ren._glLightData.lightUBOData.lights[it].color = lightComponent.light.color;
+                    ren._glLightData.lightUBOData.lights[it].intensity = lightComponent.light.intensity;
+                    ren._glLightData.lightUBOData.lights[it].radius = lightComponent.light.range;
+                    ren._glLightData.lightUBOData.lights[it].type = (int)lightComponent.light.type;
+                    ren._glLightData.lightUBOData.lights[it].position = registry.GetComponent<TransformComponent>(lightComponent.GetSparseIndex()).position;
+                    ren._glLightData.lightUBOData.lights[it].linear = 0.7f;
+                    ren._glLightData.lightUBOData.lights[it].quadratic = 1.8f;
                     const float maxBrightness = std::fmaxf(std::fmaxf(lightComponent.light.color.r, lightComponent.light.color.g), lightComponent.light.color.b);
                     float tempRadius = (-0.7f + std::sqrt(0.7f * 0.7f - 4 * 1.8f * (constant - (256.0f/5.0f) * maxBrightness))) / (2.0f * 1.8f);
-                    ren._lightUBOData.lights[it].radius = tempRadius;
+                    ren._glLightData.lightUBOData.lights[it].radius = tempRadius;
                 }
                 it++;
             }
-            ren._lightUBOData.numLights = it;
+            ren._glLightData.lightUBOData.numLights = it;
         }
     }
 }

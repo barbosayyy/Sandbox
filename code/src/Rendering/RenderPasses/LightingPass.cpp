@@ -19,16 +19,30 @@ namespace Sb {
     
         ECS::Registry& reg = ECS::Registry::GetInstance();
         Renderer& renderer = Renderer::GetInstance();
-        if(init == false) {
-            lightingPassShader->Use();
+        lightingPassShader->Use();
+        if(renderer._stateShowBufferMask == 0) {
             lightingPassShader->SetInt("gPosition", 0);
             lightingPassShader->SetInt("gNormal", 1);
             lightingPassShader->SetInt("gAlbedoSpec", 2);
-		    lightingPassShader->SetVec3("ambientLight", vec3(0.1f));
+        } else if(renderer._stateShowBufferMask == 1){
+            lightingPassShader->SetInt("gPosition", 0);
+            lightingPassShader->SetInt("gNormal", 0);
+            lightingPassShader->SetInt("gAlbedoSpec", 0);
+        } else if(renderer._stateShowBufferMask == 2){
+            lightingPassShader->SetInt("gPosition", 1);
+            lightingPassShader->SetInt("gNormal", 1);
+            lightingPassShader->SetInt("gAlbedoSpec", 1);
+        } else if(renderer._stateShowBufferMask == 3){
+            lightingPassShader->SetInt("gPosition", 2);
+            lightingPassShader->SetInt("gNormal", 2);
+            lightingPassShader->SetInt("gAlbedoSpec", 2);
+        }
+        if(init == false) {
+		    lightingPassShader->SetVec3("ambientLight", vec3(0.4f));
 
             ECS::LightSystem::Update(reg);
 
-            GLBufferLightUBO(renderer._lightUBO, renderer._lightUBOData);
+            GLBufferLightUBO(renderer._glLightData.lightUBO, renderer._glLightData.lightUBOData);
             
             Log::Print("Lighting pass init");
             init = true;

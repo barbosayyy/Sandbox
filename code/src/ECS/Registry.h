@@ -5,6 +5,7 @@
 #include "Core/Collections.h"
 #include "ECS/Components.h"
 #include <tuple>
+#include <unordered_map>
 
 namespace Sb {
     namespace ECS {
@@ -67,6 +68,7 @@ namespace Sb {
         private:
 
             CoreComponentStore _componentStore;
+            std::unordered_map<u64, u32> _guidSparseIndex;
             u32 _nextEntityId;
         };
     }

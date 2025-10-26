@@ -6,16 +6,20 @@ namespace Sb {
     void HierarchyComponent::AddChild(u32 entityID) {
         ECS::Registry& reg = ECS::Registry::GetInstance();
         
+        u32 unmovedIndex = this->GetSparseIndex();
+
         // Add hierarchy component to target entity if it has none
         if(!reg.GetComponentSparseSet<HierarchyComponent>().Contains(entityID)) {
             AddEntityComponent<HierarchyComponent>(entityID);
         }
-        
-        if(std::find(this->children.begin(), this->children.end(), entityID) != this->children.end()){
-            this->children.push_back(entityID);
+
+        HierarchyComponent& current = GetEntityComponent<HierarchyComponent>(unmovedIndex);
+
+        if(std::find(current.children.begin(), current.children.end(), entityID) == current.children.end()){
+            current.children.push_back(entityID);
         }
-        GetEntityComponent<HierarchyComponent>(entityID).parent = this->sparseIndex;
-        Log::Print("ECS: Added child ", entityID, " to parent ", this->sparseIndex);
+        GetEntityComponent<HierarchyComponent>(entityID).parent = current.GetSparseIndex();
+        Log::Print("ECS: Added child ", entityID, " to parent ", current.GetSparseIndex());
     };
     
     void HierarchyComponent::SetParent(u32 entityID) {
@@ -28,9 +32,9 @@ namespace Sb {
         
         this->parent = entityID;
         HierarchyComponent& comp = GetEntityComponent<HierarchyComponent>(entityID);
-        if(std::find(comp.children.begin(), comp.children.end(), this->sparseIndex) != comp.children.end()) {
-            comp.children.push_back(this->sparseIndex);
-            Log::Print("ECS: Added parent ", entityID, " to child ", this->sparseIndex);
+        if(std::find(comp.children.begin(), comp.children.end(), this->GetSparseIndex()) != comp.children.end()) {
+            comp.children.push_back(this->GetSparseIndex());
+            Log::Print("ECS: Added parent ", entityID, " to child ", this->GetSparseIndex());
         }
     }
 }

@@ -2,8 +2,7 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
 #include "Core/Types.h"
-
-#include <iterator>
+#include "DefaultPrimitives.h"
 
 namespace Sb {
     DefaultMesh Primitive::cube {};
@@ -119,6 +118,35 @@ namespace Sb {
         return Primitive::sphere;
     }
 
-    DefaultMesh Primitive::GetPlane() {return Primitive::plane;}
+    DefaultMesh Primitive::GetPlane() {
+        if(Primitive::plane.vertices.empty() == true) {
+            constexpr size_t floatsPerVertex = 8;
+            const size_t vCount = sizeof(SB_PLANE_VERTICES) / (sizeof(float) * floatsPerVertex);
+            const size_t iCount = sizeof(SB_PLANE_INDICES) / sizeof(u32);
+
+            Primitive::plane.vertices.reserve(vCount);
+            Primitive::plane.indices.reserve(iCount);
+
+            vec3 pos;
+            vec3 norm;
+            vec2 tex;
+            for(int i = 0; i < vCount * floatsPerVertex; i += floatsPerVertex) {
+                pos.x = SB_PLANE_VERTICES[i];
+                pos.y = SB_PLANE_VERTICES[i+1];
+                pos.z = SB_PLANE_VERTICES[i+2];
+                norm.x = SB_PLANE_VERTICES[i+3];
+                norm.y = SB_PLANE_VERTICES[i+4];
+                norm.z = SB_PLANE_VERTICES[i+5];
+                tex.x = SB_PLANE_VERTICES[i+6];
+                tex.y = SB_PLANE_VERTICES[i+7];
+                Primitive::plane.vertices.emplace_back(Vertex(pos, norm, tex));
+            }
+
+            for(int i = 0; i < iCount; i++) {
+                Primitive::plane.indices.emplace_back(SB_PLANE_INDICES[i]);
+            }
+        }
+        return Primitive::plane;
+    }
     DefaultMesh Primitive::GetQuad() {return Primitive::quad;}
 }

@@ -62,9 +62,6 @@ assets:
   - id: 20
     name: test.png
     path: ..\..\resources\assets\test.png
-  - id: 21
-    name: Level.yaml
-    path: ..\..\resources\levels\Level.yaml
   - id: 22
     name: ao.jpg
     path: ..\..\resources\model\ao.jpg
@@ -155,3 +152,9 @@ assets:
   - id: 51
     name: ztest.frag
     path: ..\..\resources\shaders\ztest.frag
+  - id: 53
+    name: LightingPassUBO.frag
+    path: ..\..\resources\shaders\LightingPassUBO.frag
+  - id: 54
+    name: level1.yaml
+    path: ..\..\resources\levels\level1.yaml

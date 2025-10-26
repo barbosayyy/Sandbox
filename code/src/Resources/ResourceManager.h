@@ -2,14 +2,13 @@
 
 #include "Core/Types.h"
 #include "Core/Singleton.h"
-#include "ECS/Components.h"
 
 #include "Rendering/Model.h"
 #include "Rendering/Shader.h"
+#include "Rendering/Cubemap.h"
 
 #include <functional>
 #include <unordered_map>
-#include <utility>
 namespace Sb {
 
     namespace ResourceManagement {

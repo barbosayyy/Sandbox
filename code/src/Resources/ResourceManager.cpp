@@ -2,13 +2,14 @@
 #include "Core/Config.h"
 #include "Core/Types.h"
 #include "Core/Utils.h"
-#include "ResourceManager.h"
 #include "Core/Debug.h"
+#include "ResourceManager.h"
 
-#include "ResourceManifest.h"
-#include "Resources/ResourceManager.h"
-#include "Rendering/Primitive.h"
 #include "Rendering/OpenGL/GLBuffer.h"
+#include "ResourceManifest.h"
+#include "ResourceManager.h"
+#include "Primitive.h"
+#include "DefaultPrimitives.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
@@ -360,6 +361,13 @@ namespace Sb {
                 
                 cubemap.data = LoadCubemapData(rightTextureID, leftTextureID, topTextureID, botTextureID, frontTextureID, backTextureID);
                 
+                cubemap._textureFaceRightManifestID = rightTextureID;
+                cubemap._textureFaceLeftManifestID = leftTextureID;
+                cubemap._textureFaceTopManifestID = topTextureID;
+                cubemap._textureFaceBottomManifestID = botTextureID;
+                cubemap._textureFaceFrontManifestID = frontTextureID;
+                cubemap._textureFaceBackManifestID = backTextureID;
+
                 cubemap._cubemapShader = ResourceManager::LoadShader(34, 33);
                 cubemap._cubemapShader->SetInt("skybox", 0);
 

@@ -7,10 +7,10 @@
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
 #include "Core/Profiler.h"
+#include "Scene/SceneManagement.h"
 
 #include "ECS/Systems/InputSystem.h"
 #include "ECS/Systems/PhysicsSystem.h"
-#include "ECS/Systems/RenderSystem.h"
 #include "ECS/Systems/HierarchySystem.h"
 #include <memory>
 
@@ -19,6 +19,9 @@ using namespace Sb;
 bool Engine::_error = false;
 
 Engine::Engine() : _uiRenderEnabled(true){
+
+	Log::Info("Starting Sandbox application backend");
+
 #ifdef SB_DEBUG
 	Log::SetLogLevel(Log::Level::DEBUG);
 #elif SB_RELEASE
@@ -130,10 +133,12 @@ void Engine::Stop() {
 
 void Engine::OnInput() {
 	if(InputManager::PressedKey(SB_KEYBOARD_1)) {
-		_renderer->_stateShowBufferMask = 1;
+		_renderer->_stateShowBufferMask = 0;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_2)) {
-		_renderer->_stateShowBufferMask = 2;
+		_renderer->_stateShowBufferMask = 1;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_3)) {
+		_renderer->_stateShowBufferMask = 2;
+	} else if(InputManager::PressedKey(SB_KEYBOARD_4)) {
 		_renderer->_stateShowBufferMask = 3;
 	} else if(InputManager::PressedKey(SB_KEYBOARD_F5)) {
 		Profiler::EnableFrameCapture();
@@ -141,5 +146,7 @@ void Engine::OnInput() {
 		Profiler::ClearRecordings();
 	} else if(InputManager::PressedKey(SB_KEYBOARD_F7)) {
 		Profiler::DumpRecordings();
+	} else if(InputManager::PressedKey(SB_KEYBOARD_L)) {
+		SceneManagement::SaveScene("level1");
 	}
 }

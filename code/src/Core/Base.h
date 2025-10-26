@@ -10,17 +10,17 @@
 #endif
 
 namespace Sb {
-	// Internal types
 
+	// Internal aliases
 	using u8 = uint8_t;
-	using s8 = int8_t;
+	using i8 = int8_t;
 	using u16 = uint16_t;
-	using s16 = int16_t;
+	using i16 = int16_t;
 	using u32 = uint32_t;
-	using s32 = int32_t;
+	using i32 = int32_t;
 	using u64 = uint64_t;
-	using s64 = int64_t;
-	using uintPointer = uintptr_t;
+	using i64 = int64_t;
+	using u64ptr = uintptr_t;
 
 	static constexpr u32 _MAX_U32 = 4294967295;
 
@@ -35,6 +35,7 @@ namespace Sb {
 	constexpr u8 SB_DX12   = 1 << 3;
 	constexpr u8 SB_DIRTY_PROJECTION = 1 << 0;
 
+	// ECS
 	using Entity = u32;
 
 	// Input
@@ -176,118 +177,4 @@ namespace Sb {
 	constexpr u16 SB_KEYBOARD_RIGHT_ALT {346};
 	constexpr u16 SB_KEYBOARD_RIGHT_SUPER {347};
 	constexpr u16 SB_KEYBOARD_MENU {348};
-
-	constexpr float SB_PLANE[] {};
-
-	constexpr float SB_QUAD[] {
-		-1.0f, 1.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 0.0f,
-		1.0f, -1.0f, 1.0f, 0.0f,
-	
-		-1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, -1.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f
-	};
-
-	constexpr float SB_TEX_QUAD[] {
-		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-	};
-
-	constexpr float SB_CUBE[] = {
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-
-		-1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f
-	};
-
-	constexpr u32 SB_CUBE_INDICES[] = {
-		// Front Face (0-3)
-		0, 2, 3,  0, 1, 3,
-		// Back Face (4-7)
-		4, 6, 7,  4, 5, 7,
-		// Left Face (8-11)
-		8, 10, 11,  8, 9, 11,
-		// Right Face (12-15)
-		12, 14, 15,  12, 13, 15,
-		// Bottom Face (16-19)
-		16, 18, 19,  16, 17, 19,
-		// Top Face (20-23)
-		20, 22, 23,  20, 21, 23
-	};
-
-    constexpr float SB_CUBE_VERTICES[] = {
-		
-		// pos | norm | tex
-
-		// Front Face
-		-1, -1,  1.0,   0, 0, 1,   0, 0,  // 0
-		1, -1,  1.0,   0, 0, 1,   1, 0,  // 1
-		-1,  1,  1.0,   0, 0, 1,   0, 1,  // 2
-		1,  1,  1.0,   0, 0, 1,   1, 1,  // 3
-		// Back Face
-		-1, -1, -1.0,   0, 0, -1,  1, 0,  // 4
-		1, -1, -1.0,   0, 0, -1,  0, 0,  // 5
-		-1,  1, -1.0,   0, 0, -1,  1, 1,  // 6
-		1,  1, -1.0,   0, 0, -1,  0, 1,  // 7
-		// Left Face
-		-1, -1, -1.0,  -1, 0, 0,   0, 0,  // 4
-		-1, -1,  1.0,  -1, 0, 0,   1, 0,  // 0
-		-1,  1, -1.0,  -1, 0, 0,   0, 1,  // 6
-		-1,  1,  1.0,  -1, 0, 0,   1, 1,  // 2
-		// Right Face
-		1, -1,  1.0,   1, 0, 0,   0, 0,  // 1
-		1, -1, -1.0,   1, 0, 0,   1, 0,  // 5
-		1,  1,  1.0,   1, 0, 0,   0, 1,  // 3
-		1,  1, -1.0,   1, 0, 0,   1, 1,  // 7
-		// Bottom Face
-		-1, -1, -1.0,   0, -1, 0,  0, 0,  // 4
-		1, -1, -1.0,   0, -1, 0,  1, 0,  // 5
-		-1, -1,  1.0,   0, -1, 0,  0, 1,  // 0
-		1, -1,  1.0,   0, -1, 0,  1, 1,  // 1
-		// Top Face
-		-1,  1,  1.0,   0, 1, 0,   0, 0,  // 2
-		1,  1,  1.0,   0, 1, 0,   1, 0,  // 3
-		-1,  1, -1.0,   0, 1, 0,   0, 1,  // 6
-		1,  1, -1.0,   0, 1, 0,   1, 1   // 7
-	};
 }

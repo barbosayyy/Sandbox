@@ -2,33 +2,23 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
 #include "Core/Debug.h"
+#include "Input/Input.h"
 #include "ECS/Components.h"
 #include "ECS/Registry.h"
-#include "Input/Input.h"
 #include "Rendering/Light.h"
 #include "Rendering/Mesh.h"
-#include "Rendering/Primitive.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Resources/ResourceManagement.h"
-#include "stb_image/stb_image.h"
-#include "Rendering/Camera.h"
 #include "Rendering/Model.h"
 #include "ECS/EntityManagement.h"
 #include "Scene/SceneManagement.h"
 #include "Resources/ResourceManifest.h"
-
-#include <cmath>
-#include <string>
-
 #include "Game/Game.h"
+
+#include "stb_image/stb_image.h"
 
 #include "SbGameBase.h"
 #include "SbGameUI.h"
-
-// ### TEMP - !!TEST!!
-#include "ECS/Systems/RenderSystem.h"
 
 using namespace Sb;
 
@@ -64,6 +54,7 @@ void Game::Start() {
 	backpack = AddEntity();
 	cube = AddEntity();
 	skybox = AddEntity();
+	plane = AddEntity();
 
 	AddEntityComponent<TransformComponent>(cube);
 	AddEntityComponent<MeshComponent>(cube);
@@ -81,6 +72,18 @@ void Game::Start() {
 	AddEntityComponent<SkyboxComponent>(skybox);
 	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(13, 6, 14, 4, 5, 3);
 	
+	AddEntityComponent<TransformComponent>(plane);
+	AddEntityComponent<MeshComponent>(plane);
+	GetEntityComponent<MeshComponent>(plane).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_PLANE_ID);
+	GetEntityComponent<MeshComponent>(plane).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
+	GetEntityComponent<TransformComponent>(plane).position.y = -6;
+	GetEntityComponent<TransformComponent>(plane).scale.x = 10;
+	GetEntityComponent<TransformComponent>(plane).scale.z = 10;
+
+	parent0 = AddEntity();
+	parent1 = AddEntity();
+	child0 = AddEntity();
+	child1 = AddEntity();
 
 	// Scene graph test
 

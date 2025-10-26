@@ -8,6 +8,7 @@ namespace Sb {
     template<typename T>
     struct SparseSet{
     public:
+
         void Insert(u32 element, T data) {
             if(Contains(element)) {
                 Sb::Log::Warn("Collections; Sparse Set: Sparse already points to value in dense set");

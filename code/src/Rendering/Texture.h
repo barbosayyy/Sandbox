@@ -5,9 +5,9 @@ namespace Sb {
 
 	struct Texture{
 		u32 id;
-		s32 width;
-		s32 height;
-		s32 numChannels;
+		i32 width;
+		i32 height;
+		i32 numChannels;
 		TextureType type;
 		u32 assetID;
 		String name;

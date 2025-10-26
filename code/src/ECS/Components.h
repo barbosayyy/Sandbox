@@ -3,6 +3,7 @@
 #include "Rendering/Model.h"
 #include "Rendering/Cubemap.h"
 #include "Rendering/Light.h"
+#include "Core/Collections.h"
 
 namespace Sb {
 
@@ -14,10 +15,19 @@ namespace Sb {
 
 namespace Sb {
     struct ComponentBase {
+        // Returns underlying sparse index of entity in component storage
+        u32 GetSparseIndex() const { return sparseIndex; }
+    private:
         u32 sparseIndex;
-    };
 
+        template<typename T>
+        friend struct SparseSet;
+    };
+    
     struct AssetComponentBase : ComponentBase{
+        // Returns asset index
+        u32 GetAssetID() const { return assetID; }
+    private:
         u32 assetID;
     };
 

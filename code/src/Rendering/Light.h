@@ -32,7 +32,7 @@ namespace Sb {
     };
 
     // GL_MAX_UNIFORM_BLOCK_SIZE = 16384
-    struct LightUBOData {
+    struct alignas(16) LightUBOData {
         LightUBO lights[SB_RENDERER_MAX_NUM_LIGHTS];
         u32 numLights;
     };

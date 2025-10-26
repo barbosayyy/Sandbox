@@ -1,0 +1,388 @@
+entities:
+  - id: 0
+  - id: 1
+    Transform:
+      position: {x: 5, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Mesh:
+      id: 24
+  - id: 2
+    Transform:
+      position: {x: 2.01999855, y: -2, z: -1}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 0.5, y: 0.5, z: 0.5}
+    Mesh:
+      id: 3
+  - id: 3
+    Skybox:
+      textureFaceRightID: 13
+      textureFaceLeftID: 6
+      textureFaceTopID: 14
+      textureFaceBottomID: 4
+      textureFaceFrontID: 5
+      textureFaceBackID: 3
+  - id: 4
+    Transform:
+      position: {x: 0, y: -6, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 10, y: 1, z: 10}
+    Mesh:
+      id: 6
+  - id: 5
+    Transform:
+      position: {x: 5, y: 5, z: 5}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Mesh:
+      id: 3
+    Hierarchy:
+      parent: 0
+      children: {id: 7, id: 8}
+  - id: 6
+    Transform:
+      position: {x: -5, y: -5, z: -5}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Mesh:
+      id: 3
+  - id: 7
+    Transform:
+      position: {x: 0, y: -15, z: 5}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Mesh:
+      id: 3
+    Hierarchy:
+      parent: 5
+      children: {}
+  - id: 8
+    Transform:
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Mesh:
+      id: 3
+    Hierarchy:
+      parent: 5
+      children: {}
+  - id: 9
+    Transform:
+      position: {x: 1.86000001, y: 0.560000002, z: 2.75999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.74000001, g: 0.860000014, b: 0.879999995}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 10
+    Transform:
+      position: {x: 0.540000021, y: 1.94000006, z: 2.57999992}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.61500001, g: 0.649999976, b: 0.86500001}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 11
+    Transform:
+      position: {x: -2.75999999, y: 0.5, z: -1.62}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.699999988, g: 0.995000005, b: 0.845000029}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 12
+    Transform:
+      position: {x: 2.75999999, y: 1.27999997, z: -0.779999971}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.835000038, g: 0.699999988, b: 0.960000038}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 13
+    Transform:
+      position: {x: 2.27999997, y: -3.0999999, z: 1.79999995}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.579999983, g: 0.810000002, b: 0.860000014}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 14
+    Transform:
+      position: {x: 2.4000001, y: -2.61999989, z: -2.75999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.774999976, g: 0.610000014, b: 0.595000029}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 15
+    Transform:
+      position: {x: 1.08000004, y: -2.01999998, z: -0.180000007}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.574999988, g: 0.754999995, b: 0.975000024}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 16
+    Transform:
+      position: {x: 2.03999996, y: -0.639999986, z: -1.25999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.649999976, g: 0.639999986, b: 0.610000014}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 17
+    Transform:
+      position: {x: -2.94000006, y: -0.100000001, z: 2.46000004}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.625, g: 0.584999979, b: 0.654999971}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 18
+    Transform:
+      position: {x: 2.6400001, y: 0.800000012, z: 2.75999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.805000007, g: 0.620000005, b: 0.584999979}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 19
+    Transform:
+      position: {x: -3, y: 1.51999998, z: 1.13999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.595000029, g: 0.819999993, b: 0.930000007}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 20
+    Transform:
+      position: {x: 2.22000003, y: -0.939999998, z: -1.91999996}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.63499999, g: 0.960000038, b: 0.659999967}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 21
+    Transform:
+      position: {x: -2.88000011, y: -3.4000001, z: -1.32000005}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.730000019, g: 0.720000029, b: 0.86500001}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 22
+    Transform:
+      position: {x: -1.38, y: 1.10000002, z: -1.01999998}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.86500001, g: 0.625, b: 0.595000029}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 23
+    Transform:
+      position: {x: 1.55999994, y: 1.34000003, z: -2.03999996}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.985000014, g: 0.75, b: 0.870000005}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 24
+    Transform:
+      position: {x: -0.779999971, y: -1.05999994, z: -3}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.535000026, g: 0.654999971, b: 0.789999962}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 25
+    Transform:
+      position: {x: -0.479999989, y: -2.5, z: -2.27999997}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.519999981, g: 0.995000005, b: 0.930000007}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 26
+    Transform:
+      position: {x: 2.88000011, y: -2.61999989, z: -2.0999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.870000005, g: 0.504999995, b: 0.75}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 27
+    Transform:
+      position: {x: -2.4000001, y: -2.44000006, z: -2.4000001}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.629999995, g: 0.595000029, b: 0.86500001}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 28
+    Transform:
+      position: {x: -0.180000007, y: -1.05999994, z: -1.25999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.754999995, g: 0.63499999, b: 0.819999993}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 29
+    Transform:
+      position: {x: -1.55999994, y: -2.07999992, z: 1.13999999}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.620000005, g: 0.574999988, b: 0.860000014}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 30
+    Transform:
+      position: {x: -1.08000004, y: 0.0799999982, z: 1.62}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.904999971, g: 0.709999979, b: 0.88499999}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 31
+    Transform:
+      position: {x: -0.959999979, y: 0.200000003, z: -2.46000004}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.600000024, g: 0.639999986, b: 0.879999995}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 32
+    Transform:
+      position: {x: 0.660000026, y: 1.03999996, z: 1.62}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.735000014, g: 0.814999998, b: 0.519999981}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 33
+    Transform:
+      position: {x: -0.239999995, y: 1.82000005, z: 0.419999987}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.514999986, g: 0.519999981, b: 0.63499999}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 34
+    Transform:
+      position: {x: 0.540000021, y: 1.27999997, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.659999967, g: 0.769999981, b: 0.800000012}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 35
+    Transform:
+      position: {x: -2.0999999, y: -3.22000003, z: 2.70000005}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.850000024, g: 0.850000024, b: 0.519999981}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 36
+    Transform:
+      position: {x: 0.959999979, y: -1.17999995, z: -1.86000001}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.875, g: 0.519999981, b: 0.709999979}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 37
+    Transform:
+      position: {x: -3, y: 1.34000003, z: 2.16000009}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.524999976, g: 0.5, b: 0.610000014}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 38
+    Transform:
+      position: {x: 1.74000001, y: -2.07999992, z: -1.20000005}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.784999967, g: 0.555000007, b: 0.889999986}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 39
+    Transform:
+      position: {x: -2.70000005, y: -0.460000008, z: -0.600000024}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.850000024, g: 0.930000007, b: 0.774999976}
+      intensity: 0.5
+      type: 0
+      range: 1
+  - id: 40
+    Transform:
+      position: {x: 1.86000001, y: 1.03999996, z: 1.74000001}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    Light:
+      color: {r: 0.909999967, g: 0.909999967, b: 0.860000014}
+      intensity: 0.5
+      type: 0
+      range: 1

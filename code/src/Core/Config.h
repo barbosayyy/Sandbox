@@ -9,8 +9,8 @@ namespace Sb {
     constexpr u16 DEFAULT_WINDOW_HEIGHT = 360;
     constexpr u16 DEFAULT_VIEWPORT_WIDTH = DEFAULT_WINDOW_WIDTH;
     constexpr u16 DEFAULT_VIEWPORT_HEIGHT = DEFAULT_WINDOW_HEIGHT;
-    constexpr s16 DEFAULT_VIEWPORT_X = 0;
-    constexpr s16 DEFAULT_VIEWPORT_Y = 0;
+    constexpr i16 DEFAULT_VIEWPORT_X = 0;
+    constexpr i16 DEFAULT_VIEWPORT_Y = 0;
     
     constexpr bool SB_RENDERER_VSYNC = FALSE;
     constexpr bool SB_RENDERER_TRIPLE_BUFFERING = TRUE;
@@ -36,7 +36,7 @@ namespace Sb {
 
     struct Config{
         Config();
-        s16 windowWidth;
-        s16 windowHeight;
+        i16 windowWidth;
+        i16 windowHeight;
     };
 };
