@@ -6,6 +6,8 @@ add_library(Sandbox_Engine STATIC
     Core/Base.h
     Core/Types.h
     Core/Types.cpp
+    Core/Crypto.h
+    Core/Crypto.cpp
     Core/Collections.h
     Core/Collections.cpp
     Core/Singleton.h

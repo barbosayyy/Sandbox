@@ -56,12 +56,10 @@ namespace Sb {
             template<typename T>
             std::vector<T>& GetComponentStoreDense() { return std::get<SparseSet<T>>(_componentStore).GetDense(); }
 
-#ifdef SB_DEBUG
             template<typename T>
             std::vector<u32>& GetComponentStoreSparse() { return std::get<SparseSet<T>>(_componentStore).GetSparse(); }
             template<typename T>
             SparseSet<T>& GetComponentSparseSet() { return std::get<SparseSet<T>>(_componentStore); }
-#endif
 
             CoreComponentStore& GetComponentStore() { return _componentStore; }
 

@@ -33,7 +33,7 @@ namespace Sb {
                 _sparse[_dense.back().sparseIndex] = denseId;
                 _dense.pop_back();
                 _sparse[element] = _MAX_U32;
-#ifdef SB_DEBUG
+#ifdef SB_BUILD_DEBUG
                 Log::Info(typeid(T).name(), " SparseSet Removed element ", element);
 #endif
             }
@@ -53,10 +53,10 @@ namespace Sb {
             _sparse.clear();
         }
 
-#ifdef SB_DEBUG
         std::vector<T>& GetDense() { return _dense; };
         std::vector<u32>& GetSparse() { return _sparse; };
-
+        
+#ifdef SB_BUILD_DEBUG
         void PrintSparse() { for(int i = 0; i < _sparse.size(); i++) { Log::Print(typeid(T).name(), " Sparse at ", i, " = ", _sparse.at(i)); }};
         void PrintDenseSize() { Log::Print(typeid(T).name(), " Dense size: ", _dense.size()); };
 #endif

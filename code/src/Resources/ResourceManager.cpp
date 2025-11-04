@@ -13,6 +13,8 @@
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
+#include <cstdlib>
+#include <filesystem>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
@@ -233,9 +235,14 @@ namespace Sb {
         ResourceManager::ResourceManager() : _faceCount(0), _loadedMetadataChunkIndex(0) {
             _assetMetadataCache.reserve(SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE);
             
+            // WriteCommonManifest();
             WriteResourceManifest();
+
             // Force first metadata chunk load
-            LoadMetadata(SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE);
+            LoadCommonMetadata();
+            if(!LoadResourceMetadata(SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE)) {
+                // TODO throw engine subsystem error here
+            }
         }
 
         // TODO: Any reason for Manifest ID and Runtime reference ID to be different?
@@ -253,7 +260,7 @@ namespace Sb {
             // Load model from manifest path
             else {
                 if(manifestID < SB_RESOURCE_MANIFEST_MAX_ASSET_ID) {
-                    LoadMetadata(manifestID);
+                    LoadResourceMetadata(manifestID);
                     Model model;
                     std::vector<Texture> loadedTextures;
 
@@ -301,7 +308,7 @@ namespace Sb {
 
             // Load texture from manifest path
             else {
-                LoadMetadata(manifestID);
+                LoadResourceMetadata(manifestID);
                 if(_assetMetadataCache.count(manifestID) > 0) {
 
                     // TODO provide wrap method
@@ -330,8 +337,8 @@ namespace Sb {
                 return &_shaderCache[sID].shader;
             }
             else {
-                LoadMetadata(vertexManifestID);
-                LoadMetadata(fragmentManifestID);
+                LoadResourceMetadata(vertexManifestID);
+                LoadResourceMetadata(fragmentManifestID);
                 if(_assetMetadataCache.count(vertexManifestID) > 0 && _assetMetadataCache.count(fragmentManifestID) > 0) {
                     Shader shader(_assetMetadataCache[vertexManifestID].path.c_str(), _assetMetadataCache[fragmentManifestID].path.c_str());
                     shader._assetID.vertexManifestID = sID.vertexManifestID;
@@ -464,14 +471,25 @@ namespace Sb {
             return rData;
         }
 
-        bool ResourceManager::LoadMetadata(u32 targetLoadPtr) {
+        bool ResourceManager::LoadCommonMetadata() {
+            return true;
+        }
+
+        bool ResourceManager::LoadResourceMetadata(u32 targetLoadPtr) {
 
             // No loaded metadata for asset - Load whole metadata
             if(!(_assetMetadataCache.count(targetLoadPtr) > 0)) {
                 
                 u32 targetCurrentLoadNum;
+                YAML::Node manifestAssetsNode;
 
-                YAML::Node manifestAssetsNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH)["assets"];
+                if(std::filesystem::exists(SB_RESOURCE_MANIFEST_PATH)) {
+                    manifestAssetsNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH)["assets"];
+                }
+                else {
+                    Log::Error("ResourceManager: Failed to find manifest file");
+                    return false;
+                }
 
                 manifestSize = manifestAssetsNode.size();
 
@@ -494,7 +512,7 @@ namespace Sb {
                 // TODO Implement load size limit
                 _loadedMetadataChunkIndex = targetCurrentLoadNum;
                 if(!(_assetMetadataCache.count(targetLoadPtr) > 0) && manifestSize > _loadedMetadataChunkIndex) {
-                    return LoadMetadata(targetLoadPtr);
+                    return LoadResourceMetadata(targetLoadPtr);
                 }
                 else if(!(_assetMetadataCache.count(targetLoadPtr) > 0)) {
                     return false;

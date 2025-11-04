@@ -2,13 +2,6 @@
 
 #include <cstdint>
 
-// Build system
-#ifdef SB_BUILD_DEBUG
-	#define SB_DEBUG
-#elif SB_BUILD_RELEASE
-	#define SB_RELEASE
-#endif
-
 namespace Sb {
 
 	// Internal aliases

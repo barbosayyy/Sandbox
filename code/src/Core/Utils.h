@@ -7,7 +7,6 @@
 
 #include <string>
 #include <filesystem>
-#include <random>
 
 namespace Sb {
 
@@ -23,14 +22,20 @@ namespace Sb {
 	class YamlUtil{
 	private:
 		
-	public:	
+	public:
 		static YAML::Node GetNode(const char* filePath, const char* nodeName);
 	};
 	
 	class Random{
 	public:
-		// Inclusive
+		// Range inclusive
 		static int GetRange(int from, int to);
 	};
+
+	class StringParser {
+	public:
+		static u64 HexToU64(const String& string);
+	};
+
 }
 

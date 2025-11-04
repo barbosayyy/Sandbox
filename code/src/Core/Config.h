@@ -4,6 +4,8 @@
 #include "Core/Base.h"
 #include <string>
 
+// Sandbox Engine configuration 
+
 namespace Sb {
     constexpr u16 DEFAULT_WINDOW_WIDTH = 640;
     constexpr u16 DEFAULT_WINDOW_HEIGHT = 360;
@@ -17,13 +19,10 @@ namespace Sb {
     
     constexpr u8 SB_RENDERER_MAX_NUM_LIGHTS = 255;
     
-    #ifdef SB_DEBUG
-    const std::string SB_RESOURCE_FOLDER_PATH = "..\\..\\resources";
-    const std::string SB_RESOURCE_MANIFEST_PATH = "..\\..\\resources\\resource_manifest.yaml";
-    #else
-        const std::string SB_RESOURCE_FOLDER_PATH = "resources";
-        const std::string SB_RESOURCE_MANIFEST_PATH = "resources\\resource_manifest.yaml";
-    #endif
+    const std::string SB_RESOURCE_FOLDER_PATH = "./resources";
+    const std::string SB_RESOURCE_MANIFEST_PATH = "./resources/resource_manifest.yaml";
+    const std::string SB_COMMON_RESOURCE_FOLDER_PATH = "./common";
+    const std::string SB_COMMON_RESOURCE_MANIFEST_PATH = "./common/common_manifest.yaml";
 
     constexpr u32 SB_RESOURCE_MANIFEST_MESH_CUBE_ID = _MAX_U32-1;
     constexpr u32 SB_RESOURCE_MANIFEST_MESH_PLANE_ID = _MAX_U32-2;

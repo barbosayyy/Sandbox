@@ -12,7 +12,7 @@ namespace Sb {
     static void RemoveEntityComponent(u32 entityID) { ECS::Registry::GetInstance().RemoveComponent<T>(entityID); }
     template<typename T>
     static T& GetEntityComponent(u32 entityID) { return ECS::Registry::GetInstance().GetComponent<T>(entityID); }
-#ifdef SB_DEBUG
+#ifdef SB_BUILD_DEBUG
     template<typename T>
     static void PrintComponentStore() { ECS::Registry::GetInstance().GetComponentSparseSet<T>().PrintDenseSize(); ECS::Registry::GetInstance().GetComponentSparseSet<T>().PrintSparse(); }
 #endif

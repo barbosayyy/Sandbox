@@ -132,8 +132,9 @@ namespace Sb {
             std::unordered_map<u32, AssetMetadata> _assetMetadataCache;
             
             u32 _faceCount;
-        
-            bool LoadMetadata(u32 targetLoadPtr);
+
+            bool LoadCommonMetadata();
+            bool LoadResourceMetadata(u32 targetLoadPtr);
             u32 _loadedMetadataChunkIndex;
             u32 manifestSize;
         };

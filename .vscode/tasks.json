@@ -3,7 +3,7 @@
         {
             "type": "shell",
             "label": "Sandbox: Clean build",
-            "command": "rm -r ${workspaceFolder}/SampleProject/build",
+            "command": "rm -r ${workspaceFolder}/build",
             "problemMatcher": [],
             "detail": "Clean the Sandbox build folder"
         },
@@ -31,7 +31,14 @@
         {
             "type": "shell",
             "label": "Sandbox: Build Editor & Game",
-            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja; cmake --build ${workspaceFolder}/build --config Debug --target all",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja --DCMAKE_BUILD_TYPE=Debug; cmake --build ${workspaceFolder}/build --config Debug --target all",
+            "problemMatcher": [],
+            "detail": "Build Editor and Game executables"
+        },
+        {
+            "type": "shell",
+            "label": "Sandbox: Build Editor & Game Release",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja -DCMAKE_BUILD_TYPE=Release; cmake --build ${workspaceFolder}/build --config Release --target all",
             "problemMatcher": [],
             "detail": "Build Editor and Game executables"
         },

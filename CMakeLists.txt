@@ -72,22 +72,21 @@ message("")
 
 # Main Source
     add_subdirectory(code/src)
+    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/smhasher)
     add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
-set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject/build)
-set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor/build/)
+set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject)
+set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor)
 
 # Game build configuration
 
 if(BUILD_GAME)
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        set(CMAKE_BINARY_DIR ${CM_SANDBOX_GAME_DIR}/release)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR}/release)
-    else()
-        set(CMAKE_BINARY_DIR ${CM_SANDBOX_GAME_DIR}/debug)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR}/debug)
-    endif()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
 
     # Temp - Set on project creation
     set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
@@ -102,6 +101,7 @@ if(BUILD_GAME)
         PRIVATE Sandbox_App
 
         # Third Parties
+        PUBLIC smhasher
         PUBLIC imgui
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/glew32.lib
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/assimp-vc143-mtd.lib
@@ -110,9 +110,12 @@ if(BUILD_GAME)
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/yaml-cppd.lib
     )
 
-    file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CMAKE_BINARY_DIR})
-    file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_BINARY_DIR})
-    # file(COPY ${CM_SANDBOX_RESOURCES_DIR} DESTINATION ${CMAKE_BINARY_DIR})
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
+    else()
+        file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG})
+    endif()
+    file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CM_SANDBOX_GAME_DIR})
 
     # Post-config scripts
 
@@ -134,13 +137,12 @@ endif()
 # Engine build configuration
 
 if(BUILD_EDITOR)
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        set(CMAKE_BINARY_DIR ${CM_SANDBOX_EDITOR_DIR}/release)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR}/release)
-    else()
-        set(CMAKE_BINARY_DIR ${CM_SANDBOX_EDITOR_DIR}/debug)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR}/debug)
-    endif()
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_EDITOR_DIR}/release)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_EDITOR_DIR}/debug)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_EDITOR_DIR}/release)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_EDITOR_DIR}/debug)
 
     add_subdirectory(code/editor)
     add_executable(SandboxEditor code/editor/main.cpp)
@@ -151,6 +153,7 @@ if(BUILD_EDITOR)
         PRIVATE Sandbox_Editor
 
         # Third Parties
+        PUBLIC smhasher
         PUBLIC imgui
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/glew32.lib
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/assimp-vc143-mtd.lib
@@ -159,8 +162,12 @@ if(BUILD_EDITOR)
         PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/yaml-cppd.lib
     )
 
-    file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CMAKE_BINARY_DIR})
-    file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_BINARY_DIR})
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
+    else()
+    file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG})
+    endif()
+    file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CM_SANDBOX_EDITOR_DIR})
 endif()
 
 # ---

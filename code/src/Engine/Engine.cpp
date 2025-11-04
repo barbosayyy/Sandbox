@@ -22,11 +22,12 @@ Engine::Engine() : _uiRenderEnabled(true){
 
 	Log::Info("Starting Sandbox application backend");
 
-#ifdef SB_DEBUG
+#ifdef SB_BUILD_DEBUG
 	Log::SetLogLevel(Log::Level::DEBUG);
-#elif SB_RELEASE
-	Log::SetLogLevel(Log::Level::WARN);
+#elif SB_BUILD_RELEASE
+	Log::SetLogLevel(Log::Level::WARNING);
 #endif
+
 	SetRenderer(Renderer::GetInstance());
 	SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
 	SetECSRegistry(ECS::Registry::GetInstance());
@@ -96,13 +97,11 @@ void Engine::Update() {
 		_renderer->GetRenderCamera()->GenerateProjection(_renderer->GetViewportWidth(), _renderer->GetViewportHeight());
 		_renderer->ClearStateDirtyFlags(SB_DIRTY_PROJECTION);
 	}
-
 }
 
 void Engine::Render() {
 	Profiler::StartRecord("Render");
 	_renderer->OnBeginFrame();
-
 	for(std::unique_ptr<RenderPass>& pass : _renderer->GetRenderpasses()) {
 		pass->Execute();
 	}
@@ -112,7 +111,8 @@ void Engine::LateRender() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
 	Profiler::StopRecord("Render");
-	// Engine UI
+	
+	// Game-side Engine UI
 	if(_uiRenderEnabled)
 		_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
 	_renderer->GetImGuiSbContext().RenderEnd();

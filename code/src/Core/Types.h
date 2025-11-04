@@ -12,8 +12,6 @@
 
 namespace Sb {
 
-	// Enums
-
 	enum class ImageFormat {
 		JPG, PNG
 	};
@@ -24,8 +22,6 @@ namespace Sb {
 		NORMAL 		= 2,
 		EMISSIVE 	= 3
 	};
-
-	// Objects
 
 	class String
 	{
@@ -40,7 +36,10 @@ namespace Sb {
 		void append(String& str);
 		void append(const std::string& str);
 		char& at(int index);
+		char* data() {return _string.data();};
 		bool empty();
+		size_t size() const {return _string.size();};
+		const String substr(size_t off, size_t count) const {return _string.substr(off, count);};
 		
 		String operator+(const String& str) const {
 			String temp;
@@ -123,5 +122,13 @@ namespace Sb {
 	struct DefaultMesh {
 		std::vector<Vertex> vertices;
         std::vector<u32> indices;
+    };
+
+	struct SbGUID {
+        u64 h1;
+        u64 h2;
+        bool operator == (const SbGUID& other) {
+            return h1 == other.h1 && h2 == other.h2;
+        }
     };
 };

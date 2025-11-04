@@ -2,6 +2,7 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
 #include "Core/Debug.h"
+#include "Core/Utils.h"
 #include "Input/Input.h"
 #include "ECS/Components.h"
 #include "ECS/Registry.h"

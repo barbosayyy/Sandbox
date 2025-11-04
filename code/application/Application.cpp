@@ -29,10 +29,10 @@ void Application::Run() {
 
 	while(sbEngine.Validate() && !this->ShouldStop()) {
 		sbEngine.Update();
-		
 		game->Update();
-			
+
 		sbEngine.Render();
+
 		sbEngine.LateRender();
 	}
 

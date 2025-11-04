@@ -19,11 +19,13 @@ namespace SbEditor {
 
         while(sbEngine.Validate() && !this->ShouldStop()) {
             sbEngine.Update();
-            
             this->Update();
-            this->Render();
 
             sbEngine.Render();
+
+            this->Render();
+            
+            sbEngine.LateRender();
         }
 
         sbEngine.Stop();

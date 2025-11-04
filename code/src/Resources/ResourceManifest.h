@@ -2,7 +2,7 @@
 
 namespace Sb {
     namespace ResourceManagement {
+        void WriteCommonManifest();
         void WriteResourceManifest();
-        void LoadResourceManifest();
     }
 }

@@ -45,7 +45,8 @@ GLuint Shader::Load(const char* vertexPath, const char* fragmentPath)
 
 void Shader::Use()
 {
-	glUseProgram(this->_shader);
+	if(this->_shader)
+		glUseProgram(this->_shader);
 }
 
 GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
