@@ -43,7 +43,7 @@ namespace Sb {
 			}
 		}
 
-		static String LogLevelToString(Level level) {
+		static const String LogLevelToString(Level level) {
 			switch(level) {
 				case(Level::DEBUG):
 					return ("Debug");

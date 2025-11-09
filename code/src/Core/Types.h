@@ -36,36 +36,28 @@ namespace Sb {
 		void append(String& str);
 		void append(const std::string& str);
 		char& at(int index);
-		char* data() {return _string.data();};
+		char* data() {return this->_string.data();};
 		bool empty();
-		size_t size() const {return _string.size();};
-		const String substr(size_t off, size_t count) const {return _string.substr(off, count);};
+		size_t size() const {return this->_string.size();};
+		const String substr(size_t off, size_t count) const {return this->_string.substr(off, count);};
 		
 		String operator+(const String& str) const {
-			String temp;
-			temp._string = this->_string + str._string;
-			return temp;
+			return this->_string + str._string;
 		}
 		String operator+(const char* str) const {
-			String temp;
-			temp._string = this->_string + str;
-			return temp;
+			return this->_string + str;
 		}
 		String operator+=(const String& str) {
-			this->_string += str._string;
-			return _string;
+			return this->_string += str._string;
 		}
 		String operator+=(const int& value) {
-			this->_string += std::to_string(value);
-			return _string;
+			return this->_string += std::to_string(value);
 		}
 		String operator+(char value){
-			this->_string = _string + value;
-			return _string;
+			return this->_string = _string + value;
 		}
 		String operator+=(char value){
-			this->_string += value;
-			return _string;
+			return this->_string += value;
 		}
 		bool operator==(const String& str) const{
 			return this->_string == str._string;
@@ -73,21 +65,17 @@ namespace Sb {
 		bool operator!=(const String& str) const{
 			return this->_string != str._string;
 		}
-		friend std::ostream& operator<<(std::ostream& os, const String& str) {
-			os << str._string;
-			return os;
-		}
 
 		const char* c_str() const {
-			return _string.c_str();
+			return this->_string.c_str();
 		}
 
 		operator const char*() const {
-			return _string.c_str();
+			return this->_string.c_str();
 		}
 
 		operator std::string() const{
-			return _string;
+			return this->_string;
 		}
 	};
 
@@ -127,7 +115,7 @@ namespace Sb {
 	struct SbGUID {
         u64 h1;
         u64 h2;
-        bool operator == (const SbGUID& other) {
+        bool operator == (const SbGUID& other) const {
             return h1 == other.h1 && h2 == other.h2;
         }
     };

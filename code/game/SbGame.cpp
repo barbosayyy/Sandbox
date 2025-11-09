@@ -9,6 +9,7 @@
 #include "Rendering/Light.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
+#include "Resources/Primitive.h"
 #include "Resources/ResourceManagement.h"
 #include "Rendering/Model.h"
 #include "ECS/EntityManagement.h"
@@ -59,27 +60,30 @@ void Game::Start() {
 
 	AddEntityComponent<TransformComponent>(cube);
 	AddEntityComponent<MeshComponent>(cube);
-	GetEntityComponent<MeshComponent>(cube).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
-	txtr = ResourceManagement::LoadTexture(15, TextureType::DIFFUSE);
+	GetEntityComponent<MeshComponent>(cube).model = ResourceManagement::LoadModel(Primitive::GetCube());
+	txtr = ResourceManagement::LoadTexture("assets/d_container.png", TextureType::DIFFUSE);
 	GetEntityComponent<MeshComponent>(cube).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
 	GetEntityComponent<TransformComponent>(cube).position = vec3(0, -2, -1);
 	GetEntityComponent<TransformComponent>(cube).scale = vec3(0.5f);
 
 	AddEntityComponent<TransformComponent>(backpack);
 	AddEntityComponent<MeshComponent>(backpack);
-	GetEntityComponent<MeshComponent>(backpack).model = ResourceManagement::LoadModel(24);
+	GetEntityComponent<MeshComponent>(backpack).model = ResourceManagement::LoadModel("model/backpack.obj");
 	GetEntityComponent<TransformComponent>(backpack).position.x = 5;
 	
 	AddEntityComponent<SkyboxComponent>(skybox);
-	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(13, 6, 14, 4, 5, 3);
+	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(
+		"assets/cubemap/right.jpg", "assets/cubemap/left.jpg",
+		"assets/cubemap/top.jpg", "assets/cubemap/bot.jpg",
+		"assets/cubemap/front.jpg", "assets/cubemap/back.jpg");
 	
-	AddEntityComponent<TransformComponent>(plane);
-	AddEntityComponent<MeshComponent>(plane);
-	GetEntityComponent<MeshComponent>(plane).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_PLANE_ID);
-	GetEntityComponent<MeshComponent>(plane).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
-	GetEntityComponent<TransformComponent>(plane).position.y = -6;
-	GetEntityComponent<TransformComponent>(plane).scale.x = 10;
-	GetEntityComponent<TransformComponent>(plane).scale.z = 10;
+	// AddEntityComponent<TransformComponent>(plane);
+	// AddEntityComponent<MeshComponent>(plane);
+	// GetEntityComponent<MeshComponent>(plane).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_PLANE_ID);
+	// GetEntityComponent<MeshComponent>(plane).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
+	// GetEntityComponent<TransformComponent>(plane).position.y = -6;
+	// GetEntityComponent<TransformComponent>(plane).scale.x = 10;
+	// GetEntityComponent<TransformComponent>(plane).scale.z = 10;
 
 	parent0 = AddEntity();
 	parent1 = AddEntity();

@@ -1,5 +1,6 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
+#include "Core/Crypto.h"
 #include "Core/Types.h"
 #include "Core/Utils.h"
 #include "Core/Debug.h"
@@ -15,6 +16,7 @@
 #include "assimp/postprocess.h"
 #include <cstdlib>
 #include <filesystem>
+#include <smhasher/MurmurHash3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
 
@@ -233,73 +235,130 @@ namespace Sb {
             }
 
         ResourceManager::ResourceManager() : _faceCount(0), _loadedMetadataChunkIndex(0) {
-            _assetMetadataCache.reserve(SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE);
-            
             // WriteCommonManifest();
-            WriteResourceManifest();
+            if(!WriteResourceManifest()) {
 
-            // Force first metadata chunk load
-            LoadCommonMetadata();
-            if(!LoadResourceMetadata(SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE)) {
+            }
+            if(!LoadCommonMetadata()) {
+                // TODO throw engine subsystem error here
+            }
+            if(!LoadResourceMetadata()) {
                 // TODO throw engine subsystem error here
             }
         }
 
         // TODO: Any reason for Manifest ID and Runtime reference ID to be different?
-        Model* ResourceManager::LoadModel(u32 manifestID) {
+        Model* ResourceManager::LoadModel(const std::string& assetPath) {
+            SbGUID guid = {};
+            Model model;
+            if(assetPath.rfind("common/", 0) == 0 || assetPath.rfind("/common/", 0) == 0) {
+                guid = Crypto::GetGUIDFromHashedInput(assetPath, GUIDDomain::Engine);
+            }
+            else {
+                u32 hashedAsset = Crypto::GetU32HashFromPath(assetPath);
+                guid = _pathHashToGUID[hashedAsset];
+            }
+
+            if(!(_modelCache.count(guid) > 0)){
+                _modelCache.emplace(guid, ModelCacheData{1, model});
+            }
+            else{
+                _modelCache[guid].refCount++;
+                return &_modelCache[guid].model;
+            }
+
+            /* NEW IMPLEMENTATION */
+/*
+            if(_assetMetadataCache.count(assetPath) > 0) {
+               const SbGUID assetGUID = _assetMetadataCache[assetPath];
+                if(_modelCache.count(assetGUID) > 0) {
+                    _modelCache[assetGUID].refCount++;
+
+                    return &_modelCache[assetGUID].model;
+                }
+                else {
+                    Model model;
+                    std::vector<Texture> loadedTextures;
+                    Assimp::Importer importer;
+                    const String path = _assetMetadataCache[assetGUID].path;
+                    const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+                
+                    if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
+                        Log::Warn("Assimp Importer: ", importer.GetErrorString());
+                        return nullptr;
+                    }
+                    Log::Info("Assimp Importer: Importing model ", path);
+                    String trimmedPath = std::string(path).substr(0, std::string(path).find_last_of("\\"));
+                
+                    Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
+                    
+                    AssimpProcessNode(scene->mRootNode, scene, trimmedPath, model, loadedTextures);
+
+                    model._assetID = 0;
+
+                    _modelCache.emplace(assetGUID, ModelCacheData{1, model});
+                    
+                    return &_modelCache[assetGUID].model;
+                }
+            }
+*/
+
+            // ------------------------------------------------------------------------------------
+            /* OLD CODE */
 
             // This must be done for default meshes, these could have predetermined indexes in the manifest
             //      _meshes.push_back(Mesh(defaultMesh.vertices, defaultMesh.indices, Material()))
 
             // Find model in cache and return reference
-            if(_modelCache.count(manifestID) > 0) {
-                _modelCache[manifestID].refCount++;
 
-                return &_modelCache[manifestID].model;
-            }
+            // ---
+
+            // Load asset by path - 
             // Load model from manifest path
-            else {
-                if(manifestID < SB_RESOURCE_MANIFEST_MAX_ASSET_ID) {
-                    LoadResourceMetadata(manifestID);
-                    Model model;
-                    std::vector<Texture> loadedTextures;
+            
+            // else {
+            //     if(manifestID < SB_RESOURCE_MANIFEST_MAX_ASSET_ID) {
+            //         LoadResourceMetadata(manifestID);
+            //         Model model;
+            //         std::vector<Texture> loadedTextures;
 
-                    if(_assetMetadataCache.count(manifestID) > 0) {
+            //         if(_assetMetadataCache.count(manifestID) > 0) {
 
-                        Assimp::Importer importer;
-                        const String path = _assetMetadataCache[manifestID].path;
-                        const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+            //             Assimp::Importer importer;
+            //             const String path = _assetMetadataCache[manifestID].path;
+            //             const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
                     
-                        if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-                            Log::Warn("Assimp Importer: ", importer.GetErrorString());
-                            return nullptr;
-                        }
-                        Log::Info("Assimp Importer: Importing model ", path);
-                        String trimmedPath = std::string(path).substr(0, std::string(path).find_last_of("\\"));
+            //             if(!scene || scene->mFlags || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
+            //                 Log::Warn("Assimp Importer: ", importer.GetErrorString());
+            //                 return nullptr;
+            //             }
+            //             Log::Info("Assimp Importer: Importing model ", path);
+            //             String trimmedPath = std::string(path).substr(0, std::string(path).find_last_of("\\"));
                     
-                        Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
+            //             Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
                         
-                        AssimpProcessNode(scene->mRootNode, scene, trimmedPath, model, loadedTextures);
+            //             AssimpProcessNode(scene->mRootNode, scene, trimmedPath, model, loadedTextures);
 
-                        model._assetID = manifestID;
+            //             model._assetID = manifestID;
 
-                        _modelCache.emplace(manifestID, ModelCacheData{1, model});
+            //             _modelCache.emplace(manifestID, ModelCacheData{1, model});
                         
-                        return &_modelCache[manifestID].model;
-                    }
-                }
-                else {
-                    Model model;
-                    DefaultMesh mesh = GetPrimitiveMeshByID(manifestID);
-                    model.GetMeshes().push_back(Mesh(mesh.vertices, mesh.indices, Material()));
-                    _modelCache.emplace(manifestID, ModelCacheData{1, model});
-                    return &_modelCache[manifestID].model;
-                }
+            //             return &_modelCache[manifestID].model;
+            //         }
+            //     }
+
+                // DEFAULT MESH LOADING
+                // else {
+                //     Model model;
+                //     DefaultMesh mesh = GetPrimitiveMeshByID(manifestID);
+                //     model.GetMeshes().push_back(Mesh(mesh.vertices, mesh.indices, Material()));
+                //     _modelCache.emplace(manifestID, ModelCacheData{1, model});
+                //     return &_modelCache[manifestID].model;
+                // }
                 return nullptr;
-            }
         }
 
-        Texture* ResourceManager::LoadTexture(u32 manifestID, TextureType type) {
+        /*Texture* ResourceManager::LoadTexture(u32 manifestID, TextureType type) {
             if(_textureCache.count(manifestID) > 0) {
                 _textureCache[manifestID].refCount++;
 
@@ -470,58 +529,67 @@ namespace Sb {
         
             return rData;
         }
-
+}*/
         bool ResourceManager::LoadCommonMetadata() {
+
+            if(!std::filesystem::exists(SB_RESOURCE_COMMON_FOLDER_PATH)) {
+                Log::Error("ResourceManager: Failed to load engine assets");
+                return false;
+            }
+
+            String buffer = "";
+            u32 insertedIndex = _assetPaths.size();
+            u32 originalSize = insertedIndex;
+
+            // Register common engine assets into access cache
+            for(auto dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_COMMON_FOLDER_PATH)) {
+                buffer = dirEntry.path().string();
+                const SbGUID hashedGuid = Crypto::GetGUIDFromHashedInput(buffer, GUIDDomain::Engine);
+                _pathHashToGUID.emplace(hashedGuid, buffer);
+                _guidToAssetPathIndex.emplace(hashedGuid, insertedIndex);
+                _assetPaths.push_back(buffer);
+                insertedIndex++;
+            }
+
+            Log::Error("ResourceManager: Cached access metadata for ", insertedIndex-originalSize, " engine assets");
             return true;
         }
 
-        bool ResourceManager::LoadResourceMetadata(u32 targetLoadPtr) {
+        bool ResourceManager::LoadResourceMetadata() {
 
-            // No loaded metadata for asset - Load whole metadata
-            if(!(_assetMetadataCache.count(targetLoadPtr) > 0)) {
-                
-                u32 targetCurrentLoadNum;
-                YAML::Node manifestAssetsNode;
+            YAML::Node manifestAssetsNode;
 
-                if(std::filesystem::exists(SB_RESOURCE_MANIFEST_PATH)) {
-                    manifestAssetsNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH)["assets"];
-                }
-                else {
-                    Log::Error("ResourceManager: Failed to find manifest file");
-                    return false;
-                }
-
-                manifestSize = manifestAssetsNode.size();
-
-                // Determine target lookahead
-                if(manifestSize > _loadedMetadataChunkIndex+SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE) {
-                    targetCurrentLoadNum = _loadedMetadataChunkIndex+SB_RESOURCE_MANAGER_ASSET_ENTRY_LOAD_SIZE;
-                }
-                else {
-                    targetCurrentLoadNum = manifestSize;
-                }
-
-                Log::Info("ResourceManager: Missing asset metadata, loading metadata for ", targetCurrentLoadNum, " assets");
-
-                for(size_t i = _loadedMetadataChunkIndex; i < targetCurrentLoadNum; i++) {
-                    YAML::Node entry = manifestAssetsNode[i];
-                    _assetMetadataCache.emplace(entry["id"].as<u32>(), 
-                    AssetMetadata{entry["name"].as<std::string>(), entry["path"].as<std::string>()});
-                }
-
-                // TODO Implement load size limit
-                _loadedMetadataChunkIndex = targetCurrentLoadNum;
-                if(!(_assetMetadataCache.count(targetLoadPtr) > 0) && manifestSize > _loadedMetadataChunkIndex) {
-                    return LoadResourceMetadata(targetLoadPtr);
-                }
-                else if(!(_assetMetadataCache.count(targetLoadPtr) > 0)) {
-                    return false;
-                }
-                else{
-                    Log::Info("ResourceManager: Finished loading metadata - Loaded ", (sizeof(_assetMetadataCache.begin()->first)+sizeof(_assetMetadataCache.begin()->second))*_assetMetadataCache.size(), " bytes");
-                    return true;
-                }
+            if(std::filesystem::exists(SB_RESOURCE_MANIFEST_PATH)) {
+                manifestAssetsNode = YAML::LoadFile(SB_RESOURCE_MANIFEST_PATH)["assets"];
             }
+            else {
+                Log::Error("ResourceManager: Failed to find manifest file");
+                return false;
+            }
+            
+            _assetPaths.clear();
+            _assetPaths.reserve(manifestAssetsNode.size());
+            
+            u32 insertedIndex = _assetPaths.size();
+            u32 originalSize = insertedIndex;
+            
+            Log::Error("ResourceManager: Caching access metadata for ", _assetPaths.capacity(), " assets");
+            for(int i = 0; i < manifestAssetsNode.size(); i++) {
+                YAML::Node entry = manifestAssetsNode[i];
+                if(!(entry["id"] && entry["path"])) {
+                    continue;
+                }
+
+                // Asset path is hashed to a u32 key for GUID lookup
+                _pathHashToGUID.emplace(Crypto::GetU32HashFromPath(entry["path"].as<std::string>()), entry["id"].as<std::string>());
+                
+                // GUID lookup implies using a GUID as lookup key so asset paths are kept with an order ID
+                _guidToAssetPathIndex.emplace(Crypto::GetGUIDFromString(entry["id"].as<std::string>()), insertedIndex);
+                _assetPaths.push_back(entry["path"].as<std::string>());
+                insertedIndex++;
+            }
+            Log::Error("ResourceManager: Cached access metadata for ", insertedIndex-originalSize, " game assets");
+            
             return true;
         }
     }

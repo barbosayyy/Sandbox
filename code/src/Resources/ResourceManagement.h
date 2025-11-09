@@ -1,13 +1,17 @@
 #pragma once
 
+#include "Core/Types.h"
 #include "Rendering/Model.h"
 #include "Rendering/Cubemap.h"
 
 namespace Sb {
     namespace ResourceManagement {
-        Model* LoadModel(u32 assetID);
-        Texture* LoadTexture(u32 assetID, TextureType type);
-        Shader* LoadShader(u32 vertexManifestID, u32 fragmentManifestID);
-        Cubemap* LoadCubemap(u32 rightTextureID, u32 leftTextureID, u32 topTextureID, u32 botTextureID, u32 frontTextureID, u32 backTextureID);
+        using Primitive = DefaultMesh;
+
+        Model* LoadModel(const String& assetPath);
+        Model* LoadModel(Primitive primitive);
+        Texture* LoadTexture(const String& assetPath, TextureType type);
+        Shader* LoadShader(const String& vertexShaderAssetPath, const String& fragmentShaderAssetPath);
+        Cubemap* LoadCubemap(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath);
     }
 }

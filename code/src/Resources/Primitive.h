@@ -9,7 +9,8 @@ namespace Sb {
         Each mesh in the ECS holds instance of the appropriate material (shader + data)
     */
 
-	DefaultMesh GetPrimitiveMeshByID(u32 ID); 
+	// DefaultMesh GetPrimitiveMeshByID(u32 ID); 
+
 
 	class Primitive {
 	public:

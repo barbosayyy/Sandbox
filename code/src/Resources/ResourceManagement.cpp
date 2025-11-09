@@ -3,27 +3,39 @@
 
 namespace Sb {
     namespace ResourceManagement {
-        Model* LoadModel(u32 assetID) {
+        Model* LoadModel(const String& assetPath) {
             ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
         
-            return resManager.LoadModel(assetID);
-        }
-        
-        Texture* LoadTexture(u32 assetID, TextureType type) { 
-            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
-            
-            return resManager.LoadTexture(assetID, type);
-        }
-        Shader* LoadShader(u32 vertexManifestID, u32 fragmentManifestID) {
-            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
-            
-            return resManager.LoadShader(vertexManifestID, fragmentManifestID);
+            return resManager.LoadModel(assetPath);
         }
 
-        Cubemap* LoadCubemap(u32 rightTextureID, u32 leftTextureID, u32 topTextureID, u32 botTextureID, u32 frontTextureID, u32 backTextureID) {
+        Model* LoadModel(Primitive primitive) {
+            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
+        
+            return resManager.LoadModel(primitive);
+        }
+
+        Model* LoadModel(const String& assetPath) {
+            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
+        
+            return resManager.LoadModel(assetPath);
+        }
+        
+        Texture* LoadTexture(const String& assetPath, TextureType type) { 
             ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
             
-            return resManager.LoadCubemap(rightTextureID, leftTextureID, topTextureID, botTextureID, frontTextureID, backTextureID);
+            return resManager.LoadTexture(assetPath, type);
+        }
+        Shader* LoadShader(const String& vertexShaderAssetPath, const String& fragmentShaderAssetPath) {
+            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
+            
+            return resManager.LoadShader(vertexShaderAssetPath, fragmentShaderAssetPath);
+        }
+
+        Cubemap* LoadCubemap(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath) {
+            ResourceManagement::ResourceManager& resManager = ResourceManagement::ResourceManager::GetInstance();
+            
+            return resManager.LoadCubemap(rightTextureAssetPath, leftTextureAssetPath, topTextureAssetPath, bottomTextureAssetPath, frontTextureAssetPath, backTextureAssetPath);
         }
     }
 }
