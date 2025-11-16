@@ -2,6 +2,7 @@
 #include "Utils.h"
 #include "Debug.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <random>
@@ -56,6 +57,12 @@
 
 	String File::GetCurrentDirectory() {
 		return _currentDirectory.string();
+	}
+
+	const std::string File::ToUnixPathStyle(const std::string& path) {
+		std::string str = path;
+		std::replace(str.begin(), str.end(), '\\', '/');
+		return str;
 	}
 
 	YAML::Node YamlUtil::GetNode(const char* filePath, const char* nodeName) {

@@ -17,7 +17,8 @@ namespace Sb {
 		static std::string Read(const char* filePath);
 		static bool Write(const char* content, const String& filePath, const String& fileName);
 		static String GetCurrentDirectory();
-	};
+		static const std::string ToUnixPathStyle(const std::string& path);
+	}; 
 
 	class YamlUtil{
 	private:

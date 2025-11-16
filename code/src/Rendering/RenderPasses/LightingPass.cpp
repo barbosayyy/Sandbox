@@ -9,13 +9,13 @@
 namespace Sb {
 
     LightingPass::LightingPass() {
-        lightingPassShader = ResourceManagement::LoadShader(41, 53);
+        lightingPassShader = ResourceManagement::LoadShader("common/shaders/LightingPass.vert", "common/shaders/LightingPass.frag");
     }
 
     void LightingPass::Execute() {
         Profiler::StartRecord("Lightpass");
         if(lightingPassShader == nullptr)
-            Shader* lightingPassShader = ResourceManagement::LoadShader(41, 53);
+            Shader* lightingPassShader = ResourceManagement::LoadShader("common/shaders/LightingPass.vert", "common/shaders/LightingPass.frag");
     
         ECS::Registry& reg = ECS::Registry::GetInstance();
         Renderer& renderer = Renderer::GetInstance();

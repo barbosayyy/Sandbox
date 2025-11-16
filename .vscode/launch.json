@@ -5,16 +5,16 @@
         "name": "LLDB SandboxGame",
         "type": "lldb",
         "request": "launch",
-        "cwd": "${workspaceFolder}\\SampleProject\\build\\debug",
-        "program": "${workspaceFolder}\\SampleProject\\build\\debug\\SandboxGame.exe",
+        "cwd": "${workspaceFolder}\\SampleProject",
+        "program": "${workspaceFolder}\\SampleProject\\SandboxGame.exe",
         "preLaunchTask": "Sandbox: Build Editor & Game"
         },
         {
         "name": "LLDB SandboxEditor",
         "type": "lldb",
         "request": "launch",
-        "cwd": "${workspaceFolder}\\SandboxEditor\\build\\debug",
-        "program": "${workspaceFolder}\\SandboxEditor\\build\\debug\\SandboxEditor.exe",
+        "cwd": "${workspaceFolder}\\SandboxEditor",
+        "program": "${workspaceFolder}\\SandboxEditor\\SandboxEditor.exe",
         "preLaunchTask": "Sandbox: Build Editor & Game"
         }
     ]

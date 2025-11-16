@@ -1,6 +1,7 @@
 #include "Engine/Engine.h"
 #include "Core/Base.h"
 #include "Core/Debug.h"
+#include "ECS/Components.h"
 #include "ECS/Registry.h"
 #include "Input/Input.h"
 #include "Resources/ResourceManager.h"
@@ -18,7 +19,7 @@ using namespace Sb;
 
 bool Engine::_error = false;
 
-Engine::Engine() : _uiRenderEnabled(true){
+Engine::Engine() : _uiRenderEnabled(true), _firstFrame(true){
 
 	Log::Info("Starting Sandbox application backend");
 
@@ -82,6 +83,18 @@ void Engine::Start() {
 }
 
 void Engine::Update() {
+
+	if(_firstFrame) {
+		Log::Info(_ecsRegistry->GetComponentStoreDense<DummyComponent>().size(), " Entities");
+		Log::Info(_ecsRegistry->GetComponentStoreDense<TransformComponent>().size(), " Transform components");
+		Log::Info(_ecsRegistry->GetComponentStoreDense<MeshComponent>().size(), " Mesh components");
+		Log::Info(_ecsRegistry->GetComponentStoreDense<SkyboxComponent>().size(), " Skybox components");
+		Log::Info(_ecsRegistry->GetComponentStoreDense<LightComponent>().size(), " Light components");
+		Log::Info(_ecsRegistry->GetComponentStoreDense<HierarchyComponent>().size(), " Hierarchy components");
+		Log::Info("Rendering first frame");
+
+		_firstFrame = false;
+	}
 
 	Profiler::StopRecord("Frame swap");
 	Profiler::DisableFrameCapture();

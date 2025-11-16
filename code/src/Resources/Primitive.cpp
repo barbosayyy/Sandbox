@@ -5,10 +5,10 @@
 #include "DefaultPrimitives.h"
 
 namespace Sb {
-    DefaultMesh Primitive::cube {};
-    DefaultMesh Primitive::plane {};
-    DefaultMesh Primitive::sphere {};
-    DefaultMesh Primitive::quad {};
+    DefaultMesh Primitive::cube {"Cube"};
+    DefaultMesh Primitive::plane {"Plane"};
+    DefaultMesh Primitive::sphere {"Sphere"};
+    DefaultMesh Primitive::quad {"Quad"};
 
     DefaultMesh GetPrimitiveMeshByID(u32 ID) {
         switch(ID) {

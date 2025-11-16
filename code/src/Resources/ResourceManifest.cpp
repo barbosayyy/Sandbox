@@ -17,20 +17,19 @@ namespace Sb {
         // --- Private
 
 #ifdef SB_BUILD_DEBUG
-        // #define SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
+        // #define SB_BUILD_DEBUG_RESOURCE_MANIFEST
 #endif
         
-        void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter, String& buffer, const SbGUID& assetGUID);
+        void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter, const SbGUID& assetGUID);
         void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Node& node, const SbGUID& assetGUID);
         bool FindNewAssetReference(std::filesystem::directory_entry dirEntry, std::unordered_set<std::string>& manifestPaths, std::unordered_set<std::string>& foundPaths, YAML::Node& node);
 
         // Write utils
-            void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter, String& buffer, const SbGUID& assetGUID) {
+            void WriteAssetMetaData(std::filesystem::directory_entry dirEntry, YAML::Emitter& emitter, const SbGUID& assetGUID) {
                 emitter << YAML::BeginMap;
                 emitter << YAML::Key << "id" << YAML::Value << std::string(Crypto::GetStringFromGUID(assetGUID));
-                buffer = dirEntry.path().string().substr(dirEntry.path().string().find_last_of("\\")+1);
-                emitter << YAML::Key << "name" << YAML::Value << std::string(buffer);
-                emitter << YAML::Key << "path" << YAML::Value << dirEntry.path().string();
+                emitter << YAML::Key << "name" << YAML::Value << dirEntry.path().filename().string();
+                emitter << YAML::Key << "path" << YAML::Value << File::ToUnixPathStyle(dirEntry.path().string());
                 emitter << YAML::EndMap;
             }
 
@@ -42,7 +41,7 @@ namespace Sb {
 
                 entry["id"] = std::string(Crypto::GetStringFromGUID(assetGUID));
                 entry["name"] = dirEntry.path().filename().string();
-                entry["path"] = dirEntry.path().string();
+                entry["path"] = File::ToUnixPathStyle(dirEntry.path().string());
 
                 node["assets"].push_back(entry);
             }
@@ -57,9 +56,9 @@ namespace Sb {
                     
                     // Verify that the entry is not in the manifest already - Update node
                     if(!(manifestPaths.count(entryDir.path().string()) > 0)) {
-                        node["path"] = entryDir.path().string();
+                        node["path"] = File::ToUnixPathStyle(entryDir.path().string());
                         
-                        Log::Info("ResourceManifest: Fixed missing asset reference path ", dirEntry.path().string() , " to ", entryDir.path().string());
+                        Log::Info("ResourceManifest: Fixed missing asset reference path ", File::ToUnixPathStyle(dirEntry.path().string()) , " to ", node["path"]);
                         
                         return true;
                     }
@@ -76,8 +75,6 @@ namespace Sb {
             if(!std::filesystem::exists(SB_RESOURCE_FOLDER_PATH))
                 std::filesystem::create_directories(SB_RESOURCE_FOLDER_PATH);
 
-            String buffer;
-
             YAML::Emitter emitter;
 
             // No resource manifest exists
@@ -91,10 +88,14 @@ namespace Sb {
                     
                     if(!dirEntry.exists())
                         continue;
+
+                    // Skip common assets
+                    if((dirEntry.path().string().rfind("resources/common", 0) == 0 || dirEntry.path().string().rfind("resources\\common", 0) == 0) )
+                        continue;
                     
                     if(!std::filesystem::is_directory(dirEntry)) {
                         const SbGUID guid = Crypto::NewGUID();
-                        WriteAssetMetaData(dirEntry, emitter, buffer, guid);
+                        WriteAssetMetaData(dirEntry, emitter, guid);
                     }
                 }
 
@@ -122,23 +123,24 @@ namespace Sb {
                 
                 if(manifestRootNode && manifestRootNode["assets"]) {
                     
-                    // Register every asset directory entry in resources folder
                     for(const auto& dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_FOLDER_PATH)) {
                         if(!dirEntry.exists())
                             continue;
-                        if(!std::filesystem::is_directory(dirEntry) && dirEntry.path().string() != SB_RESOURCE_MANIFEST_PATH) {
-                            resourceAssetPaths.insert(dirEntry.path().string());
+                        if((dirEntry.path().string().rfind("resources/common", 0) == 0 || dirEntry.path().string().rfind("resources\\common", 0) == 0) )
+                            continue;
+                        
+                        // Get paths in resources directory as set
+                        if(!std::filesystem::is_directory(dirEntry) && File::ToUnixPathStyle(dirEntry.path().string()) != SB_RESOURCE_MANIFEST_PATH) {
+                            resourceAssetPaths.insert(File::ToUnixPathStyle(dirEntry.path().string()));
                         }
                     }
 
-                    // Get paths in manifest as set
+                    // Add existing manifest paths to NEW manifest set to rewrite
                     for(auto node : manifestRootNode["assets"]) {
                         manifest.emplace(node["path"].as<std::string>());
-                        if(node["id"].as<int>() > manifestID)
-                            manifestID = node["id"].as<int>();
                     }
                 
-                    // Remove non-existing entries in manifest and add new ones; Fix mismatching references
+                    // Remove non-existing entries in manifest; Fix mismatching references
                     for(size_t i = 0; i < manifestRootNode["assets"].size();) {
                         YAML::Node entry = manifestRootNode["assets"][i];
                         if(entry["id"] && entry["path"]) {
@@ -146,7 +148,7 @@ namespace Sb {
                                 if(!FindNewAssetReference(std::filesystem::directory_entry(entry["path"].as<std::string>()), manifest, resourceAssetPaths, entry)) {
                                     manifestRootNode["assets"].remove(i);
                                     manifest.erase(entry["path"].as<std::string>());
-#ifdef SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
+#ifdef SB_BUILD_DEBUG_RESOURCE_MANIFEST
                                     Log::Print(manifestRootNode["assets"]);
 #endif
                                     Log::Info("ResourceManifest: Removed asset ", entry["path"].as<std::string>());

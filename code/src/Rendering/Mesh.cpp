@@ -2,7 +2,7 @@
 #include "Core/Debug.h"
 #include "Core/Types.h"
 #include "OpenGL/GLBuffer.h"
-#include "Resources/ResourceManager.h"
+#include "Resources/ResourceManagement.h"
 #include <string>
 
 #include "Rendering/OpenGL/GLBuffer.h"
@@ -25,8 +25,7 @@ namespace Sb {
 		GLBufferVertexData(this->_vao, this->_vertices, this->_indices);
 
 		Renderer& ren = Renderer::GetInstance();
-		ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
-		this->_material._shader = res.LoadShader(38, 37);
+		this->_material._shader = ResourceManagement::LoadShader("common/shaders/GeometryPass.vert", "common/shaders/GeometryPass.frag");
 	}
 
 	void Mesh::Draw(Renderer* renderer, vec3 pos, vec3 rot, vec3 scale) {

@@ -32,12 +32,12 @@ namespace Sb {
         return oss.str();
     }
 
-    u32 GetU32HashFromPath(const std::string& path) {
+    u32 Crypto::GetU32HashFromPath(const std::string& path) {
         u32 hash;
         MurmurHash3_x86_32(path.data(), path.size(), 0xDEADBEEF, &hash);
         return hash;
     }
-
+    
     // TODO - Could also parse braced+dashed guid strings?
     SbGUID Crypto::GetGUIDFromString(const String& string) {
         if(string.size() != 32) {

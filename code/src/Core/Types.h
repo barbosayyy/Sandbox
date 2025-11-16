@@ -36,10 +36,11 @@ namespace Sb {
 		void append(String& str);
 		void append(const std::string& str);
 		char& at(int index);
-		char* data() {return this->_string.data();};
+		char* data() {return this->_string.data();}
 		bool empty();
-		size_t size() const {return this->_string.size();};
-		const String substr(size_t off, size_t count) const {return this->_string.substr(off, count);};
+		size_t size() const {return this->_string.size();}
+		const String substr(size_t off, size_t count) const {return this->_string.substr(off, count);}
+		size_t rfind(const char* ptr, size_t offset) const {return this->_string.rfind(ptr, offset);}
 		
 		String operator+(const String& str) const {
 			return this->_string + str._string;
@@ -108,6 +109,7 @@ namespace Sb {
 	};
 
 	struct DefaultMesh {
+		const String name;
 		std::vector<Vertex> vertices;
         std::vector<u32> indices;
     };

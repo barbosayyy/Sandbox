@@ -64,5 +64,6 @@ namespace Sb {
 		Config _engineConfig;
 
 		static bool _error;
+		bool _firstFrame;
 	};
 }

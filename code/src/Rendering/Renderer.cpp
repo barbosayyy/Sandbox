@@ -8,7 +8,7 @@
 #include "RenderPasses/GeometryPass.h"
 #include "RenderPasses/LightingPass.h"
 #include "RenderPasses/SkyboxPass.h"
-#include "Resources/ResourceManager.h"
+#include "Resources/ResourceManagement.h"
 #include "Resources/DefaultPrimitives.h"
 
 #include "glfw/glfw3.h"
@@ -192,7 +192,6 @@ namespace Sb {
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	
-		ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
-		framebufferQuadShader = res.LoadShader(47, 46);
+		framebufferQuadShader = ResourceManagement::LoadShader("common/shaders/ScreenQuad.vert", "common/shaders/ScreenQuad.frag");
 	}
 }

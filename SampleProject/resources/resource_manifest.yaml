@@ -1,0 +1,97 @@
+assets:
+  - id: cf0230e28911affdad132dc434181667
+    name: confusion.png
+    path: resources/assets/confusion.png
+  - id: 5323596c5151fce6c5c87cac2f4eda06
+    name: container.jpg
+    path: resources/assets/container.jpg
+  - id: 15107f947495d02518bbf567374d81a4
+    name: container2.png
+    path: resources/assets/container2.png
+  - id: 83834a75b36feee6e25cc9823ea74299
+    name: back.jpg
+    path: resources/assets/cubemap/back.jpg
+  - id: 23e41eac9cb75723ca1363aa381d9fce
+    name: bot.jpg
+    path: resources/assets/cubemap/bot.jpg
+  - id: c95a19a6cdba14b32ee2348a04dbbd26
+    name: front.jpg
+    path: resources/assets/cubemap/front.jpg
+  - id: 0870ad9c7bc3aacca65d8b0cb29eac5c
+    name: left.jpg
+    path: resources/assets/cubemap/left.jpg
+  - id: ffd99f15b3ffb4f06743ac8196295945
+    name: back.jpg
+    path: resources/assets/cubemap/old/back.jpg
+  - id: adc1ba004521ebb6fdcba65b79d7bd63
+    name: bot.jpg
+    path: resources/assets/cubemap/old/bot.jpg
+  - id: 47b968936df9cb8a81d0607021520735
+    name: front.jpg
+    path: resources/assets/cubemap/old/front.jpg
+  - id: 9fadb125794ca8a69b23a1a353d5a0ac
+    name: left.jpg
+    path: resources/assets/cubemap/old/left.jpg
+  - id: 578748698b5c41218fa278241d4eeef1
+    name: right.jpg
+    path: resources/assets/cubemap/old/right.jpg
+  - id: 7f2bee1f9411f27fb62908af7d269582
+    name: top.jpg
+    path: resources/assets/cubemap/old/top.jpg
+  - id: f89bad79e2fdbc072ab95e0c90ea6e05
+    name: right.jpg
+    path: resources/assets/cubemap/right.jpg
+  - id: a79c31dfd52ffed1e4511a25867f8eca
+    name: top.jpg
+    path: resources/assets/cubemap/top.jpg
+  - id: 3f2f59c0273680c5f927e38f37f4b28a
+    name: d_container.png
+    path: resources/assets/d_container.png
+  - id: 8fa008611bf098684bbc9d2f17208844
+    name: fire.png
+    path: resources/assets/fire.png
+  - id: 6c0fe9344e0546d4a29c71b389e4401b
+    name: license.txt
+    path: resources/assets/license.txt
+  - id: 9db1dff77e685d46abb793bb6b506141
+    name: matrix.jpg
+    path: resources/assets/matrix.jpg
+  - id: 7e0805db402c3352465c61dae543c40c
+    name: s_container.png
+    path: resources/assets/s_container.png
+  - id: 1a332e7472acb485a863edb1e08a8e23
+    name: test.png
+    path: resources/assets/test.png
+  - id: ddacffda7acd4242b3a4d68d49552975
+    name: level1.yaml
+    path: resources/levels/level1.yaml
+  - id: b3f3ad265bedc350af4be5c35832154b
+    name: ao.jpg
+    path: resources/model/ao.jpg
+  - id: 2c093a26f16ab779ccd73693ea7c3336
+    name: backpack.mtl
+    path: resources/model/backpack.mtl
+  - id: 91e7844a808cc85577562d5da185449f
+    name: backpack.obj
+    path: resources/model/backpack.obj
+  - id: a5064101113812ea11b80026edaf2792
+    name: cube.mtl
+    path: resources/model/cube.mtl
+  - id: 14c48305e8b1fca35c034ebef2612ed8
+    name: cube.obj
+    path: resources/model/cube.obj
+  - id: 19a51dc43eb5035d4ec8c447ab097778
+    name: diffuse.jpg
+    path: resources/model/diffuse.jpg
+  - id: f47dd51ed9e264294cd1b0f9c4402559
+    name: normal.png
+    path: resources/model/normal.png
+  - id: 81d1fa975adeeb3150cf73893cc7730c
+    name: roughness.jpg
+    path: resources/model/roughness.jpg
+  - id: 76d6918d274679478466fdbb609e44d8
+    name: source.txt
+    path: resources/model/source.txt
+  - id: 17fe63cc6077375bef18673944fa293e
+    name: specular.jpg
+    path: resources/model/specular.jpg

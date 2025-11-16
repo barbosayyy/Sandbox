@@ -32,7 +32,8 @@ namespace std {
 	struct hash<Sb::SbGUID> {
 		size_t operator()(const Sb::SbGUID& guid) const {
             size_t h = 0;
-            Sb::Crypto::HashCombine(h, guid);
+            Sb::Crypto::HashCombine(h, guid.h1);
+            Sb::Crypto::HashCombine(h, guid.h2);
             return h;
 		}
 	};

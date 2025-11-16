@@ -19,9 +19,9 @@ namespace Sb {
     
     constexpr u8 SB_RENDERER_MAX_NUM_LIGHTS = 255;
     
-    const std::string SB_RESOURCE_FOLDER_PATH = "/resources";
-    const std::string SB_RESOURCE_MANIFEST_PATH = "/resources/resource_manifest.yaml";
-    const std::string SB_RESOURCE_COMMON_FOLDER_PATH = "/resources/common";
+    const std::string SB_RESOURCE_FOLDER_PATH = "resources";
+    const std::string SB_RESOURCE_MANIFEST_PATH = "resources/resource_manifest.yaml";
+    const std::string SB_RESOURCE_COMMON_FOLDER_PATH = "resources/common";
 
     constexpr u32 SB_RESOURCE_MANIFEST_MESH_CUBE_ID = _MAX_U32-1;
     constexpr u32 SB_RESOURCE_MANIFEST_MESH_PLANE_ID = _MAX_U32-2;

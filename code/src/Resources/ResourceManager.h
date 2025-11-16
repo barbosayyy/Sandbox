@@ -9,6 +9,7 @@
 #include "Rendering/Cubemap.h"
 
 #include <functional>
+#include <string>
 #include <string_view>
 #include <unordered_map>
 namespace Sb {
@@ -106,31 +107,27 @@ namespace Sb {
         class ResourceManager : public Singleton<ResourceManager, int>{
         public:
             ResourceManager();
-            
-            std::unordered_map<std::string, SbGUID> const& GetAssetMetadata() {};
-
-            // Model* LoadModel(u32 manifestID);
-            // Texture* LoadTexture(u32 manifestID, TextureType type);
-            // Shader* LoadShader(u32 vertexManifestID, u32 fragmentManifestID);
-            // Cubemap* LoadCubemap(u32 rightTextureID, u32 leftTextureID, u32 topTextureID, u32 botTextureID, u32 frontTextureID, u32 backTextureID);
 
             Model* LoadModel(const String& assetPath);
             Model* LoadModel(DefaultMesh primitive);
             Texture* LoadTexture(const String& assetPath, TextureType type);
             Shader* LoadShader(const String& vertexShaderAssetPath, const String& fragmentShaderAssetPath);
-            Cubemap* LoadCubemap(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath);
+            Cubemap* LoadCubemap(const String& rightTextureAssetPath, const String& leftTextureAssetPath,
+                const String& topTextureAssetPath, const String& bottomTextureAssetPath,
+                const String& frontTextureAssetPath, const String& backTextureAssetPath);
             
-            // void UnloadModel(u32 manifestID);
-            // void UnloadTexture(u32 manifestID);
-            // void UnloadShader(ShaderManifestID shaderManifestID);
-            // void UnloadShader(u32 vertexManifestID, u32 fragmentManifestID);
-            // void UnloadCubemap(Cubemap* cubemap);
+            void UnloadModel(SbGUID assetGUID);
+            void UnloadTexture(SbGUID assetGUID);
+            void UnloadShader(ShaderManifestID assetGUID);
+            void UnloadCubemap(CubemapManifestID assetGUID);
             
             //
                 String GetYamlResourceNameFromResourceID(ResourceID rId);
                 Resource GetDataFromID(ResourceID rId, int id);
 
         private:
+            SbGUID GetGUIDByAssetPath(const String& assetPath);
+
             std::unordered_map<SbGUID, ModelCacheData> _modelCache;
             std::unordered_map<SbGUID, TextureCacheData> _textureCache;
             std::unordered_map<ShaderManifestID, ShaderCacheData, ShaderManifestIDHash> _shaderCache;

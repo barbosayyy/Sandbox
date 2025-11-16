@@ -77,13 +77,13 @@ void Game::Start() {
 		"assets/cubemap/top.jpg", "assets/cubemap/bot.jpg",
 		"assets/cubemap/front.jpg", "assets/cubemap/back.jpg");
 	
-	// AddEntityComponent<TransformComponent>(plane);
-	// AddEntityComponent<MeshComponent>(plane);
-	// GetEntityComponent<MeshComponent>(plane).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_PLANE_ID);
-	// GetEntityComponent<MeshComponent>(plane).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
-	// GetEntityComponent<TransformComponent>(plane).position.y = -6;
-	// GetEntityComponent<TransformComponent>(plane).scale.x = 10;
-	// GetEntityComponent<TransformComponent>(plane).scale.z = 10;
+	AddEntityComponent<TransformComponent>(plane);
+	AddEntityComponent<MeshComponent>(plane);
+	GetEntityComponent<MeshComponent>(plane).model = ResourceManagement::LoadModel(Primitive::GetPlane());
+	GetEntityComponent<MeshComponent>(plane).model->GetMeshes().at(0).SetTextureMap(txtr->id, txtr->type);
+	GetEntityComponent<TransformComponent>(plane).position.y = -6;
+	GetEntityComponent<TransformComponent>(plane).scale.x = 10;
+	GetEntityComponent<TransformComponent>(plane).scale.z = 10;
 
 	parent0 = AddEntity();
 	parent1 = AddEntity();
@@ -100,10 +100,10 @@ void Game::Start() {
 		AddEntityComponent<MeshComponent>(parent1);
 		AddEntityComponent<MeshComponent>(child0);
 		AddEntityComponent<MeshComponent>(child1);
-		GetEntityComponent<MeshComponent>(parent0).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
-		GetEntityComponent<MeshComponent>(parent1).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
-		GetEntityComponent<MeshComponent>(child0).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
-		GetEntityComponent<MeshComponent>(child1).model = ResourceManagement::LoadModel(SB_RESOURCE_MANIFEST_MESH_CUBE_ID);
+		GetEntityComponent<MeshComponent>(parent0).model = ResourceManagement::LoadModel(Primitive::GetCube());
+		GetEntityComponent<MeshComponent>(parent1).model = ResourceManagement::LoadModel(Primitive::GetCube());
+		GetEntityComponent<MeshComponent>(child0).model = ResourceManagement::LoadModel(Primitive::GetCube());
+		GetEntityComponent<MeshComponent>(child1).model = ResourceManagement::LoadModel(Primitive::GetCube());
 
 		GetEntityComponent<TransformComponent>(parent0).position = vec3(5);
 		GetEntityComponent<TransformComponent>(child0).localPosition = vec3(0, -2, 0);
