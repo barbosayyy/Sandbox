@@ -7,18 +7,16 @@ Shader::Shader() {
 
 }
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const String& vertexPath, const String& fragmentPath)
 {
-	Debug::_buffer = "vertex: " + std::string(vertexPath) + " frag: " + std::string(fragmentPath);
-	
-	this->_shader = Load(File::Read(vertexPath).c_str(), File::Read(fragmentPath).c_str());	
+	this->_shader = Load(vertexPath, fragmentPath);	
 }
 
-GLuint Shader::Load(const char* vertexPath, const char* fragmentPath)
+GLuint Shader::Load(const String& vertexPath, const String& fragmentPath)
 {
 	this->_shader = glCreateProgram();
-	GLuint vShader = CompileShader(GL_VERTEX_SHADER, vertexPath);
-	GLuint fShader = CompileShader(GL_FRAGMENT_SHADER, fragmentPath);
+	GLuint vShader = CompileShaderSource(GL_VERTEX_SHADER, vertexPath);
+	GLuint fShader = CompileShaderSource(GL_FRAGMENT_SHADER, fragmentPath);
 
 	glAttachShader(this->_shader, vShader);
 	glAttachShader(this->_shader, fShader);
@@ -45,15 +43,15 @@ GLuint Shader::Load(const char* vertexPath, const char* fragmentPath)
 
 void Shader::Use()
 {
-	if(this->_shader)
-		glUseProgram(this->_shader);
+	glUseProgram(this->_shader);
 }
 
-GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
+GLuint Shader::CompileShaderSource(GLenum shaderType, const String& shaderPath)
 {
 	unsigned int shader = glCreateShader(shaderType);
-
-	glShaderSource(shader, 1, &shaderSource, NULL);
+	std::string shaderSource = File::Read(shaderPath);
+	const char* src = shaderSource.c_str();
+	glShaderSource(shader, 1, &src, NULL);
 	glCompileShader(shader);
 
 	int successful;
@@ -61,7 +59,8 @@ GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
 	if (successful == false)
 	{
 		char infoLog[512];
-		glGetShaderInfoLog(shader, 512, NULL, infoLog);
+		GLsizei size {0};
+		glGetShaderInfoLog(shader, sizeof(infoLog), &size, infoLog);
 		String shaderTypeStr;
 		switch(shaderType)
 		{
@@ -72,7 +71,8 @@ GLuint Shader::CompileShader(GLenum shaderType, const char* shaderSource)
 				shaderTypeStr = "VERTEX";
 			break;
 		}
-		Debug::FlushError("Shader: Compilation failed - ", " Shader Type: ", shaderTypeStr, " Path: ", Debug::_buffer, "\n", infoLog);
+		Debug::_buffer = std::string(shaderPath);
+		Debug::FlushError("Shader: Compilation failed - ", " Shader Type: ", shaderTypeStr, " Path: ", Debug::_buffer, " Log size: ", size, "\nLog: ", infoLog);
 
 		glDeleteShader(shader);
 		return 0;

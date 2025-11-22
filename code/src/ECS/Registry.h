@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Types.h"
 #include "Core/Base.h"
 #include "Core/Singleton.h"
 #include "Core/Collections.h"
@@ -63,10 +64,12 @@ namespace Sb {
 
             CoreComponentStore& GetComponentStore() { return _componentStore; }
 
+            void EmplaceEntityGUID(SbGUID newGUID, u32 entityID) { _guidSparseIndex.emplace(newGUID, entityID); }; 
+
         private:
 
             CoreComponentStore _componentStore;
-            std::unordered_map<u64, u32> _guidSparseIndex;
+            std::unordered_map<SbGUID, u32> _guidSparseIndex;
             u32 _nextEntityId;
         };
     }

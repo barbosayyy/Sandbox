@@ -62,9 +62,6 @@ assets:
   - id: 1a332e7472acb485a863edb1e08a8e23
     name: test.png
     path: resources/assets/test.png
-  - id: ddacffda7acd4242b3a4d68d49552975
-    name: level1.yaml
-    path: resources/levels/level1.yaml
   - id: b3f3ad265bedc350af4be5c35832154b
     name: ao.jpg
     path: resources/model/ao.jpg
@@ -95,3 +92,6 @@ assets:
   - id: 17fe63cc6077375bef18673944fa293e
     name: specular.jpg
     path: resources/model/specular.jpg
+  - id: 06cc089f827dc454c45133357ead722c
+    name: Level.yaml
+    path: resources/levels/Level.yaml

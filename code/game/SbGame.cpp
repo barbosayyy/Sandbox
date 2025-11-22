@@ -32,14 +32,10 @@ namespace SbGameGlobals{
 	Entity skybox;
 	Entity plane;
 
-	Entity parent0;
-	Entity parent1;
-	Entity child0;
-	Entity child1;
-
 	bool ping = true;
 
 	Texture* txtr;
+		
 }
 
 using namespace SbGameGlobals;
@@ -56,7 +52,6 @@ void Game::Start() {
 	backpack = AddEntity();
 	cube = AddEntity();
 	skybox = AddEntity();
-	plane = AddEntity();
 
 	AddEntityComponent<TransformComponent>(cube);
 	AddEntityComponent<MeshComponent>(cube);
@@ -70,7 +65,7 @@ void Game::Start() {
 	AddEntityComponent<MeshComponent>(backpack);
 	GetEntityComponent<MeshComponent>(backpack).model = ResourceManagement::LoadModel("model/backpack.obj");
 	GetEntityComponent<TransformComponent>(backpack).position.x = 5;
-	
+
 	AddEntityComponent<SkyboxComponent>(skybox);
 	GetEntityComponent<SkyboxComponent>(skybox).cubemap = ResourceManagement::LoadCubemap(
 		"assets/cubemap/right.jpg", "assets/cubemap/left.jpg",
@@ -84,36 +79,6 @@ void Game::Start() {
 	GetEntityComponent<TransformComponent>(plane).position.y = -6;
 	GetEntityComponent<TransformComponent>(plane).scale.x = 10;
 	GetEntityComponent<TransformComponent>(plane).scale.z = 10;
-
-	parent0 = AddEntity();
-	parent1 = AddEntity();
-	child0 = AddEntity();
-	child1 = AddEntity();
-
-	// Scene graph test
-
-		AddEntityComponent<TransformComponent>(parent0);
-		AddEntityComponent<TransformComponent>(parent1);
-		AddEntityComponent<TransformComponent>(child0);
-		AddEntityComponent<TransformComponent>(child1);
-		AddEntityComponent<MeshComponent>(parent0);
-		AddEntityComponent<MeshComponent>(parent1);
-		AddEntityComponent<MeshComponent>(child0);
-		AddEntityComponent<MeshComponent>(child1);
-		GetEntityComponent<MeshComponent>(parent0).model = ResourceManagement::LoadModel(Primitive::GetCube());
-		GetEntityComponent<MeshComponent>(parent1).model = ResourceManagement::LoadModel(Primitive::GetCube());
-		GetEntityComponent<MeshComponent>(child0).model = ResourceManagement::LoadModel(Primitive::GetCube());
-		GetEntityComponent<MeshComponent>(child1).model = ResourceManagement::LoadModel(Primitive::GetCube());
-
-		GetEntityComponent<TransformComponent>(parent0).position = vec3(5);
-		GetEntityComponent<TransformComponent>(child0).localPosition = vec3(0, -2, 0);
-		GetEntityComponent<TransformComponent>(child0).localPosition = vec3(0, -3, 1);
-		GetEntityComponent<TransformComponent>(parent1).position = vec3(-5);
-
-		AddEntityComponent<HierarchyComponent>(parent0);
-		GetEntityComponent<HierarchyComponent>(parent0).AddChild(child0);
-		GetEntityComponent<HierarchyComponent>(parent0).AddChild(child1);
-		// GetEntityComponent<HierarchyComponent>(parent0).SetParent(parent1);
 	
 	/*
 		Number of LightComponent entities defines numLights

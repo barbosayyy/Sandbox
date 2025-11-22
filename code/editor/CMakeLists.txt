@@ -1,6 +1,8 @@
 # Sandbox - Editor
 
 add_library(Sandbox_Editor STATIC
+    EditorApplication.h
+    EditorApplication.cpp
     Editor.h
     Editor.cpp
 )

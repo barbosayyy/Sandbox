@@ -7,7 +7,8 @@ namespace Sb {
             Renderer& ren = Renderer::GetInstance();
             
             for(SkyboxComponent skyboxComponent : registry.GetComponentStoreDense<SkyboxComponent>()) {
-                skyboxComponent.cubemap->Draw();
+                if(skyboxComponent.cubemap != nullptr)
+                    skyboxComponent.cubemap->Draw();
             }
         }
     }

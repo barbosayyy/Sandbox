@@ -91,8 +91,15 @@ void Engine::Update() {
 		Log::Info(_ecsRegistry->GetComponentStoreDense<SkyboxComponent>().size(), " Skybox components");
 		Log::Info(_ecsRegistry->GetComponentStoreDense<LightComponent>().size(), " Light components");
 		Log::Info(_ecsRegistry->GetComponentStoreDense<HierarchyComponent>().size(), " Hierarchy components");
+		
+		for(int i = 0; i < _ecsRegistry->GetComponentStoreSparse<DummyComponent>().size(); i++) {
+			if(_ecsRegistry->GetComponentSparseSet<MeshComponent>().Contains(i)) {
+				Log::Print("entity mesh ", i, " points to ", _ecsRegistry->GetComponentStoreSparse<MeshComponent>().at(i));
+				Log::Print(_ecsRegistry->GetComponentStoreDense<MeshComponent>().at(_ecsRegistry->GetComponentStoreSparse<MeshComponent>().at(i)).model->_assetID);
+			}
+		}
+		
 		Log::Info("Rendering first frame");
-
 		_firstFrame = false;
 	}
 

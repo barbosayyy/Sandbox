@@ -16,11 +16,11 @@ namespace Sb {
 				u32 vertexManifestID;
 				u32 fragmentManifestID;
 			};
-			GLuint CompileShader(GLenum shaderType, const char* shaderSource);
-			GLuint Load(const char* vertexPath, const char* fragmentPath);
+			GLuint CompileShaderSource(GLenum shaderType, const String& shaderPath);
+			GLuint Load(const String& vertexPath, const String& fragmentPath);
 	public:
 		Shader();
-		Shader(const char* vertexPath, const char* fragmentPath);
+		Shader(const String& vertexPath, const String& fragmentPath);
 
 		void Use();
 

@@ -4,8 +4,15 @@
 #include "ECS/Registry.h"
 
 namespace Sb {
+
+    // Add new entity (game runtime)
     u32 AddEntity();
+    
+    // Load entities by SceneManagement
+    u32 LoadEntity();
+
     void RemoveEntity(u32 entityID);
+    
     template<typename T>
     static void AddEntityComponent(u32 entityID) { ECS::Registry::GetInstance().AddComponent<T>(entityID); }
     template<typename T>

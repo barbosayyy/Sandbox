@@ -6,8 +6,6 @@
 
 #include <vector>
 #include <string>
-#include <ostream>
-#include <variant>
 #include <xstring>
 
 namespace Sb {
@@ -122,3 +120,10 @@ namespace Sb {
         }
     };
 };
+
+namespace std {
+	template <>
+	struct hash<Sb::SbGUID> {
+		size_t operator()(const Sb::SbGUID& guid) const;
+	};
+}

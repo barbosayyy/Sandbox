@@ -10,10 +10,11 @@ namespace Sb {
                 if(registry.GetComponentSparseSet<TransformComponent>().Contains(meshComponent.GetSparseIndex())) {
                     
                     // Updated transform used on draw
-                    meshComponent.model->Draw(&ren,
-                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).position,
-                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).rotation,
-                        registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).scale);
+                    if(meshComponent.model != nullptr)
+                        meshComponent.model->Draw(&ren,
+                            registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).position,
+                            registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).rotation,
+                            registry.GetComponent<TransformComponent>(meshComponent.GetSparseIndex()).scale);
                 }
             }
         }

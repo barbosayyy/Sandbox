@@ -3,6 +3,7 @@
 #include "ECS/Registry.h"
 #include "SceneManagement.h"
 
+#include "Resources/ResourceManager.h"
 #include "yaml-cpp/emitter.h"
 #include "yaml-cpp/emittermanip.h"
 #include <filesystem>
@@ -13,7 +14,7 @@ namespace Sb {
         template <typename T>
         void WriteSparseSetComponentData(SparseSet<T>& sparseSet, u32 entityID, YAML::Emitter& emitter) {
             if(sparseSet.Contains(entityID)) {
-
+                ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
                 vec3 temp;
 
                 // Write component data
@@ -50,8 +51,9 @@ namespace Sb {
                 else if constexpr (std::is_same_v<T, MeshComponent>) {
                     emitter << YAML::Key << "Mesh" << YAML::Value;
                     emitter << YAML::BeginMap;
-                    
-                    emitter << YAML::Key << "id" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].model->_assetID;
+                    Log::Print(entityID);
+                    Log::Print(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].model->_assetID);
+                    emitter << YAML::Key << "id" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].model->_assetID)));
                     
                     emitter << YAML::EndMap;
                 }
@@ -59,13 +61,13 @@ namespace Sb {
                 else if constexpr (std::is_same_v<T, SkyboxComponent>) {
                     emitter << YAML::Key << "Skybox" << YAML::Value;
                     emitter << YAML::BeginMap;
-                    
-                    emitter << YAML::Key << "textureFaceRightID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceRightManifestID;
-                    emitter << YAML::Key << "textureFaceLeftID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceLeftManifestID;
-                    emitter << YAML::Key << "textureFaceTopID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceTopManifestID;
-                    emitter << YAML::Key << "textureFaceBottomID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBottomManifestID;
-                    emitter << YAML::Key << "textureFaceFrontID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceFrontManifestID;
-                    emitter << YAML::Key << "textureFaceBackID" << YAML::Value << sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBackManifestID;
+                    Log::Print(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceRightManifestID)));
+                    emitter << YAML::Key << "textureFaceRightID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceRightManifestID)));
+                    emitter << YAML::Key << "textureFaceLeftID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceLeftManifestID)));
+                    emitter << YAML::Key << "textureFaceTopID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceTopManifestID)));
+                    emitter << YAML::Key << "textureFaceBottomID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBottomManifestID)));
+                    emitter << YAML::Key << "textureFaceFrontID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceFrontManifestID)));
+                    emitter << YAML::Key << "textureFaceBackID" << YAML::Value << std::string(Crypto::GetStringFromGUID(res.GetSbGUIDFromU32Hash(sparseSet.GetDense()[sparseSet.GetSparse()[entityID]].cubemap->_textureFaceBackManifestID)));
                     
                     emitter << YAML::EndMap;
                 }
@@ -87,6 +89,7 @@ namespace Sb {
                     
                     emitter << YAML::EndMap;
                 }
+                
                 else if constexpr (std::is_same_v<T, HierarchyComponent>) {
                     emitter << YAML::Key << "Hierarchy" << YAML::Value;
                     emitter << YAML::BeginMap;
@@ -109,7 +112,7 @@ namespace Sb {
         static void SaveScene(const String& levelName) {
             ECS::Registry& entityRegistry = ECS::Registry::GetInstance();
 
-            String path = String(File::GetCurrentDirectory() + "\\..\\..\\resources\\levels");
+            String path = String("resources/levels");
 
             // If scene exists, delete
             if(std::filesystem::exists(std::string(path + levelName+".yaml"))) {

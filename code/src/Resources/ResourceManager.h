@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Crypto.h"
 #include "Core/Types.h"
+#include "Core/Crypto.h"
 #include "Core/Singleton.h"
 
 #include "Rendering/Model.h"
@@ -125,6 +125,15 @@ namespace Sb {
                 String GetYamlResourceNameFromResourceID(ResourceID rId);
                 Resource GetDataFromID(ResourceID rId, int id);
 
+            SbGUID GetSbGUIDFromU32Hash(u32 pathHash) {
+                SbGUID guid {};
+                if(_pathHashToGUID.count(pathHash) > 0) {
+                    guid.h1 = _pathHashToGUID[pathHash].h1;
+                    guid.h2 = _pathHashToGUID[pathHash].h2;
+                }
+                return guid;
+            }
+
         private:
             SbGUID GetGUIDByAssetPath(const String& assetPath);
 
@@ -138,7 +147,9 @@ namespace Sb {
             std::vector<std::string> _assetPaths;
 
             u32 _faceCount;
-
+            
+            void LoadPrimitiveMetadata();
+            
             bool LoadCommonMetadata();
             bool LoadResourceMetadata();
             u32 _loadedMetadataChunkIndex;

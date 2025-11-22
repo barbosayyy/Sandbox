@@ -7,9 +7,6 @@
 namespace SbEditor {
     class Editor {
     public:
-		// Runtime
-		void Run();
-
 		void Setup(Sb::IEngine* sbEngine);
 
 		void Update();
@@ -17,10 +14,6 @@ namespace SbEditor {
 		void Render();
 
 		void Stop();
-
-		void QueryStop() { _flag = true; };
-
-		bool ShouldStop() { return _flag; };
 		
 		// UI
 		void UIRender();
@@ -35,7 +28,6 @@ namespace SbEditor {
 		void UIShowInspector();
 		
 	private:
-		bool _flag = false;
 		int _editorWindowWidth;
 		int _editorWindowHeight;
 		Sb::IEngine* _sbEnginePtr;

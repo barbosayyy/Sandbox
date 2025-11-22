@@ -1,8 +1,8 @@
-#include "Editor.h"
+#include "EditorApplication.h"
 
 using namespace SbEditor;
 
 int main() {
-    Editor editor;
-    editor.Run();
+    EditorApplication editorApplication;
+    editorApplication.Run();
 }

@@ -1,7 +1,7 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
-#include "Core/Crypto.h"
 #include "Core/Types.h"
+#include "Core/Crypto.h"
 #include "Core/Utils.h"
 #include "Core/Debug.h"
 #include "ResourceManager.h"
@@ -29,11 +29,12 @@ namespace Sb {
     namespace ResourceManagement {
         
 #ifdef SB_BUILD_DEBUG
-        #define SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
+        // #define SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
+        // #define SB_BUILD_DEBUG_ASSIMP
 #endif
         // Textures
         Texture LoadTextureResource(const String& path, TextureType type, GLint wrapMethod, bool flipVertical, bool gammaCorrection);
-        u32 LoadCubemapData(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath);
+        u32 LoadCubemapTexture(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath);
         
         // Assimp (OBJ)
         void AssimpProcessNode(aiNode* node, const aiScene *scene, const String& path, Model& model, std::vector<Texture>& loadedTextures);
@@ -77,7 +78,7 @@ namespace Sb {
                 return texture;
             }
 
-            u32 LoadCubemapData(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath) {
+            u32 LoadCubemapTexture(const String& rightTextureAssetPath, const String& leftTextureAssetPath, const String& topTextureAssetPath, const String& bottomTextureAssetPath, const String& frontTextureAssetPath, const String& backTextureAssetPath) {
                 u32 cubemapData;
                 
                 glGenTextures(1, &cubemapData);
@@ -164,7 +165,9 @@ namespace Sb {
 
         // Model load Utils
             void AssimpProcessNode(aiNode* node, const aiScene *scene, const String& path, Model& model, std::vector<Texture>& loadedTextures) {
+#ifdef SB_BUILD_DEBUG_ASSIMP
                 Log::Print("Assim Importer: Processing node, Number of textures: ", loadedTextures.size());
+#endif
                 for(u32 i = 0; i < node->mNumMeshes; i++){
                     aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
                     model.GetMeshes().push_back(AssimpProcessMesh(mesh, scene, path, loadedTextures));
@@ -250,6 +253,12 @@ namespace Sb {
             }
         }
 
+        /* TODO
+        
+           - Each Resource load function needs an edge case error asset so nullptrs or garbage assets are never used/emplaced
+        
+        */
+
         SbGUID ResourceManager::GetGUIDByAssetPath(const String& assetPath) {
             // "common/" should indicate that asset belongs to Sandbox Engine domain
             if(assetPath.rfind("common/", 0) == 0 || assetPath.rfind("/common/", 0) == 0) {
@@ -278,13 +287,16 @@ namespace Sb {
                     Log::Warn("Assimp Importer: ", importer.GetErrorString());
                     return nullptr;
                 }
+#ifdef SB_BUILD_DEBUG_ASSIMP
                 Log::Info("Assimp Importer: Importing model ", assetPath);
+#endif
                 String trimmedPath = assetPath.substr(0, std::string(assetPath).find_last_of("/"));
             
+#ifdef SB_BUILD_DEBUG_ASSIMP
                 Log::Print("Assimp Importer: Scene root node has ", scene->mRootNode->mNumChildren, " children");
-                
+#endif
                 AssimpProcessNode(scene->mRootNode, scene, trimmedPath, model, loadedTextures);
-
+                model._assetID = Crypto::GetU32HashFromPath(assetPath);
                 _modelCache.emplace(guid, ModelCacheData{1, model});
                 return &_modelCache[guid].model;
             }
@@ -297,14 +309,14 @@ namespace Sb {
 
         Model* ResourceManager::LoadModel(DefaultMesh primitive) {
             
-            // Primitive name is placed under Default domain and then hashed 
+            // Primitive name is placed under Default domain and then hashed
             const SbGUID guid = Crypto::GetGUIDFromHashedInput(primitive.name, GUIDDomain::Default);
 
             if(!(_modelCache.count(guid) > 0)) {
                 Model model;
                 model.GetMeshes().push_back(Mesh(primitive.vertices, primitive.indices, Material()));
+                model._assetID = Crypto::GetU32HashFromPath(primitive.name);
                 _modelCache.emplace(guid, ModelCacheData{1, model});
-    
                 return &_modelCache[guid].model;
             }
             else {
@@ -347,7 +359,7 @@ namespace Sb {
                 return &_shaderCache[sID].shader;
             }
             else {
-                Shader shader(vertexShaderAssetPath.c_str(), fragmentShaderAssetPath.c_str());
+                Shader shader(vertexShaderAssetPath, fragmentShaderAssetPath);
 
                 _shaderCache.emplace(sID, ShaderCacheData{1, shader});
 
@@ -365,7 +377,14 @@ namespace Sb {
 
                 GLBufferPrimitiveData(cubemap.vertexData, SB_CUBE, 36, 3);
                 
-                cubemap.data = LoadCubemapData(rightTextureAssetPath, leftTextureAssetPath, topTextureAssetPath, bottomTextureAssetPath, frontTextureAssetPath, backTextureAssetPath);
+                cubemap.data = LoadCubemapTexture(rightTextureAssetPath, leftTextureAssetPath, topTextureAssetPath, bottomTextureAssetPath, frontTextureAssetPath, backTextureAssetPath);
+
+                cubemap._textureFaceRightManifestID = Crypto::GetU32HashFromPath(rightTextureAssetPath);
+                cubemap._textureFaceLeftManifestID = Crypto::GetU32HashFromPath(leftTextureAssetPath);
+                cubemap._textureFaceTopManifestID = Crypto::GetU32HashFromPath(topTextureAssetPath);
+                cubemap._textureFaceBottomManifestID = Crypto::GetU32HashFromPath(bottomTextureAssetPath);
+                cubemap._textureFaceFrontManifestID = Crypto::GetU32HashFromPath(frontTextureAssetPath);
+                cubemap._textureFaceBackManifestID = Crypto::GetU32HashFromPath(backTextureAssetPath);
 
                 cubemap._cubemapShader = ResourceManagement::LoadShader("common/shaders/cubemap.vert", "common/shaders/cubemap.frag");
                 cubemap._cubemapShader->SetInt("skybox", 0);
@@ -467,6 +486,19 @@ namespace Sb {
             return rData;
         }
 
+        void ResourceManager::LoadPrimitiveMetadata() {
+            _pathHashToGUID.emplace(Crypto::GetU32HashFromPath("Cube"), Crypto::GetGUIDFromHashedInput("Cube", GUIDDomain::Default));
+            _pathHashToGUID.emplace(Crypto::GetU32HashFromPath("Plane"), Crypto::GetGUIDFromHashedInput("Plane", GUIDDomain::Default));
+            _pathHashToGUID.emplace(Crypto::GetU32HashFromPath("Sphere"), Crypto::GetGUIDFromHashedInput("Sphere", GUIDDomain::Default));
+            _pathHashToGUID.emplace(Crypto::GetU32HashFromPath("Quad"), Crypto::GetGUIDFromHashedInput("Quad", GUIDDomain::Default));
+#ifdef SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
+            Log::Print("Cube u32hash: ", Crypto::GetU32HashFromPath("Cube"), " guid: ", Crypto::GetStringFromGUID(Crypto::GetGUIDFromHashedInput("Cube", GUIDDomain::Default)));
+            Log::Print("Plane u32hash: ", Crypto::GetU32HashFromPath("Plane"), " guid: ", Crypto::GetStringFromGUID(Crypto::GetGUIDFromHashedInput("Plane", GUIDDomain::Default)));
+            Log::Print("Sphere u32hash: ", Crypto::GetU32HashFromPath("Sphere"), " guid: ", Crypto::GetStringFromGUID(Crypto::GetGUIDFromHashedInput("Sphere", GUIDDomain::Default)));
+            Log::Print("Quad u32hash: ", Crypto::GetU32HashFromPath("Quad"), " guid: ", Crypto::GetStringFromGUID(Crypto::GetGUIDFromHashedInput("Quad", GUIDDomain::Default)));
+#endif
+        }
+
         bool ResourceManager::LoadCommonMetadata() {
 
             if(!std::filesystem::exists(SB_RESOURCE_COMMON_FOLDER_PATH)) {
@@ -477,6 +509,8 @@ namespace Sb {
             String buffer = "";
             u32 insertedIndex = _assetPaths.size();
             u32 originalSize = insertedIndex;
+
+            LoadPrimitiveMetadata();
 
             // Register common engine assets into access cache
             for(auto dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_COMMON_FOLDER_PATH)) {
@@ -529,7 +563,7 @@ namespace Sb {
                 _assetPaths.push_back(entry["path"].as<std::string>());
                 insertedIndex++;
 #ifdef SB_BUILD_DEBUG_RESOURCE_MANAGEMENT
-                Log::Print("Hashed ", entry["path"].as<std::string>(), " to ", entry["id"].as<std::string>(), " asset path index ", insertedIndex-1);
+                Log::Print("GAME RES/: Hashed ", entry["path"].as<std::string>(), " to ", entry["id"].as<std::string>(), " asset path index ", insertedIndex-1);
 #endif
             }
             Log::Info("ResourceManager: Cached access metadata for ", insertedIndex-originalSize, " game assets");

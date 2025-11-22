@@ -5,31 +5,6 @@
 #include "imgui/imgui.h"
 
 namespace SbEditor {
-    void Editor::Run() {
-        Sb::Engine sbEngine;
-        sbEngine.Start();
-
-#ifdef SB_EDITOR
-    sbEngine.GetRenderer().GetWindow()->SetWindowTitle("Sandbox Editor");
-#endif
-
-        this->Setup(&sbEngine);
-
-        sbEngine.SetUIRenderingEnabled(false);
-
-        while(sbEngine.Validate() && !this->ShouldStop()) {
-            sbEngine.Update();
-            this->Update();
-
-            sbEngine.Render();
-
-            this->Render();
-            
-            sbEngine.LateRender();
-        }
-
-        sbEngine.Stop();
-    }
 
     void Editor::Setup(Sb::IEngine* sbEngine) {
         this->_sbEnginePtr = sbEngine;
