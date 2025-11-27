@@ -70,7 +70,7 @@ namespace Sb {
         // --- Public
 
         // Generate Asset manifest
-        static bool WriteResourceManifest() {
+        bool WriteResourceManifest() {
 
             if(!std::filesystem::exists(SB_RESOURCE_FOLDER_PATH))
                 std::filesystem::create_directories(SB_RESOURCE_FOLDER_PATH);

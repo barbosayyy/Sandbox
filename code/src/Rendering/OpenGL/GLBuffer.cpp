@@ -6,7 +6,7 @@
 #include "GLBuffer.h"
 
 namespace Sb {
-    static void GLBufferVertexData(u32 &vao, std::vector<Vertex> vertices, std::vector<u32> indices) {
+    void GLBufferVertexData(u32 &vao, std::vector<Vertex> vertices, std::vector<u32> indices) {
         glGenVertexArrays(1, &vao);
 		
 		u32 vbo;
@@ -41,7 +41,7 @@ namespace Sb {
 		glBindVertexArray(0);
     }
 
-    static void GLBufferPrimitiveData(u32 &vao, const float* primitive, size_t vertexSize, size_t numAttributes) {
+    void GLBufferPrimitiveData(u32 &vao, const float* primitive, size_t vertexSize, size_t numAttributes) {
         u32 vbo;
         
         glGenVertexArrays(1, &vao);
@@ -53,7 +53,7 @@ namespace Sb {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     }
 
-    static void GLAllocateLightUBO(u32 &ubo) {
+    void GLAllocateLightUBO(u32 &ubo) {
         glGenBuffers(1, &ubo);
         glBindBuffer(GL_UNIFORM_BUFFER, ubo);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(LightUBOData), NULL, GL_DYNAMIC_DRAW);
@@ -62,7 +62,7 @@ namespace Sb {
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 
-    static void GLBufferLightUBO(u32& ubo, LightUBOData& lightData) {
+    void GLBufferLightUBO(u32& ubo, LightUBOData& lightData) {
         glBindBuffer(GL_UNIFORM_BUFFER, ubo);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightUBOData), &lightData);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
