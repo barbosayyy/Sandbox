@@ -47,6 +47,7 @@ namespace Sb {
 #ifdef SB_PLATFORM_MAC
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_FALSE);
 #endif
 
 			_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
