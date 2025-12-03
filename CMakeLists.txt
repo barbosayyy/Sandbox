@@ -1,3 +1,73 @@
+function(configure_compiler)
+
+    if(CLANG_COMPILER)
+        set(CMAKE_C_COMPILER "${CLANG_COMPILER}" CACHE STRING "C compiler" FORCE)
+    endif()
+    if(CLANGXX_COMPILER)
+        set(CMAKE_CXX_COMPILER "${CLANGXX_COMPILER}" CACHE STRING "C++ compiler" FORCE)
+    endif()
+
+    # set(CMAKE_CXX_COMPILER clang++)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED On)
+    set(CMAKE_CXX_EXTENSIONS Off)
+
+    if(APPLE)
+        add_compile_options(-stdlib=libc++)
+        add_link_options(-stdlib=libc++)
+    endif()
+
+    if(CMAKE_CXX_COMPILER)
+        message("C++ Compiler: ${CMAKE_CXX_COMPILER}")
+        message("Compiler ID: " ${CMAKE_CXX_COMPILER_ID} " " ${CMAKE_CXX_COMPILER_VERSION})
+        message("Standard: ${CMAKE_CXX_STANDARD}")
+    else()
+        message(FATAL_ERROR "C++ compiler not found.")
+    endif()
+endfunction()
+
+function(configure_project_defines)
+    
+    # Platform & build type
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        add_compile_definitions(SB_PLATFORM_WIN)
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        add_compile_definitions(SB_PLATFORM_MAC)
+    endif()
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_definitions(SB_BUILD_RELEASE)
+    else()
+        add_compile_definitions(SB_BUILD_DEBUG)
+    endif()
+
+    # C++ Compiler
+
+    if(CMAKE_CXX_COMPILER STREQUAL clang++)
+        add_compile_definitions(SB_COMPILER_CLANGCPP)
+    endif()
+
+    message("For platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} - ${CMAKE_BUILD_TYPE}")
+endfunction()
+
+function(configure_project_variables)
+    set(CM_SANDBOX_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
+    set(CM_SANDBOX_GAME_DIR ${CM_SANDBOX_DIR}/SampleProject PARENT_SCOPE)
+    set(CM_SANDBOX_EDITOR_DIR ${CM_SANDBOX_DIR}/SandboxEditor PARENT_SCOPE)
+    set(CM_SANDBOX_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources PARENT_SCOPE)
+    set(CM_SANDBOX_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts PARENT_SCOPE)
+    set(CM_SANDBOX_CODE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code PARENT_SCOPE)
+    set(CM_SANDBOX_VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor PARENT_SCOPE)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/Windows64 PARENT_SCOPE)
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/macOS PARENT_SCOPE)
+    endif()
+endfunction()
+
+###############################################
+
 # CMake Sandbox Engine build configuration file
 
 cmake_minimum_required(VERSION 3.16)
@@ -11,97 +81,41 @@ if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND NOT ${CMAKE_SYSTEM_NAME} STRE
     message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} platform not supported")
 endif()
 
-include(CTest)
-
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
+include(CTest)
 include(FetchContent)
 
-# Compiler configuration
+configure_compiler()
 
-if(CLANG_COMPILER)
-    set(CMAKE_C_COMPILER "${CLANG_COMPILER}" CACHE STRING "C compiler" FORCE)
-endif()
-if(CLANGXX_COMPILER)
-    set(CMAKE_CXX_COMPILER "${CLANGXX_COMPILER}" CACHE STRING "C++ compiler" FORCE)
-endif()
-#set(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED On)
-set(CMAKE_CXX_EXTENSIONS Off)
+configure_project_defines()
 
-if(APPLE)
-    add_compile_options(-stdlib=libc++)
-    add_link_options(-stdlib=libc++)
-endif()
-
-if(CMAKE_CXX_COMPILER)
-    message("C++ Compiler: ${CMAKE_CXX_COMPILER}")
-    message("Compiler ID: " ${CMAKE_CXX_COMPILER_ID} " " ${CMAKE_CXX_COMPILER_VERSION})
-    message("Standard: ${CMAKE_CXX_STANDARD}")
-else()
-    message(FATAL_ERROR "C++ compiler not found.")
-endif()
-
-# Project definitions
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    add_compile_definitions(SB_PLATFORM_WIN)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    add_compile_definitions(SB_PLATFORM_MAC)
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_definitions(SB_BUILD_RELEASE)
-else()
-    add_compile_definitions(SB_BUILD_DEBUG)
-endif()
-
-if(CMAKE_CXX_COMPILER STREQUAL clang++)
-    add_compile_definitions(SB_COMPILER_CLANGCPP)
-endif()
-
-message("For platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} - ${CMAKE_BUILD_TYPE}")
-
+# Flags for which projects to build
 option(BUILD_EDITOR "Build editor project" OFF)
 option(BUILD_GAME "Build game project" ON)
+
 message("BUILD_EDITOR flag: " ${BUILD_EDITOR})
 message("BUILD_GAME flag: " ${BUILD_GAME})
 
-# Project directory variables
-
-set(CM_SANDBOX_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(CM_SANDBOX_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
-set(CM_SANDBOX_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts)
-set(CM_SANDBOX_CODE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code)
-set(CM_SANDBOX_VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
+configure_project_variables()
 
 message("")
 
 # ---
 
-# Engine build configuration
-
 # Main Source
     add_subdirectory(code/src)
-    set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject)
-    set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor)
     add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/smhasher)
     add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
 # Dependencies
+    set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/_deps)
+
     FetchContent_Declare(yaml-cpp
         GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
         GIT_TAG 0.8.0
     )
     FetchContent_MakeAvailable(yaml-cpp)
-
-    # FetchContent_Declare(glew
-    #     GIT_REPOSITORY https://github.com/nigels-com/glew.git
-    #     GIT_TAG glew-2.2.0
-    # )
-    # set(BUILD_UTILS OFF)
-    # FetchContent_MakeAvailable(glew)
-    find_package(GLEW REQUIRED)
 
     FetchContent_Declare(glfw
         GIT_REPOSITORY https://github.com/glfw/glfw.git
@@ -120,6 +134,7 @@ message("")
     FetchContent_MakeAvailable(assimp)
 
     find_package(OpenGL REQUIRED)
+
 # Game build configuration
 
 if(BUILD_GAME)
@@ -148,10 +163,18 @@ if(BUILD_GAME)
         PRIVATE  assimp
         PRIVATE  yaml-cpp
         PRIVATE  glfw
-        PRIVATE  GLEW::GLEW
         PRIVATE  OpenGL::GL
     )
-
+    
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
+            PRIVATE ${CM_SANDBOX_LIB_DIR}/glew32s.lib
+        )
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
+            PRIVATE  ${CM_SANDBOX_LIB_DIR}/libGLEW.a
+        )
+    endif()
     # if(CMAKE_BUILD_TYPE STREQUAL "Release")
     #     file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
     # else()
