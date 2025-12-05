@@ -22,7 +22,8 @@ bld/
 _*
 
 CMakeUserPresets.json
-
 imgui.ini
+*.exe
+*.pdb
 
 .DS_Store

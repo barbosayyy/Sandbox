@@ -33,13 +33,13 @@ namespace Sb {
 
 			// GLFW config
 			glfwDefaultWindowHints();
-			glfwWindowHint(GLFW_RED_BITS, 8);				// Frame bit length
+			glfwWindowHint(GLFW_RED_BITS, 8);									// Frame bit length
 			glfwWindowHint(GLFW_GREEN_BITS, 8);			
 			glfwWindowHint(GLFW_BLUE_BITS, 8);				
 			glfwWindowHint(GLFW_ALPHA_BITS, 8);			
 			glfwWindowHint(GLFW_DEPTH_BITS, 16);			
 			glfwWindowHint(GLFW_DOUBLEBUFFER, SB_RENDERER_TRIPLE_BUFFERING);	// Triple buffering		
-			glfwWindowHint(GLFW_SAMPLES, 0);				// MSAA
+			glfwWindowHint(GLFW_SAMPLES, 0);									// MSAA
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

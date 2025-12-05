@@ -36,6 +36,18 @@ namespace SbGameGlobals{
 
 	Texture* txtr;
 		
+	void GameLocalInput() {
+		ECS::Registry& reg = ECS::Registry::GetInstance();
+		ResourceManagement::ResourceManager& res = ResourceManagement::ResourceManager::GetInstance();
+
+		// Test input
+		if(InputManager::PressedKey(SB_KEYBOARD_U)) {
+			SceneManagement::SaveScene("Level");
+		}
+		else if(InputManager::PressedKey(SB_KEYBOARD_M)) {
+			ResourceManagement::WriteResourceManifest();
+		}
+	}
 }
 
 using namespace SbGameGlobals;
@@ -44,6 +56,7 @@ Game::Game(IEngine& sbEngine) : _sbEngine(sbEngine) {
 }
 
 void Game::Init() {
+	_sbEngine.GetInputManager().AddInputFunction(GameLocalInput);
 }
 
 void Game::Start() {

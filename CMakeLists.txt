@@ -1,17 +1,16 @@
 function(configure_compiler)
 
     if(CLANG_COMPILER)
-        set(CMAKE_C_COMPILER "${CLANG_COMPILER}" CACHE STRING "C compiler" FORCE)
+        set(CMAKE_C_COMPILER "${CLANG_COMPILER}" CACHE STRING "C compiler" FORCE PARENT_SCOPE)
     endif()
     if(CLANGXX_COMPILER)
-        set(CMAKE_CXX_COMPILER "${CLANGXX_COMPILER}" CACHE STRING "C++ compiler" FORCE)
+        set(CMAKE_CXX_COMPILER "${CLANGXX_COMPILER}" CACHE STRING "C++ compiler" FORCE PARENT_SCOPE)
     endif()
 
-    # set(CMAKE_CXX_COMPILER clang++)
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED On)
-    set(CMAKE_CXX_EXTENSIONS Off)
-
+    set(CMAKE_CXX_STANDARD 20 PARENT_SCOPE)
+    set(CMAKE_CXX_STANDARD_REQUIRED On PARENT_SCOPE)
+    set(CMAKE_CXX_EXTENSIONS Off PARENT_SCOPE)
+    
     if(APPLE)
         add_compile_options(-stdlib=libc++)
         add_link_options(-stdlib=libc++)
@@ -52,9 +51,8 @@ function(configure_project_defines)
 endfunction()
 
 function(configure_project_variables)
-    set(CM_SANDBOX_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
-    set(CM_SANDBOX_GAME_DIR ${CM_SANDBOX_DIR}/SampleProject PARENT_SCOPE)
-    set(CM_SANDBOX_EDITOR_DIR ${CM_SANDBOX_DIR}/SandboxEditor PARENT_SCOPE)
+    set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject PARENT_SCOPE)
+    set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor PARENT_SCOPE)
     set(CM_SANDBOX_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources PARENT_SCOPE)
     set(CM_SANDBOX_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts PARENT_SCOPE)
     set(CM_SANDBOX_CODE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code PARENT_SCOPE)
@@ -103,12 +101,8 @@ message("")
 
 # ---
 
-# Main Source
-    add_subdirectory(code/src)
-    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/smhasher)
-    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
-
 # Dependencies
+    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/smhasher)
     set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/_deps)
 
     FetchContent_Declare(yaml-cpp
@@ -133,7 +127,27 @@ message("")
     set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(assimp)
 
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        find_library(GLEWS
+            NAMES glew32s
+            PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/Windows64"
+            REQUIRED
+        )
+
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        find_library(GLEWS
+            NAMES libGLEW
+            PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/Darwin"
+            REQUIRED
+        )
+        
+    endif()
+
     find_package(OpenGL REQUIRED)
+
+    add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
+
+add_subdirectory(code/src)
 
 # Game build configuration
 
@@ -153,34 +167,20 @@ if(BUILD_GAME)
     add_subdirectory(code/game)
     add_subdirectory(code/application)
 
+    target_compile_definitions(${CM_SANDBOX_GAME_PROJECT} PRIVATE GLEW_STATIC)
     target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
         # Engine & game source
         PRIVATE Sandbox_App
 
         # Third Parties
-        PUBLIC smhasher
-        PUBLIC imgui
-        PRIVATE  assimp
-        PRIVATE  yaml-cpp
-        PRIVATE  glfw
-        PRIVATE  OpenGL::GL
+        PUBLIC  smhasher
+        PUBLIC  imgui
+        PRIVATE assimp
+        PRIVATE yaml-cpp
+        PUBLIC glfw
+        PUBLIC ${GLEWS}
+        PRIVATE OpenGL::GL
     )
-    
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
-            PRIVATE ${CM_SANDBOX_LIB_DIR}/glew32s.lib
-        )
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
-            PRIVATE  ${CM_SANDBOX_LIB_DIR}/libGLEW.a
-        )
-    endif()
-    # if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    #     file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
-    # else()
-        # file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG})
-    # endif()
-    # file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CM_SANDBOX_GAME_DIR})
 
     # Post-config scripts
 
@@ -211,28 +211,22 @@ if(BUILD_EDITOR)
 
     add_subdirectory(code/editor)
     add_executable(SandboxEditor code/editor/main.cpp)
-    target_include_directories(SandboxEditor PRIVATE vendor/includes)
     message("\nExecutable: Editor\n")
 
+    target_compile_definitions(SandboxEditor PRIVATE GLEW_STATIC)
     target_link_libraries(SandboxEditor
         PRIVATE Sandbox_Editor
 
         # Third Parties
         PUBLIC smhasher
         PUBLIC imgui
-        PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/glew32.lib
-        PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/assimp-vc143-mtd.lib
-        PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/glfw3.lib
-        PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/OpenGL32.lib
-        PRIVATE  ${CM_SANDBOX_VENDOR_DIR}/libs/yaml-cppd.lib
+        PRIVATE assimp
+        PRIVATE yaml-cpp
+        PUBLIC glfw
+        PUBLIC ${GLEWS}
+        PRIVATE OpenGL::GL
     )
-
-    # if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    #     file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE})
-    # else()
-    #     file(COPY ${CM_SANDBOX_VENDOR_DIR}/libs/ DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG})
-    # endif()
-    # file(COPY ${CM_SANDBOX_VENDOR_DIR}/dlls/ DESTINATION ${CM_SANDBOX_EDITOR_DIR})
+    
 endif()
 
 # ---

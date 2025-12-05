@@ -101,8 +101,19 @@ add_library(Sandbox_Engine STATIC
     Game/IGame.h
 )
 
+# target_include_directories(Sandbox_Engine SYSTEM PUBLIC
+#     ${glfw_SOURCE_DIR}/include
+# )
+
 # SYSTEM flag clears warnings from vendor headers
-target_include_directories(Sandbox_Engine SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+target_compile_definitions(Sandbox_Engine PRIVATE GLEW_STATIC)
 target_include_directories(Sandbox_Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Sandbox_Engine SYSTEM PRIVATE
+    ${CM_SANDBOX_VENDOR_DIR}/includes
+    ${assimp_SOURCE_DIR}/include
+    ${FETCHCONTENT_BASE_DIR}/assimp-build/include
+    ${yaml-cpp_SOURCE_DIR}/include
+    ${glfw_SOURCE_DIR}/include
+)
 
 message("Finished Sandbox Engine library")
