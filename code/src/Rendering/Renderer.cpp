@@ -33,14 +33,23 @@ namespace Sb {
 
 			// GLFW config
 			glfwDefaultWindowHints();
-			glfwWindowHint(GLFW_RED_BITS, 8);				// Frame bit length
+			glfwWindowHint(GLFW_RED_BITS, 8);									// Frame bit length
 			glfwWindowHint(GLFW_GREEN_BITS, 8);			
 			glfwWindowHint(GLFW_BLUE_BITS, 8);				
 			glfwWindowHint(GLFW_ALPHA_BITS, 8);			
 			glfwWindowHint(GLFW_DEPTH_BITS, 16);			
 			glfwWindowHint(GLFW_DOUBLEBUFFER, SB_RENDERER_TRIPLE_BUFFERING);	// Triple buffering		
-			glfwWindowHint(GLFW_SAMPLES, 0);				// MSAA
-			
+			glfwWindowHint(GLFW_SAMPLES, 0);									// MSAA
+
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+#ifdef SB_PLATFORM_MAC
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_FALSE);
+#endif
+
 			_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 			glfwSwapInterval(SB_RENDERER_VSYNC);
 			
@@ -50,8 +59,8 @@ namespace Sb {
 			}
 	
 			glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GLFramebufferSizeCallback);
-	
-	
+
+			glewExperimental = GL_TRUE;
 			// GLEW initialization
 			if(glewInit() != GLEW_OK) {
 				glfwTerminate();

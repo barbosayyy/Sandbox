@@ -19,7 +19,11 @@ bld/
 [Cc]ache/
 /[Ii]nstall/
 [Uu]ser/
+_*
 
 CMakeUserPresets.json
-
 imgui.ini
+*.exe
+*.pdb
+
+.DS_Store

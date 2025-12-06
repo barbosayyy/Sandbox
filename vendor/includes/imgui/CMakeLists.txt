@@ -19,4 +19,8 @@ add_library(imgui STATIC
     imstb_truetype.h
 )
 
-target_include_directories(imgui SYSTEM PRIVATE ../)
+target_compile_definitions(imgui PRIVATE GLEW_STATIC)
+target_include_directories(imgui SYSTEM PRIVATE ~
+    ${glfw_SOURCE_DIR}/include
+    ../
+)

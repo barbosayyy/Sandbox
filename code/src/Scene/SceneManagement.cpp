@@ -109,7 +109,7 @@ namespace Sb {
             }
         }
 
-        static void SaveScene(const String& levelName) {
+        void SaveScene(const String& levelName) {
             ECS::Registry& entityRegistry = ECS::Registry::GetInstance();
 
             String path = String("resources/levels");

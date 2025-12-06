@@ -3,14 +3,30 @@
         {
             "type": "shell",
             "label": "Sandbox: Clean build",
-            "command": "rm -r ${workspaceFolder}/build",
+            "windows": {
+                "command": "rm -r ${workspaceFolder}/build"
+            },
+            "osx": {
+                "command": "rm -rf ${workspaceFolder}/build"
+            },
+            "linux": {
+                "command": "rm -rf ${workspaceFolder}/build"
+            },
             "problemMatcher": [],
             "detail": "Clean the Sandbox build folder"
         },
         {
             "type": "shell",
             "label": "Sandbox: Clean CMake cache",
-            "command": "rm -r ${workspaceFolder}/.cache",
+            "windows": {
+                "command": "rm -r ${workspaceFolder}/.cache"
+            },
+            "osx": {
+                "command": "rm -rf ${workspaceFolder}/.cache"
+            },
+            "linux": {
+                "command": "rm -rf ${workspaceFolder}/.cache"
+            },
             "problemMatcher": [],
             "detail": "Clean CMake .cache folder"
         },

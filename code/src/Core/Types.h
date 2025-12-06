@@ -6,7 +6,6 @@
 
 #include <vector>
 #include <string>
-#include <xstring>
 
 namespace Sb {
 
@@ -34,7 +33,7 @@ namespace Sb {
 		void append(String& str);
 		void append(const std::string& str);
 		char& at(int index);
-		char* data() {return this->_string.data();}
+		const char* data() {return this->_string.data();}
 		bool empty();
 		size_t size() const {return this->_string.size();}
 		const String substr(size_t off, size_t count) const {return this->_string.substr(off, count);}

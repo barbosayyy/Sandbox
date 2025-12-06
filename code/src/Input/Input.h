@@ -4,7 +4,7 @@
 #include "Core/Base.h"
 #include "Core/Config.h"
 #include "Rendering/Renderer.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 #include <imgui/imgui.h>
 #include <functional>
 #include <vector>
