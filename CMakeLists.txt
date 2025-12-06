@@ -136,8 +136,8 @@ message("")
 
     elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         find_library(GLEWS
-            NAMES libGLEW
-            PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/Darwin"
+            NAMES libGLEW.a
+            PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/macOS"
             REQUIRED
         )
         
