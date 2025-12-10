@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Base.h"
 #include "Rendering/Model.h"
 #include "Rendering/Cubemap.h"
 #include "Rendering/Light.h"
@@ -57,7 +58,7 @@ namespace Sb {
     };
 
     struct HierarchyComponent : ComponentBase {
-        Entity parent;
+        Entity parent {_MAX_U32};
         std::vector<Entity> children;
 
         void AddChild(u32 entityID);

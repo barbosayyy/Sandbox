@@ -5,6 +5,19 @@ add_library(Sandbox_Editor STATIC
     EditorApplication.cpp
     Editor.h
     Editor.cpp
+    EditorWindow.h
+    EditorWindow.cpp
+    EditorGameService.h
+    EditorGameService.cpp
+    EditorMessageBus.h
+    EditorMessageBus.cpp
+    EditorMessage.h
+    SceneTree/EditorSceneTreeWindow.h
+    SceneTree/EditorSceneTreeWindow.cpp
+    Inspector/EditorInspectorWindow.h
+    Inspector/EditorInspectorWindow.cpp
+    AssetBrowser/EditorAssetBrowserWindow.h
+    AssetBrowser/EditorAssetBrowserWindow.cpp
 )
 
 target_compile_definitions(Sandbox_Editor PUBLIC SB_EDITOR)

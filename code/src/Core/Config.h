@@ -7,8 +7,8 @@
 // Sandbox Engine configuration 
 
 namespace Sb {
-    constexpr u16 DEFAULT_WINDOW_WIDTH = 640;
-    constexpr u16 DEFAULT_WINDOW_HEIGHT = 360;
+    constexpr u16 DEFAULT_WINDOW_WIDTH = 1280;
+    constexpr u16 DEFAULT_WINDOW_HEIGHT = 720;
     constexpr u16 DEFAULT_VIEWPORT_WIDTH = DEFAULT_WINDOW_WIDTH;
     constexpr u16 DEFAULT_VIEWPORT_HEIGHT = DEFAULT_WINDOW_HEIGHT;
     constexpr i16 DEFAULT_VIEWPORT_X = 0;

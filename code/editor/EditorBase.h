@@ -1,3 +1,4 @@
+#pragma once
 #include "Core/Base.h"
 #include "Core/Types.h"
 #include "Math/Vectors.h"
@@ -23,5 +24,7 @@ namespace SbEditor {
     constexpr Sb::u8 SB_EDITORUI_ASSETTREE = 1 << 2;
     constexpr Sb::u8 SB_EDITORUI_ASSETEXPLORER = 1 << 3;
     constexpr Sb::u8 SB_EDITORUI_INSPECTOR = 1 << 4;
+
+    const String SB_EDITORUI_FONTS_DIR = "resources/editor/fonts/";
 }
 

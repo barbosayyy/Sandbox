@@ -1,37 +1,44 @@
 #pragma once
 
 #include "EditorBase.h"
+#include "EditorMessageBus.h"
+#include "EditorWindow.h"
 #include "Engine/IEngine.h"
 #include "ImGui/ImGuiSbContext.h"
+#include <memory>
 
 namespace SbEditor {
     class Editor {
     public:
-		void Setup(Sb::IEngine* sbEngine);
+		Editor(Sb::IEngine* sbEngine);
+
+		void Start();
 
 		void Update();
 
 		void Render();
 
 		void Stop();
+
+		const EditorMessageBus& GetMessageBus() const {return _messageBus;}
 		
 		// UI
+		void AddEditorWindow(std::unique_ptr<EditorWindow> win);
+
 		void UIRender();
-
-		void UISetElementsVisible(Sb::u16 visibilityMask) { _uiVisibilityFlags |= visibilityMask; };
-		void UISetElementsNonVisible(Sb::u16 visibilityMask) { _uiVisibilityFlags &= ~visibilityMask; };
-
-		void UIShowMenu();
-		void UIShowSceneTree();
-		void UIShowAssetTree();
-		void UIShowAssetExplorer();
-		void UIShowInspector();
 		
+		void UIShowMenu();
+
+		void UISetElementsVisible(u16 visibilityMask) { _uiVisibilityFlags |= visibilityMask; };
+		void UISetElementsNonVisible(u16 visibilityMask) { _uiVisibilityFlags &= ~visibilityMask; };
+
 	private:
-		int _editorWindowWidth;
-		int _editorWindowHeight;
+		int _editorGlobalWindowWidth;
+		int _editorGlobalWindowHeight;
 		Sb::IEngine* _sbEnginePtr;
 		Sb::ImGuiSbContext* _sbImGuiContext;
-		Sb::u16 _uiVisibilityFlags;
+		u16 _uiVisibilityFlags;
+		std::vector<std::unique_ptr<EditorWindow>> _windows;
+		EditorMessageBus _messageBus;
     };
 }

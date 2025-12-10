@@ -11,11 +11,10 @@ namespace SbEditor {
         sbEngine.GetRenderer().GetWindow()->SetWindowTitle("Sandbox Editor");
 #endif
         
-        Editor sbEditor;
+        Editor sbEditor(&sbEngine);
         
         sbEngine.SetUIRenderingEnabled(false);
-        
-        sbEditor.Setup(&sbEngine);
+        sbEditor.Start();
 
         while(sbEngine.Validate() && !this->ShouldStop()) {
             sbEngine.Update();

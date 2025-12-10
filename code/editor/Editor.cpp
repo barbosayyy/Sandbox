@@ -1,24 +1,50 @@
+
 #include "Editor.h"
+#include "EditorBase.h"
+#include "EditorMessage.h"
+#include "EditorWindow.h"
 #include "Engine/Engine.h"
 #include "ImGui/ImGuiSbContext.h"
 #include "Core/Debug.h"
+#include "EditorGameService.h"
+#include "SceneTree/EditorSceneTreeWindow.h"
+#include "Inspector/EditorInspectorWindow.h"
+#include "AssetBrowser/EditorAssetBrowserWindow.h"
+
 #include "imgui/imgui.h"
+#include <memory>
 
 namespace SbEditor {
 
-    void Editor::Setup(Sb::IEngine* sbEngine) {
-        this->_sbEnginePtr = sbEngine;
+    Editor::Editor(Sb::IEngine* sbEngine) : _uiVisibilityFlags(0){
+        _sbEnginePtr = sbEngine;
+    }
+
+    void Editor::Start() {
         this->_sbImGuiContext = &_sbEnginePtr->GetRenderer().GetImGuiSbContext();
-        this->_editorWindowWidth = sbEngine->GetRenderer().GetWindow()->GetWindowWidth();
-        this->_editorWindowHeight = sbEngine->GetRenderer().GetWindow()->GetWindowHeight();
-        this->UISetElementsVisible(SB_EDITORUI_MENU | SB_EDITORUI_SCENETREE | SB_EDITORUI_ASSETEXPLORER | SB_EDITORUI_ASSETTREE | SB_EDITORUI_INSPECTOR);
+        this->_editorGlobalWindowWidth = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowWidth();
+        this->_editorGlobalWindowHeight = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowHeight();
+        this->UISetElementsVisible(SB_EDITORUI_MENU);
+
+        ImFont* fontEditor = this->_sbImGuiContext->_io->Fonts->AddFontFromFileTTF(SB_EDITORUI_FONTS_DIR+"Roboto/Roboto.ttf", 16, NULL, this->_sbImGuiContext->_io->Fonts->GetGlyphRangesDefault());
+        if(fontEditor != nullptr){
+            this->_sbImGuiContext->_io->Fonts->Build();
+            _sbImGuiContext->_io->FontDefault = fontEditor;
+        }
+        else {
+            Sb::Log::Warn("Editor: Failed to load custom font");
+        }
+
+        AddEditorWindow(std::make_unique<EditorSceneTreeWindow>());
+        AddEditorWindow(std::make_unique<EditorInspectorWindow>());
+        AddEditorWindow(std::make_unique<EditorAssetBrowserWindow>());
     }
 
     void Editor::Update() {
-        if(this->_editorWindowWidth != _sbEnginePtr->GetRenderer().GetWindow()->GetWindowWidth())
-            this->_editorWindowWidth = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowWidth();
-        if(this->_editorWindowHeight != _sbEnginePtr->GetRenderer().GetWindow()->GetWindowHeight())
-            this->_editorWindowHeight = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowHeight();
+        if(this->_editorGlobalWindowWidth != _sbEnginePtr->GetRenderer().GetWindow()->GetWindowWidth())
+            this->_editorGlobalWindowWidth = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowWidth();
+        if(this->_editorGlobalWindowHeight != _sbEnginePtr->GetRenderer().GetWindow()->GetWindowHeight())
+            this->_editorGlobalWindowHeight = _sbEnginePtr->GetRenderer().GetWindow()->GetWindowHeight();
     }
 
     void Editor::Render() {
@@ -30,63 +56,37 @@ namespace SbEditor {
         this->_sbImGuiContext = nullptr;
     }
 
+    void Editor::AddEditorWindow(std::unique_ptr<EditorWindow> win) {
+        _messageBus.SubscribeWindow(EditorMessageType::SceneTreeSelect, win.get());
+        _messageBus.SubscribeWindow(EditorMessageType::AssetBrowserSelect, win.get());
+        win->sbEditor = this;
+        _windows.push_back(std::move(win));
+    }
+
     void Editor::UIRender() {
-        if(this->_uiVisibilityFlags & SB_EDITORUI_SCENETREE) {
+        if(this->_uiVisibilityFlags & SB_EDITORUI_MENU) {
             this->UIShowMenu();
         }
-        if(this->_uiVisibilityFlags & SB_EDITORUI_SCENETREE) {
-            this->UIShowSceneTree();
-        }
-        
-        if(this->_uiVisibilityFlags & SB_EDITORUI_ASSETTREE) {
-            this->UIShowAssetTree();
-        }
 
-        if(this->_uiVisibilityFlags & SB_EDITORUI_ASSETEXPLORER) {
-            this->UIShowAssetExplorer();
-        }
-        
-        if(this->_uiVisibilityFlags & SB_EDITORUI_INSPECTOR) {
-            this->UIShowInspector();
+        for(auto& win : _windows) {
+            win->Render();
         }
     }
     
     void Editor::UIShowMenu() {
-        ImGui::Begin("Menu", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-        ImGui::SetWindowPos(ImVec2(0,0), 0);
-        ImGui::SetWindowSize(ImVec2(_editorWindowWidth, 60));
-        ImGui::End();
-    }
-
-    void Editor::UIShowSceneTree() {
-        int windowHeight = 60;
-        int assetExplorerHeight = _editorWindowHeight*0.3;
-        ImGui::Begin("Scene Tree", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-        ImGui::SetWindowPos(ImVec2(0, windowHeight), 0);
-        ImGui::SetWindowSize(ImVec2(_editorWindowWidth*0.20, _editorWindowHeight-windowHeight-assetExplorerHeight), 0);
-        ImGui::End();
-    }
-
-    void Editor::UIShowAssetTree() {
-        ImGui::Begin("Asset Tree", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-        ImGui::SetWindowPos(ImVec2(0, _editorWindowHeight-_editorWindowHeight*0.3), 0);
-        ImGui::SetWindowSize(ImVec2(_editorWindowWidth*0.20, _editorWindowHeight*0.3), 0);
-        ImGui::End();
-    }
-
-    void Editor::UIShowAssetExplorer() {
-        ImGui::Begin("Asset Explorer", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-        ImGui::SetWindowPos(ImVec2(_editorWindowWidth*0.20, _editorWindowHeight-_editorWindowHeight*0.3), 0);
-        ImGui::SetWindowSize(ImVec2(_editorWindowWidth-_editorWindowWidth*0.20, _editorWindowHeight*0.3), 0);
-        ImGui::End();
-    }
-
-    void Editor::UIShowInspector() {
-        int windowHeight = 60;
-        int assetExplorerHeight = _editorWindowHeight*0.3;
-        ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-        ImGui::SetWindowPos(ImVec2(_editorWindowWidth-(_editorWindowWidth*0.20), windowHeight), 0);
-        ImGui::SetWindowSize(ImVec2(_editorWindowWidth*0.20, _editorWindowHeight-windowHeight-assetExplorerHeight), 0);
-        ImGui::End();
+        if(ImGui::BeginMainMenuBar()) {
+            if(ImGui::BeginMenu("File")) {
+                if(ImGui::MenuItem("New")) {}
+                if(ImGui::MenuItem("Open")) {EditorGameService::LoadSbGame();}
+                if(ImGui::MenuItem("Save")) {}
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Edit")) {
+                if(ImGui::MenuItem("Undo")) {}
+                if(ImGui::MenuItem("Redo")) {}
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
     }
 }
