@@ -25,5 +25,13 @@
         "program": "${workspaceFolder}/SampleProject/SandboxGame",
         "preLaunchTask": "Sandbox: Build Editor & Game"
         },
+        {
+        "name": "LLDB SandboxEditor macOS",
+        "type": "lldb",
+        "request": "launch",
+        "cwd": "${workspaceFolder}/SampleProject",
+        "program": "${workspaceFolder}/SandboxEditor/SandboxEditor",
+        "preLaunchTask": "Sandbox: Build Editor & Game"
+        }
     ]
 }

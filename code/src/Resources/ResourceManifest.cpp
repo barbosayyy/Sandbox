@@ -86,12 +86,18 @@ namespace Sb {
                 
                 for(const auto& dirEntry : std::filesystem::recursive_directory_iterator(SB_RESOURCE_FOLDER_PATH)) {
                     
-                    if(!dirEntry.exists())
+                    if(!dirEntry.exists()) {
                         continue;
+                    }
 
-                    // Skip common assets
-                    if((dirEntry.path().string().rfind("resources/common", 0) == 0 || dirEntry.path().string().rfind("resources\\common", 0) == 0) )
-                        continue;
+                    // Blacklist these folders
+                        if((dirEntry.path().string().rfind("resources/common", 0) == 0 || dirEntry.path().string().rfind("resources\\common", 0) == 0) ) {
+                            continue;
+                        }
+
+                        if((dirEntry.path().string().rfind("resources/editor", 0) == 0 || dirEntry.path().string().rfind("resources\\editor", 0) == 0) ) {
+                            continue;
+                        }
                     
                     if(!std::filesystem::is_directory(dirEntry)) {
                         const SbGUID guid = Crypto::NewGUID();

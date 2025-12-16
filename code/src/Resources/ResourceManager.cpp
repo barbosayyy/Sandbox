@@ -187,13 +187,17 @@ namespace Sb {
                     Vertex vertex = Vertex();    
                     vertex.position.x = mesh->mVertices[i].x;
                     vertex.position.y = mesh->mVertices[i].y;
-                    vertex.position.z = mesh->mVertices[i].z; 
-                    vertex.normal.x = mesh->mNormals[i].x;
-                    vertex.normal.y = mesh->mNormals[i].y;
-                    vertex.normal.z = mesh->mNormals[i].z;
-                    vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
-                    vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
-            
+                    vertex.position.z = mesh->mVertices[i].z;
+                    if(mesh->mNormals[i].Length() > 0) {
+                        vertex.normal.x = mesh->mNormals[i].x;
+                        vertex.normal.y = mesh->mNormals[i].y;
+                        vertex.normal.z = mesh->mNormals[i].z;
+                    } 
+                    if(mesh->mTextureCoords[0] != nullptr) {
+                        vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
+                        vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
+                    }
+
                     vertices.push_back(vertex);
                 }
                 for(u32 i = 0; i < mesh->mNumFaces; i++){
@@ -203,12 +207,21 @@ namespace Sb {
                     }
                 }
                 aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-                material._diffuseMap = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE, path, loadedTextures).at(0);
+                std::vector<Texture> diffuseTextures = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE, path, loadedTextures);
+                std::vector<Texture> specularTextures = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR, path, loadedTextures);
+                if(diffuseTextures.size() > 0)
+                    material._diffuseMap = diffuseTextures.at(0);
+
+                    // TODO - Insert
                 // std::vector<Texture> diffuseMaps = AssimpLoadMaterialTextures(mat, aiTextureType_DIFFUSE);
                 // material._diffuseMap.insert(material._diffuseMap.end(), diffuseMaps.begin(), diffuseMaps.end());
                 // std::vector<Texture> specularMaps = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR);
-                material._specularMap = AssimpLoadMaterialTextures(mat, aiTextureType_SPECULAR, path, loadedTextures).at(0);
+
+                if(specularTextures.size() > 0)
+                    material._specularMap = specularTextures.at(0);
+
                 // textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+                
                 return Mesh(vertices, indices, material);
             }
         
@@ -251,6 +264,15 @@ namespace Sb {
             if(!LoadResourceMetadata()) {
                 // TODO throw engine subsystem error here
             }
+        }
+
+        const String ResourceManager::GetAssetPathByAssetID(u32 assetID) {
+            if(_pathHashToGUID.contains(assetID)) {
+                if(_guidToAssetPathIndex.contains(_pathHashToGUID[assetID])) {
+                    return _assetPaths.at(_guidToAssetPathIndex[_pathHashToGUID[assetID]]);
+                }
+            }
+            return "";
         }
 
         /* TODO

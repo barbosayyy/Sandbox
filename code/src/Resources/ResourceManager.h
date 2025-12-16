@@ -108,6 +108,8 @@ namespace Sb {
         public:
             ResourceManager();
 
+            const String GetAssetPathByAssetID(u32 assetID);
+
             Model* LoadModel(const String& assetPath);
             Model* LoadModel(DefaultMesh primitive);
             Texture* LoadTexture(const String& assetPath, TextureType type);

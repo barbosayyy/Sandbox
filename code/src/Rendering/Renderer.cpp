@@ -11,7 +11,24 @@
 #include "Resources/ResourceManagement.h"
 #include "Resources/DefaultPrimitives.h"
 
+#include <filesystem>
 #include "glfw/glfw3.h"
+#include <glfw/glfw3.h>
+
+namespace {
+
+	// in macOS, cwd should be in a different location relative to the app, GLFW seems to force this for some reason
+	// to make app debugging easier for now, the cwd is set again to the original cwd (the app's directory)
+#if defined(SB_PLATFORM_MAC) && defined(SB_BUILD_DEBUG)
+	void GlfwMacOSInit() {
+		std::filesystem::path cwd = std::filesystem::current_path();
+		if(!glfwInit()) {
+			SB_ASSERT("Renderer: Failed to initialize GLFW.");
+		}
+		std::filesystem::current_path(cwd);
+	}
+#endif
+}
 
 namespace Sb {
 
@@ -23,14 +40,16 @@ namespace Sb {
 	}
 
 	Renderer::Renderer() : _currentAPI(0x0), _viewportWidth(DEFAULT_VIEWPORT_WIDTH), _viewportHeight(DEFAULT_VIEWPORT_HEIGHT), _viewportX(DEFAULT_VIEWPORT_X), _viewportY(DEFAULT_VIEWPORT_Y) {
-
 		_currentAPI |= SB_OPENGL;
 		
 		if(_currentAPI & SB_OPENGL) {
+#if defined(SB_PLATFORM_MAC) && defined(SB_BUILD_DEBUG)
+			GlfwMacOSInit();
+#else
 			if(!glfwInit()) {
 				SB_ASSERT("Renderer: Failed to initialize GLFW.");
 			}
-
+#endif
 			// GLFW config
 			glfwDefaultWindowHints();
 			glfwWindowHint(GLFW_RED_BITS, 8);									// Frame bit length
@@ -49,7 +68,6 @@ namespace Sb {
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_FALSE);
 #endif
-
 			_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 			glfwSwapInterval(SB_RENDERER_VSYNC);
 			

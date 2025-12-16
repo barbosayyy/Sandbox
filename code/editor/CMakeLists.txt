@@ -25,6 +25,7 @@ target_compile_definitions(Sandbox_Editor PRIVATE GLEW_STATIC)
 
 # SYSTEM flag clears warnings from vendor headers
 target_include_directories(Sandbox_Editor SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+target_include_directories(Sandbox_Editor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(Sandbox_Editor PRIVATE
     ${assimp_SOURCE_DIR}/include
     ${FETCHCONTENT_BASE_DIR}/assimp-build/include
