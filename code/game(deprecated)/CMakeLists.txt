@@ -1,6 +1,6 @@
 # Sandbox - Game
 
-add_library(Sandbox_Game STATIC
+add_library(Sandbox_Game SHARED
     SbGameBase.h
     SbGame.cpp
     SbGameUI.h

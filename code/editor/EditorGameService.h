@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+
+    DEPRECATED
+*/
+
 namespace SbEditor {
     class EditorGameService {
     

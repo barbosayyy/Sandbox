@@ -46,6 +46,20 @@
         },
         {
             "type": "shell",
+            "label": "Sandbox: Set Build Game ON",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_GAME=ON -G Ninja",
+            "problemMatcher": [],
+            "detail": "Set Build Game ON in cache"
+        },
+        {
+            "type": "shell",
+            "label": "Sandbox: Set Build Game OFF",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_GAME=OFF -G Ninja",
+            "problemMatcher": [],
+            "detail": "Sets Build Game OFF in cache"
+        },
+        {
+            "type": "shell",
             "label": "Sandbox: Build Editor & Game",
             "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja --DCMAKE_BUILD_TYPE=Debug; cmake --build ${workspaceFolder}/build --config Debug --target all",
             "problemMatcher": [],

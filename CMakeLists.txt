@@ -89,8 +89,8 @@ configure_compiler()
 configure_project_defines()
 
 # Flags for which projects to build
-option(BUILD_EDITOR "Build editor project" OFF)
-option(BUILD_GAME "Build game project" ON)
+option(BUILD_EDITOR "Build editor project" ON)
+option(BUILD_GAME "Build game project" OFF)
 
 message("BUILD_EDITOR flag: " ${BUILD_EDITOR})
 message("BUILD_GAME flag: " ${BUILD_GAME})
@@ -148,56 +148,59 @@ message("")
     add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
 add_subdirectory(code/src)
+add_subdirectory(code/api)
 
 # Game build configuration
 
-if(BUILD_GAME)
+    # NOTE Game building will be deprecated in favor of having a detached project from the engine, compilation of a game project will be done externally
+    
+    # if(BUILD_GAME)
 
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
+    #     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR})
+    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
+    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
+    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
+    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
 
-    # Temp - Set on project creation
-    set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
-    add_executable(${CM_SANDBOX_GAME_PROJECT} code/application/main.cpp)
-    message("\nExecutable: Game\n")
+    #     # Temp - Set on project creation
+    #     set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
+    #     add_executable(${CM_SANDBOX_GAME_PROJECT} code/application/main.cpp)
+    #     message("\nExecutable: Game\n")
 
-    add_subdirectory(code/game)
-    add_subdirectory(code/application)
+    #     add_subdirectory(code/game)
+    #     add_subdirectory(code/application)
 
-    target_compile_definitions(${CM_SANDBOX_GAME_PROJECT} PRIVATE GLEW_STATIC)
-    target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
-        # Engine & game source
-        PRIVATE Sandbox_App
+    #     target_compile_definitions(${CM_SANDBOX_GAME_PROJECT} PRIVATE GLEW_STATIC)
+    #     target_link_libraries(${CM_SANDBOX_GAME_PROJECT}
+    #         # Engine & game source
+    #         PRIVATE Sandbox_App
 
-        # Third Parties
-        PUBLIC  smhasher
-        PUBLIC  imgui
-        PRIVATE assimp
-        PRIVATE yaml-cpp
-        PUBLIC glfw
-        PUBLIC ${GLEWS}
-        PRIVATE OpenGL::GL
-    )
+    #         # Third Parties
+    #         PUBLIC  smhasher
+    #         PUBLIC  imgui
+    #         PRIVATE assimp
+    #         PRIVATE yaml-cpp
+    #         PUBLIC glfw
+    #         PUBLIC ${GLEWS}
+    #         PRIVATE OpenGL::GL
+    #     )
 
-    # Post-config scripts
+    #     # Post-config scripts
 
-    set(CM_SANDBOX_RUN_SCRIPTS     0)
+    #     set(CM_SANDBOX_RUN_SCRIPTS     0)
 
-    if(${CM_SANDBOX_RUN_SCRIPTS} EQUAL 1)
-        message("Running Configure Scripts:")
-        if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-                # - Deprecated
-                    message("generate_resource_manifest.py")
-                    execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CMAKE_BINARY_DIR})    
-                    file(COPY ${CM_SANDBOX_RESOURCES_DIR}/resource_manifest.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
-            endif()
-    else()
-        message("Configure Scripts are disabled")
-    endif()
-endif()
+    #     if(${CM_SANDBOX_RUN_SCRIPTS} EQUAL 1)
+    #         message("Running Configure Scripts:")
+    #         if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    #                 # - Deprecated
+    #                     message("generate_resource_manifest.py")
+    #                     execute_process(COMMAND python -O ${CM_SANDBOX_SCRIPTS_DIR}/generate_resource_manifest.py --cmake=1 --res_path=${CMAKE_BINARY_DIR})    
+    #                     file(COPY ${CM_SANDBOX_RESOURCES_DIR}/resource_manifest.yaml DESTINATION ${CMAKE_BINARY_DIR}/resources)
+    #             endif()
+    #     else()
+    #         message("Configure Scripts are disabled")
+    #     endif()
+    # endif()
 
 # Engine build configuration
 

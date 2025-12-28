@@ -5,6 +5,7 @@
 #include "Rendering/Cubemap.h"
 #include "Rendering/Light.h"
 #include "Core/Collections.h"
+#include "Scripting/IScript.h"
 
 namespace Sb {
 
@@ -63,5 +64,9 @@ namespace Sb {
 
         void AddChild(u32 entityID);
         void SetParent(u32 entityID);
+    };
+
+    struct ScriptComponent : ComponentBase {
+        std::unique_ptr<Scripting::IScript> script;
     };
 }

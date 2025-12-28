@@ -17,7 +17,8 @@ namespace Sb {
                 MeshComponent,
                 SkyboxComponent,
                 LightComponent,
-                HierarchyComponent
+                HierarchyComponent,
+                ScriptComponent
             >;
 
             template <typename Tuple>

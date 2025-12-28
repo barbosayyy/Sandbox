@@ -5,6 +5,7 @@
 #include "ECS/Registry.h"
 #include "Input/Input.h"
 #include "Resources/ResourceManager.h"
+#include "Scripting/ScriptRegistry.h"
 #include "glfw/glfw3.h"
 #include "imgui/imgui.h"
 #include "Core/Profiler.h"
@@ -33,25 +34,30 @@ namespace Sb {
 		SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
 		SetECSRegistry(ECS::Registry::GetInstance());
 		SetResourceManager(ResourceManagement::ResourceManager::GetInstance());
+		SetScriptRegistry(Scripting::ScriptRegistry::GetInstance());
 	}
 
 	Engine::~Engine() {
 	}
 
-	void Engine::SetRenderer(Renderer& renderer) {
-		_renderer = &renderer;
+	void Engine::SetRenderer(Renderer& instance) {
+		_renderer = &instance;
 	}
 
-	void Engine::SetInputManager(InputManager& inputManager) {
-		_internalInput = &inputManager;
+	void Engine::SetInputManager(InputManager& instance) {
+		_internalInput = &instance;
 	}
 
-	void Engine::SetECSRegistry(ECS::Registry& registry) {
-		_ecsRegistry = &registry;
+	void Engine::SetECSRegistry(ECS::Registry& instance) {
+		_ecsRegistry = &instance;
 	}
 
-	void Engine::SetResourceManager(ResourceManagement::ResourceManager& resourceManager) {
-		_resourceManager = &resourceManager;
+	void Engine::SetResourceManager(ResourceManagement::ResourceManager& instance) {
+		_resourceManager = &instance;
+	}
+
+	void Engine::SetScriptRegistry(Scripting::ScriptRegistry& instance) {
+		_scriptRegistry = &instance;
 	}
 
 	bool Engine::Validate() {

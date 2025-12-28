@@ -4,6 +4,11 @@
 #include "ECS/Registry.h"
 #include "ECS/EntityManagement.h"
 
+/*
+
+    DEPRECATED
+*/
+
 namespace SbEditor {
     void EditorGameService::CompileSbGameProject() {
         // Game is compiled into DLL/SO

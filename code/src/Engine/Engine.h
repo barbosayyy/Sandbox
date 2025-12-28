@@ -6,6 +6,8 @@
 #include "Rendering/Renderer.h"
 #include "ECS/Registry.h"
 #include "Resources/ResourceManager.h"
+#include "Scripting/ScriptRegistry.h"
+#include "Game/GameService.h"
 
 #include <memory>
 
@@ -16,10 +18,12 @@ namespace Sb {
 		~Engine();
 
 		// Engine components Get/Set
-			void SetRenderer(Renderer& renderer);
-			void SetInputManager(InputManager& inputManager);
-			void SetECSRegistry(ECS::Registry& registry);
-			void SetResourceManager(ResourceManagement::ResourceManager& resourceManager);
+			void SetRenderer(Renderer& instance);
+			void SetInputManager(InputManager& instance);
+			void SetECSRegistry(ECS::Registry& instance);
+			void SetResourceManager(ResourceManagement::ResourceManager& instance);
+			void SetScriptRegistry(Scripting::ScriptRegistry& instance);
+
 			Renderer& GetRenderer() const final override { return *_renderer; };
 			InputManager& GetInputManager() const final override { return *_internalInput; };
 			ECS::Registry& GetECSRegistry() const final override { return *_ecsRegistry; };
@@ -50,19 +54,22 @@ namespace Sb {
 
 		void OnInput();
 
-		private:
+	private:
 		Renderer* _renderer;
 		InputManager* _internalInput;
 		ECS::Registry* _ecsRegistry;
 		ResourceManagement::ResourceManager* _resourceManager;
+		Scripting::ScriptRegistry* _scriptRegistry;
 		
-		bool _uiRenderEnabled;
-
+		
+		GameService _gameService;
+		
 		// Runtime stats + config
 		Stats _engineStats;
 		Stats _gameStats;
 		Config _engineConfig;
-
+		
+		bool _uiRenderEnabled;
 		static bool _error;
 		bool _firstFrame;
 	};

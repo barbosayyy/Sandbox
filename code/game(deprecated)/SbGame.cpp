@@ -142,10 +142,6 @@ void Game::Update(){
 	}
 }
 
-// void Game::Render(){
-// 	SbGameUI::ShowUI(_sbEngine.GetRenderer().GetImGuiSbContext());
-// }
-
 void Game::Stop(){
 	Log::Info("SbGame: Stopping...");
 }
