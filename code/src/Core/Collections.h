@@ -2,6 +2,7 @@
 
 #include "Core/Debug.h"
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 namespace Sb {
@@ -29,7 +30,7 @@ namespace Sb {
             // Log::Warn("Collections: SparseSet.Remove(u32 element) is not implemented!");
             if(Contains(element)) {
                 u32 denseId = _sparse[element];
-                _dense[denseId] = _dense.back();
+                _dense[denseId] = std::move(_dense.back());
                 _sparse[_dense.back().sparseIndex] = denseId;
                 _dense.pop_back();
                 _sparse[element] = _MAX_U32;

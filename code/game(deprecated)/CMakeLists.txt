@@ -16,7 +16,7 @@ target_include_directories(Sandbox_Game PRIVATE
     ${FETCHCONTENT_BASE_DIR}/assimp-build/include
     ${yaml-cpp_SOURCE_DIR}/include
     ${glfw_SOURCE_DIR}/include
-    ${CM_SANDBOX_CODE_DIR}/src
+    ${CM_SANDBOX_SOURCE_DIR}/src
 )
 target_link_libraries(Sandbox_Game PRIVATE Sandbox_Engine)
 

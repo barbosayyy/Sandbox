@@ -12,7 +12,7 @@ namespace Sb {
         class ScriptRegistry : public Singleton<ScriptRegistry, int>{
             std::unordered_map<std::string, ScriptCreator> _registry;
         public:
-            void RegisterScript(const std::string& name, ScriptCreator creator){ _registry[name] = creator; }
+            void RegisterScript(const std::string& name, ScriptCreator creator);
 
             std::unique_ptr<IScript> CreateScript(const std::string& name);
 
@@ -20,13 +20,3 @@ namespace Sb {
         };
     }
 }
-
-#define REGISTER_SCRIPT(ClassName) \
-    extern "C" { \
-        __declspec(dllexport) Sb::Scripting::IScript* Create##ClassName() { \
-            return new ClassName(); \
-        } \
-        __declspec(dllexport) void Register##ClassName() { \
-            Sb::Scripting::ScriptRegistry::GetInstance().RegisterScript(#ClassName, Create##ClassName); \
-        } \
-    }

@@ -1,6 +1,6 @@
 # Sandbox - Source
 
-add_library(Sandbox_Engine STATIC
+add_library(SbEngineCore STATIC
     
     # Core
     Core/Base.h
@@ -99,21 +99,33 @@ add_library(Sandbox_Engine STATIC
     # Game
     Game/Game.h
     Game/IGame.h
+
+    # Scripting
+    Scripting/IScript.h
+    Scripting/ScriptRegistry.h
+    Scripting/ScriptRegistry.cpp
+    Scripting/APIImpl.cpp
 )
 
-# target_include_directories(Sandbox_Engine SYSTEM PUBLIC
-#     ${glfw_SOURCE_DIR}/include
-# )
+add_library(SbAPI INTERFACE)
+
+target_include_directories(SbAPI INTERFACE
+    ${CM_SANDBOX_SOURCE_DIR/api}
+)
+
+target_compile_definitions(SbEngineCore PRIVATE GLEW_STATIC)
 
 # SYSTEM flag clears warnings from vendor headers
-target_compile_definitions(Sandbox_Engine PRIVATE GLEW_STATIC)
-target_include_directories(Sandbox_Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(Sandbox_Engine SYSTEM PRIVATE
-    ${CM_SANDBOX_VENDOR_DIR}/includes
-    ${assimp_SOURCE_DIR}/include
-    ${FETCHCONTENT_BASE_DIR}/assimp-build/include
-    ${yaml-cpp_SOURCE_DIR}/include
-    ${glfw_SOURCE_DIR}/include
+target_include_directories(SbEngineCore SYSTEM PRIVATE
+${CMAKE_CURRENT_SOURCE_DIR}
+${CM_SANDBOX_VENDOR_DIR}/includes
+
+${assimp_SOURCE_DIR}/include
+${FETCHCONTENT_BASE_DIR}/assimp-build/include
+${yaml-cpp_SOURCE_DIR}/include
+${glfw_SOURCE_DIR}/include
 )
+
+target_link_libraries(SbEngineCore PUBLIC SbAPI)
 
 message("Finished Sandbox Engine library")

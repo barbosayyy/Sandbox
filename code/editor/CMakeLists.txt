@@ -1,6 +1,6 @@
 # Sandbox - Editor
 
-add_library(Sandbox_Editor STATIC
+add_library(SbEditor STATIC
     EditorApplication.h
     EditorApplication.cpp
     Editor.h
@@ -20,20 +20,20 @@ add_library(Sandbox_Editor STATIC
     AssetBrowser/EditorAssetBrowserWindow.cpp
 )
 
-target_compile_definitions(Sandbox_Editor PUBLIC SB_EDITOR)
-target_compile_definitions(Sandbox_Editor PRIVATE GLEW_STATIC)
+target_compile_definitions(SbEditor PUBLIC SB_EDITOR)
+target_compile_definitions(SbEditor PRIVATE GLEW_STATIC)
 
 # SYSTEM flag clears warnings from vendor headers
-target_include_directories(Sandbox_Editor SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
-target_include_directories(Sandbox_Editor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(Sandbox_Editor PRIVATE
+target_include_directories(SbEditor SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+
+target_include_directories(SbEditor PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CM_SANDBOX_SOURCE_DIR}/src
+    
     ${assimp_SOURCE_DIR}/include
     ${FETCHCONTENT_BASE_DIR}/assimp-build/include
     ${yaml-cpp_SOURCE_DIR}/include
     ${glfw_SOURCE_DIR}/include
-    ${CM_SANDBOX_CODE_DIR}/src
 )
-
-target_link_libraries(Sandbox_Editor PRIVATE Sandbox_Engine )
 
 message("Finished Sandbox Editor library")

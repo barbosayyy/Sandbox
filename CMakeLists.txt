@@ -25,13 +25,15 @@ function(configure_compiler)
     endif()
 endfunction()
 
+###############################################
+
 function(configure_project_defines)
     
     # Platform & build type
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(WIN32)
         add_compile_definitions(SB_PLATFORM_WIN)
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    elseif(APPLE)
         add_compile_definitions(SB_PLATFORM_MAC)
     endif()
 
@@ -50,18 +52,20 @@ function(configure_project_defines)
     message("For platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} - ${CMAKE_BUILD_TYPE}")
 endfunction()
 
+###############################################
+
 function(configure_project_variables)
-    set(CM_SANDBOX_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject PARENT_SCOPE)
-    set(CM_SANDBOX_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor PARENT_SCOPE)
-    set(CM_SANDBOX_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources PARENT_SCOPE)
+    set(CM_SANDBOX_OUTPUT_GAME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SampleProject PARENT_SCOPE)
+    set(CM_SANDBOX_OUTPUT_EDITOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SandboxEditor PARENT_SCOPE)
     set(CM_SANDBOX_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/scripts PARENT_SCOPE)
-    set(CM_SANDBOX_CODE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code PARENT_SCOPE)
+    set(CM_SANDBOX_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/code PARENT_SCOPE)
     set(CM_SANDBOX_VENDOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor PARENT_SCOPE)
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/Windows64 PARENT_SCOPE)
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/macOS PARENT_SCOPE)
+    if(WIN32)
+    set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/Windows64 PARENT_SCOPE)
+    elseif(APPLE)
+    set(CM_SANDBOX_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/macOS PARENT_SCOPE)
     endif()
+    set(CM_SANDBOX_OUTPUT_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build PARENT_SCOPE)
 endfunction()
 
 ###############################################
@@ -75,7 +79,7 @@ project(Sandbox VERSION 0.1.0)
 message("\nConfiguring CMake Project: ${PROJECT_NAME} ${PROJECT_VERSION}")
 message("CMake Version: ${CMAKE_MINIMUM_REQUIRED_VERSION}")
 
-if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+if(NOT WIN32 AND NOT APPLE)
     message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} platform not supported")
 endif()
 
@@ -90,7 +94,7 @@ configure_project_defines()
 
 # Flags for which projects to build
 option(BUILD_EDITOR "Build editor project" ON)
-option(BUILD_GAME "Build game project" OFF)
+option(BUILD_GAME "Build game project" OFF) # Deprecated
 
 message("BUILD_EDITOR flag: " ${BUILD_EDITOR})
 message("BUILD_GAME flag: " ${BUILD_GAME})
@@ -115,6 +119,7 @@ message("")
         GIT_REPOSITORY https://github.com/glfw/glfw.git
         GIT_TAG 3.4
     )
+    set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(glfw)
 
     FetchContent_Declare(assimp
@@ -127,14 +132,14 @@ message("")
     set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(assimp)
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(WIN32)
         find_library(GLEWS
             NAMES glew32s
             PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/Windows64"
             REQUIRED
         )
 
-    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    elseif(APPLE)
         find_library(GLEWS
             NAMES libGLEW.a
             PATHS "${CM_SANDBOX_VENDOR_DIR}/lib/glew/macOS"
@@ -148,7 +153,24 @@ message("")
     add_subdirectory(${CM_SANDBOX_VENDOR_DIR}/includes/imgui)
 
 add_subdirectory(code/src)
-add_subdirectory(code/api)
+
+# Export lib and API headers to external projects' look-up directory (currently only using Development dir)
+    install(TARGETS SbEngineCore SbAPI
+        EXPORT SbEngineCoreTargets
+        ARCHIVE DESTINATION ${CM_SANDBOX_OUTPUT_BUILD_DIR}/lib
+        INCLUDES DESTINATION ${CM_SANDBOX_OUTPUT_BUILD_DIR}/include
+    )
+    install(DIRECTORY ${CM_SANDBOX_SOURCE_DIR}/api
+        DESTINATION ${CM_SANDBOX_OUTPUT_BUILD_DIR}/include
+        FILES_MATCHING
+        PATTERN "*.h"
+    )
+
+# add_library(Sandbox_API INTERFACE)
+# target_include_directories(Sandbox_API INTERFACE
+#     ${CMAKE_CURRENT_SOURCE_DIR}/code/api
+# )
+# target_link_libraries(Sandbox_Engine PUBLIC Sandbox_API)
 
 # Game build configuration
 
@@ -156,11 +178,11 @@ add_subdirectory(code/api)
     
     # if(BUILD_GAME)
 
-    #     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_GAME_DIR})
-    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
-    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
-    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_GAME_DIR}/release)
-    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_GAME_DIR}/debug)
+    #     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_OUTPUT_GAME_DIR})
+    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_OUTPUT_GAME_DIR}/release)
+    #     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_OUTPUT_GAME_DIR}/debug)
+    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_OUTPUT_GAME_DIR}/release)
+    #     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_OUTPUT_GAME_DIR}/debug)
 
     #     # Temp - Set on project creation
     #     set(CM_SANDBOX_GAME_PROJECT "SandboxGame")
@@ -206,11 +228,11 @@ add_subdirectory(code/api)
 
 if(BUILD_EDITOR)
 
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_EDITOR_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_EDITOR_DIR}/release)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_EDITOR_DIR}/debug)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_EDITOR_DIR}/release)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_EDITOR_DIR}/debug)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CM_SANDBOX_OUTPUT_EDITOR_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_OUTPUT_EDITOR_DIR}/release)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_OUTPUT_EDITOR_DIR}/debug)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CM_SANDBOX_OUTPUT_EDITOR_DIR}/release)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CM_SANDBOX_OUTPUT_EDITOR_DIR}/debug)
 
     add_subdirectory(code/editor)
     add_executable(SandboxEditor code/editor/main.cpp)
@@ -218,7 +240,8 @@ if(BUILD_EDITOR)
 
     target_compile_definitions(SandboxEditor PRIVATE GLEW_STATIC)
     target_link_libraries(SandboxEditor
-        PRIVATE Sandbox_Editor
+        PRIVATE SbEngineCore
+        PRIVATE SbEditor
 
         # Third Parties
         PUBLIC smhasher

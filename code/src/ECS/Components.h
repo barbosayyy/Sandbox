@@ -67,6 +67,9 @@ namespace Sb {
     };
 
     struct ScriptComponent : ComponentBase {
+        ScriptComponent& operator=(const ScriptComponent&) = delete;  
         std::unique_ptr<Scripting::IScript> script;
+        ScriptComponent(ScriptComponent&&) noexcept = default;
+        ScriptComponent& operator=(ScriptComponent&&) noexcept = default;
     };
 }

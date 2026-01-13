@@ -25,8 +25,8 @@ namespace Sb {
         ECS::Registry& reg = ECS::Registry::GetInstance();
         auto script = Scripting::ScriptRegistry::GetInstance().CreateScript(scriptName);
         if(script && reg.GetComponentSparseSet<DummyComponent>().Contains(entityID)) {
-            reg.AddComponent<ScriptComponent>(entityID);
-            reg.GetComponent<ScriptComponent>(entityID).script = std::move(script);
+            // reg.AddComponent<ScriptComponent>(entityID);
+            // reg.GetComponent<ScriptComponent>(entityID).script = std::move(script);
         }
     }
 }

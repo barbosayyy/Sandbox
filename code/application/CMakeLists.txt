@@ -1,23 +1,25 @@
 # Sandbox - Application
 
-add_library(Sandbox_App STATIC
+add_library(SbApp STATIC
     Application.h
     Application.cpp
 )
 
-target_compile_definitions(Sandbox_App PRIVATE GLEW_STATIC)
-target_include_directories(Sandbox_App SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
-target_include_directories(Sandbox_App PRIVATE
+target_compile_definitions(SbApp PRIVATE GLEW_STATIC)
+target_include_directories(SbApp SYSTEM PRIVATE ${CM_SANDBOX_VENDOR_DIR}/includes)
+
+target_include_directories(SbApp PRIVATE
+    ${CM_SANDBOX_SOURCE_DIR}/src
+    ${CM_SANDBOX_SOURCE_DIR}/game
+
     ${assimp_SOURCE_DIR}/include
     ${FETCHCONTENT_BASE_DIR}/assimp-build/include
     ${yaml-cpp_SOURCE_DIR}/include
     ${glfw_SOURCE_DIR}/include
-    ${CM_SANDBOX_CODE_DIR}/src
-    ${CM_SANDBOX_CODE_DIR}/game
 )
 
-target_link_libraries(Sandbox_App PRIVATE
-    Sandbox_Engine
+target_link_libraries(SbApp PRIVATE
+    SbCore
     Sandbox_Game
 )
 
