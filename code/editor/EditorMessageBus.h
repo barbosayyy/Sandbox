@@ -13,5 +13,6 @@ namespace SbEditor {
 
         void SubscribeWindow(EditorMessageType type, EditorWindow* win);
         void DispatchWindowMessage(const EditorMessage& msg) const ;
+        void UnsubscribeAll() {subscribers.clear();}
     };
 } 

@@ -43,6 +43,21 @@ namespace Sb {
 		_currentAPI |= SB_OPENGL;
 		
 		if(_currentAPI & SB_OPENGL) {
+		} else if(_currentAPI & SB_VULKAN) {
+			SB_NOT_IMPL;
+		} else if(_currentAPI & SB_DX11) {
+			SB_NOT_IMPL;
+		} else if(_currentAPI & SB_DX12) {
+			SB_NOT_IMPL;
+		}
+
+	}
+	
+	Renderer::~Renderer() {
+	}
+
+	void Renderer::NewContext(const String& name) {
+		if(_currentAPI & SB_OPENGL) {
 #if defined(SB_PLATFORM_MAC) && defined(SB_BUILD_DEBUG)
 			GlfwMacOSInit();
 #else
@@ -50,7 +65,6 @@ namespace Sb {
 				SB_ASSERT("Renderer: Failed to initialize GLFW.");
 			}
 #endif
-			// GLFW config
 			glfwDefaultWindowHints();
 			glfwWindowHint(GLFW_RED_BITS, 8);									// Frame bit length
 			glfwWindowHint(GLFW_GREEN_BITS, 8);			
@@ -68,23 +82,21 @@ namespace Sb {
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_FALSE);
 #endif
-			_windowHandle = new Window("SandboxWindow", DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+			_windowHandle = new Window(name.c_str(), DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 			glfwSwapInterval(SB_RENDERER_VSYNC);
 			
 			if(!_windowHandle->GLWindow()) {
 				glfwTerminate();
 				SB_ASSERT("Renderer: Failed to create window.");
 			}
-	
-			glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GLFramebufferSizeCallback);
 
+			glfwSetFramebufferSizeCallback(_windowHandle->GLWindow(), this->GLFramebufferSizeCallback);
+			
 			glewExperimental = GL_TRUE;
 			// GLEW initialization
 			if(glewInit() != GLEW_OK) {
 				glfwTerminate();
 				SB_ASSERT("Renderer: Failed to initialize GLEW.");
-			} else {
-				LogRendererInfo(_currentAPI);
 			}
 		} else if(_currentAPI & SB_VULKAN) {
 			SB_NOT_IMPL;
@@ -93,20 +105,12 @@ namespace Sb {
 		} else if(_currentAPI & SB_DX12) {
 			SB_NOT_IMPL;
 		}
-	
 		_imGuiSbContext = new ImGuiSbContext();
+		LogRendererInfo(_currentAPI);
+		OnContextInit();
 	}
 	
-	Renderer::~Renderer() {
-		delete _renderCamera;
-		delete _windowHandle;
-		delete _imGuiSbContext;
-	
-		if(_currentAPI & SB_OPENGL)
-			glfwTerminate();
-	}
-	
-	void Renderer::Setup() {
+	void Renderer::OnContextInit() {
 	
 		_imGuiSbContext->Init(this->_windowHandle, SbImGuiStyle::IMGUI_DARK, this->_currentAPI);
 	
@@ -126,6 +130,20 @@ namespace Sb {
 		AddRenderPass(std::make_unique<GeometryPass>());
 		AddRenderPass(std::make_unique<LightingPass>());
 		AddRenderPass(std::make_unique<SkyboxPass>());
+	}
+
+	void Renderer::OnContextEnd() {
+		glDeleteBuffers(1, &_glLightData.lightUBO);
+		glDeleteFramebuffers(1,&_gBuffer);
+		glDeleteVertexArrays(1, &framebufferVao);
+		glDeleteBuffers(1, &framebufferVbo);
+		// _imGuiSbContext->
+		renderingPasses.clear();
+		delete(_renderCamera);
+		_stateDirtyFlags = 0;
+		delete(_imGuiSbContext);
+		delete(_windowHandle);
+		glfwTerminate();
 	}
 	
 	void Renderer::OnBeginFrame() {

@@ -65,29 +65,14 @@
             "problemMatcher": [],
             "detail": "Test..."
         },
-
-        // {
-        //     "type": "shell",
-        //     "label": "Sandbox: Build Editor & Game",
-        //     "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja --DCMAKE_BUILD_TYPE=Debug; cmake --build ${workspaceFolder}/build --config Debug --target all",
-        //     "problemMatcher": [],
-        //     "detail": "Build Editor and Game executables"
-        // },
-        // {
-        //     "type": "shell",
-        //     "label": "Sandbox: Build Editor & Game Release",
-        //     "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -G Ninja -DCMAKE_BUILD_TYPE=Release; cmake --build ${workspaceFolder}/build --config Release --target all",
-        //     "problemMatcher": [],
-        //     "detail": "Build Editor and Game executables"
-        // },
-
-        // {
-        //     "type": "shell",
-        //     "label": "Sandbox: Build Game",
-        //     "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=OFF -G Ninja; cmake --build ${workspaceFolder}/build --config Debug --target all",
-        //     "problemMatcher": [],
-        //     "detail": "Build Game executable"
-        // },
+        {
+            "type": "shell",
+            "label": "Sandbox: Build",
+            "command": "cmake -B ${workspaceFolder}/build -DBUILD_EDITOR=ON -DBUILD_GAME=OFF -G Ninja --DCMAKE_BUILD_TYPE=Debug; cmake --build ${workspaceFolder}/build --config Debug --target all",
+            "problemMatcher": [],
+            "detail": "Build executable"
+        },
+        
         // {
         //     "type": "shell",
         //     "label": "Check/Install required extensions",

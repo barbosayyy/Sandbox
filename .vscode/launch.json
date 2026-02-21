@@ -7,7 +7,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}\\SampleProject",
         "program": "${workspaceFolder}\\SampleProject\\SandboxGame.exe",
-        "preLaunchTask": "Sandbox: Build Editor & Game"
+        "preLaunchTask": "Sandbox: Build"
         },
         {
         "name": "LLDB SandboxEditor",
@@ -15,7 +15,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}\\SandboxEditor",
         "program": "${workspaceFolder}\\SandboxEditor\\SandboxEditor.exe",
-        "preLaunchTask": "Sandbox: Build Editor & Game"
+        "preLaunchTask": "Sandbox: Build"
         },
         {
         "name": "LLDB SandboxGame macOS",
@@ -23,7 +23,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}/SampleProject",
         "program": "${workspaceFolder}/SampleProject/SandboxGame",
-        "preLaunchTask": "Sandbox: Build Editor & Game"
+        "preLaunchTask": "Sandbox: Build"
         },
         {
         "name": "LLDB SandboxEditor macOS",
@@ -31,7 +31,7 @@
         "request": "launch",
         "cwd": "${workspaceFolder}/SampleProject",
         "program": "${workspaceFolder}/SandboxEditor/SandboxEditor",
-        "preLaunchTask": "Sandbox: Build Editor & Game"
+        "preLaunchTask": "Sandbox: Build"
         }
     ]
 }

@@ -26,6 +26,6 @@ namespace Sb {
 		int _windowWidth;
 		int _windowHeight;
 		GLFWwindow* _window;
-		void CreateWindow(const char* windowTitle);
+		void CreateWindowasdf(const char* windowTitle);
 	};
 }

@@ -8,14 +8,21 @@ InputManager::InputManager()
 {
 }
 
-InputManager::InputManager(GLFWwindow* window) : _window(window)
+InputManager::~InputManager()
 {
+}
+
+void InputManager::OnContextInit(GLFWwindow* window) {
+	_window = window;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	pressedQueue.reserve(SB_KEYBOARD_MENU);
 }
 
-InputManager::~InputManager()
-{
+void InputManager::OnContextEnd() {
+	onInputFunctions.clear();
+	onMouseAxisMoveFunctions.clear();
+	_window = nullptr;
+	pressedQueue.clear();
 }
 
 void InputManager::SetCallbacks()

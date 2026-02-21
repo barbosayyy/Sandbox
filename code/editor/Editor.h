@@ -3,24 +3,27 @@
 #include "EditorBase.h"
 #include "EditorMessageBus.h"
 #include "EditorWindow.h"
+#include "Client/IClient.h"
 #include "Engine/IEngine.h"
 #include "ImGui/ImGuiSbContext.h"
 #include <memory>
 
 namespace SbEditor {
-    class Editor {
+    class Editor : public IClient {
     public:
 		Editor(Sb::IEngine* sbEngine);
 
-		void Start();
+		void Start() override;
 
-		void Update();
+		void Update() override;
 
-		void Render();
+		void Render() override;
 
-		void Stop();
+		void Stop() override;
 
-		const EditorMessageBus& GetMessageBus() const {return _messageBus;}
+		void StartProjectManager();
+
+		void StartEditor();
 		
 		// UI
 		void AddEditorWindow(std::unique_ptr<EditorWindow> win);
@@ -32,6 +35,7 @@ namespace SbEditor {
 		void UISetElementsVisible(u16 visibilityMask) { _uiVisibilityFlags |= visibilityMask; };
 		void UISetElementsNonVisible(u16 visibilityMask) { _uiVisibilityFlags &= ~visibilityMask; };
 
+		const EditorMessageBus& GetMessageBus() const {return _messageBus;}
 	private:
 		int _editorGlobalWindowWidth;
 		int _editorGlobalWindowHeight;

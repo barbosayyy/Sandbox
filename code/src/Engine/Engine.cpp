@@ -14,13 +14,14 @@
 #include "ECS/Systems/InputSystem.h"
 #include "ECS/Systems/PhysicsSystem.h"
 #include "ECS/Systems/HierarchySystem.h"
+#include <Client/IClient.h>
 #include <filesystem>
 #include <memory>
 
 namespace Sb {
 	bool Engine::_error = false;
 
-	Engine::Engine() : _uiRenderEnabled(true), _firstFrame(true){
+	Engine::Engine() : _uiRender(true), _firstFrame(true) {
 
 		Log::Info("Starting Sandbox application backend");
 
@@ -31,7 +32,7 @@ namespace Sb {
 	#endif
 
 		SetRenderer(Renderer::GetInstance());
-		SetInputManager(InputManager::GetInstance(this->_renderer->GetWindow()->GLWindow()));
+		SetInputManager(InputManager::GetInstance());
 		SetECSRegistry(ECS::Registry::GetInstance());
 		SetResourceManager(ResourceManagement::ResourceManager::GetInstance());
 		SetScriptRegistry(Scripting::ScriptRegistry::GetInstance());
@@ -40,27 +41,45 @@ namespace Sb {
 	Engine::~Engine() {
 	}
 
-	void Engine::SetRenderer(Renderer& instance) {
-		_renderer = &instance;
+	void Engine::InitContext(const String& name, IClient& client) {
+		_client = &client;
+		_renderer->NewContext(name);
+		_internalInput->OnContextInit(_renderer->GetWindow()->GLWindow());
+
+		Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
+		_renderer->SetRenderCamera(camera);
+		_renderer->GetRenderCamera()->_moveSpeed = 0.025;
+
+		InputManager::GetInstance().AddInputFunction([this]() { OnInput(); });
+
+		this->Context();
 	}
 
-	void Engine::SetInputManager(InputManager& instance) {
-		_internalInput = &instance;
+	void Engine::Context() {
+		_client->Start();
+		while(this->ValidateContext()) {
+			this->Update();
+			_client->Update();
+			
+			this->Render();
+			_client->Render();
+
+			this->LateRender();
+		}
+		_client->Stop();
+		EndContext();
 	}
 
-	void Engine::SetECSRegistry(ECS::Registry& instance) {
-		_ecsRegistry = &instance;
+	void Engine::EndContext() {
+		_ecsRegistry->Clear();
+		_client = nullptr;
+		_renderer->OnContextEnd();
+		_internalInput->OnContextEnd();
 	}
 
-	void Engine::SetResourceManager(ResourceManagement::ResourceManager& instance) {
-		_resourceManager = &instance;
-	}
+	//
 
-	void Engine::SetScriptRegistry(Scripting::ScriptRegistry& instance) {
-		_scriptRegistry = &instance;
-	}
-
-	bool Engine::Validate() {
+	bool Engine::ValidateContext() {
 
 		if(_error == true)
 			return false;
@@ -71,21 +90,6 @@ namespace Sb {
 		}
 
 		return true;
-	}
-
-	void Engine::Start() {
-
-		// Systems run-time setup
-
-		Camera* camera = new Camera(0.0f, 0.0f, -3.0f);
-		_renderer->SetRenderCamera(camera);
-		_renderer->GetRenderCamera()->_moveSpeed = 0.025;
-
-		this->GetRenderer().Setup();
-
-		InputManager::GetInstance().AddInputFunction([this]() { OnInput(); });
-		
-		Log::Info("Engine: Started");
 	}
 
 	void Engine::Update() {
@@ -139,7 +143,7 @@ namespace Sb {
 		Profiler::StopRecord("Render");
 		
 		// Game-side Engine UI
-		if(_uiRenderEnabled)
+		if(_uiRender)
 			_renderer->GetImGuiSbContext().RenderMain(1, 2, "Sandbox", _renderer->_faceAmount, _renderer->_stateShowBufferMask);
 		_renderer->GetImGuiSbContext().RenderEnd();
 
@@ -175,6 +179,26 @@ namespace Sb {
 		} else if(InputManager::PressedKey(SB_KEYBOARD_L)) {
 			SceneManagement::SaveScene("level1");
 		}
+	}
+
+	void Engine::SetRenderer(Renderer& instance) {
+		_renderer = &instance;
+	}
+
+	void Engine::SetInputManager(InputManager& instance) {
+		_internalInput = &instance;
+	}
+
+	void Engine::SetECSRegistry(ECS::Registry& instance) {
+		_ecsRegistry = &instance;
+	}
+
+	void Engine::SetResourceManager(ResourceManagement::ResourceManager& instance) {
+		_resourceManager = &instance;
+	}
+
+	void Engine::SetScriptRegistry(Scripting::ScriptRegistry& instance) {
+		_scriptRegistry = &instance;
 	}
 }
 

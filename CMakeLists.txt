@@ -252,6 +252,12 @@ if(BUILD_EDITOR)
         PUBLIC ${GLEWS}
         PRIVATE OpenGL::GL
     )
+
+    if(WIN32)
+        target_link_libraries(SandboxEditor
+            PRIVATE dwmapi
+        )
+    endif()
     
 endif()
 

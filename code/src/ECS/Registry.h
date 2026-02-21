@@ -53,7 +53,7 @@ namespace Sb {
 
             void IncrementNextEntityID() { _nextEntityId++;}
 
-            void Clear() { std::apply([](auto&... componentSparseSet) { (componentSparseSet.Clear(), ...); }, _componentStore); Log::Info("ECS Registry: Cleared all data"); }
+            void Clear() { std::apply([](auto&... componentSparseSet) { (componentSparseSet.Clear(), ...); }, _componentStore); _nextEntityId = 0; Log::Info("ECS Registry: Cleared all data"); }
 
             template<typename T>
             std::vector<T>& GetComponentStoreDense() { return std::get<SparseSet<T>>(_componentStore).GetDense(); }

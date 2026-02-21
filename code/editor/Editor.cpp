@@ -52,8 +52,17 @@ namespace SbEditor {
     }
 
     void Editor::Stop() {
-        this->_sbEnginePtr = nullptr;
-        this->_sbImGuiContext = nullptr;
+        this->UISetElementsVisible(0);
+        _messageBus.UnsubscribeAll();
+        _windows.clear();
+    }
+
+    void Editor::StartProjectManager() {
+        this->_sbEnginePtr->InitContext("Sandbox Project Manager", *this);
+    }
+
+    void Editor::StartEditor() {
+        this->_sbEnginePtr->InitContext("Sandbox Editor", *this);
     }
 
     void Editor::AddEditorWindow(std::unique_ptr<EditorWindow> win) {

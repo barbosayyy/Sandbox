@@ -19,8 +19,11 @@ namespace Sb {
 		Renderer();
 		~Renderer();
 
-		void Init();
-		void Setup();
+		void NewContext(const String& name);
+
+		void OnContextInit();
+		void OnContextEnd();
+
 		void OnBeginFrame();
 		void GenerateFramebufferTextures();
 
@@ -50,17 +53,17 @@ namespace Sb {
 
 		u8 _stateShowBufferMask {0};
 		u32 _faceAmount {0};
-		// Framebuffer data
+		
 			u32 _gBuffer;
 			u32 gPosition, gNormal, gAlbedoSpec;
 			u32 _renderBufferObject;
-			u32 _fbo;
 		GLLightData _glLightData;
 
 	private:
 		void SetupFramebufferQuad();
 		void AddRenderPass(std::unique_ptr<RenderPass> pass) { renderingPasses.push_back(std::move(pass)); };
 
+		u32 framebufferVao, framebufferVbo;
 		u8 _currentAPI;
 		u16 _viewportWidth;
 		u16 _viewportHeight;
@@ -69,7 +72,6 @@ namespace Sb {
 		Camera* _renderCamera;
 		Window* _windowHandle;
 		ImGuiSbContext* _imGuiSbContext;
-		u32 framebufferVao, framebufferVbo;
 		Shader* framebufferQuadShader;
 		u8 _stateDirtyFlags;
 		std::vector<std::unique_ptr<RenderPass>> renderingPasses;

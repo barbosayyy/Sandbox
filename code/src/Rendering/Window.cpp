@@ -1,7 +1,14 @@
 #include "Core/Debug.h"
 #include "Rendering/Renderer.h"
-#include "glfw/glfw3.h"
 #include "Rendering/Window.h"
+
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include "GLFW/glfw3.h"
+#include <GLFW/glfw3native.h>
+
+#ifdef SB_PLATFORM_WIN
+#include "dwmapi.h"
+#endif
 
 namespace Sb {
 
@@ -27,17 +34,20 @@ namespace Sb {
 		this->_windowWidth = width;
 		this->_windowHeight = height;
 
-		Window::CreateWindow(windowTitle);
+		Window::CreateWindowasdf(windowTitle);
 		glfwMakeContextCurrent(_window);
 		glfwSetWindowSizeCallback(_window, this->GlWindowSizeCallback);
 	}
 
-	void Window::CreateWindow(const char* windowTitle)
+	void Window::CreateWindowasdf(const char* windowTitle)
 	{
 		this->_window = glfwCreateWindow(_windowWidth, _windowHeight, windowTitle, nullptr, nullptr);
+#ifdef SB_PLATFORM_WIN
+		BOOL darkMode = true;
+		HWND win = glfwGetWin32Window(this->_window);
+		DwmSetWindowAttribute(win, 20, &darkMode, sizeof(darkMode));
+#endif
 	}
-
-	//
 
 	Window::~Window()
 	{

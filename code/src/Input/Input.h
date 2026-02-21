@@ -13,9 +13,11 @@ namespace Sb {
 
 	class InputManager final : public Singleton<InputManager, GLFWwindow*> {
 	public:
-		InputManager(GLFWwindow* window);
 		InputManager();
 		~InputManager();
+
+		void OnContextInit(GLFWwindow* window);
+		void OnContextEnd();
 
 		void ProcessInput();
 

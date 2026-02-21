@@ -5,27 +5,16 @@
 namespace SbEditor {
     void EditorApplication::Run() {
         Sb::Engine sbEngine;
-        sbEngine.Start();
-        
-#ifdef SB_EDITOR
-        sbEngine.GetRenderer().GetWindow()->SetWindowTitle("Sandbox Editor");
-#endif
         
         Editor sbEditor(&sbEngine);
-        
-        sbEngine.SetUIRenderingEnabled(false);
-        sbEditor.Start();
 
-        while(sbEngine.Validate() && !this->ShouldStop()) {
-            sbEngine.Update();
-            sbEditor.Update();
+        sbEngine.SetUIRendering(false);
 
-            sbEngine.Render();
+        sbEditor.StartProjectManager();
 
-            sbEditor.Render();
-            
-            sbEngine.LateRender();
-        }
+        // TODO -> context isnt being reset properly!
+
+        sbEditor.StartEditor();
 
         sbEngine.Stop();
     }
